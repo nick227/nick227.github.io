@@ -1,0 +1,6 @@
+/* CSS Modules Assembler */
+
+@import "./src/css/variables.css";
+@import "./src/css/base.css";
+@import "./src/css/grid.css";
+@import "./src/css/components.css";

@@ -1,0 +1,60 @@
+/* Base Document Reset */
+
+* {
+  box-sizing: border-box;
+  margin: 0;
+  padding: 0;
+}
+
+html, body {
+  width: 100%;
+  height: 100%;
+  background-color: var(--color-bg-deep);
+  font-family: var(--font-sans);
+  color: var(--color-txt-primary);
+  -webkit-font-smoothing: antialiased;
+  /* The layout targets a single viewport; overflow is a safety net for
+     viewports too short/narrow to fit everything without scroll. */
+  overflow-y: auto;
+  overflow-x: hidden;
+}
+
+ul {
+  list-style: square;
+}
+
+/* Background Canvas fixed behind scrolling page content */
+#nature-canvas {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 0;
+  display: block;
+}
+
+/* Fixed scrim keeps text legible over bright sky/weather channels.
+   Content now spans the full page width, so the darkening needs to be
+   even across x and only shape itself vertically (sky vs. ground). */
+#scrim {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(
+    180deg,
+    rgba(2, 4, 10, 0.55) 0%,
+    rgba(2, 4, 10, 0.4) 55%,
+    rgba(2, 4, 10, 0.6) 100%
+  );
+}
+
+/* Page content flows over the canvas */
+#page {
+  position: relative;
+  z-index: 2;
+}

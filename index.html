@@ -1,27 +1,134 @@
 <!DOCTYPE html>
-<html>
-    <head>
-        <meta charset="utf-8">
-        <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
-        <title>Nick Rios</title>
-        <meta name="description" content="">
-        <meta name="viewport" content="width=device-width, initial-scale=1">
-        <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
-    </head>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="color-scheme" content="dark">
+  <title>Nick Rios | Senior Software Engineer &amp; AI Architect</title>
+  <meta name="description" content="Portfolio of Nick Rios, Senior Software Engineer &amp; AI solutions provider. Enterprise architectures, LLM automations, Web/Mobile developer.">
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2302040a'/%3E%3Ctext x='50' y='68' font-family='Arial,sans-serif' font-size='54' font-weight='900' fill='%23daff00' text-anchor='middle'%3ENR%3C/text%3E%3C/svg%3E">
+
+  <!-- Critical First Paint Minimum CSS -->
+  <style>
+    * { box-sizing: border-box; margin: 0; padding: 0; }
+    html, body { width: 100%; background-color: #02040a; }
+    #nature-canvas {
+      position: fixed;
+      top: 0; left: 0; width: 100%; height: 100%;
+      z-index: 0;
+      display: block;
+      background-color: #02040a;
+    }
+  </style>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+
+  <!-- Root Stylesheet Imports CSS Modules -->
+  <link rel="stylesheet" href="index.css">
+</head>
 <body>
+  <!-- High-Performance Generative Nature Canvas Background -->
+  <canvas id="nature-canvas"></canvas>
 
-    <script>
-        (function(){
-            function ready(){
-                
-            }
+  <!-- Fixed readability scrim, independent of time-of-day/weather brightness -->
+  <div id="scrim" aria-hidden="true"></div>
 
-          if (window.addEventListener){
-              window.addEventListener("load", ready, false);
-          }else if(window.attachEvent){
-              window.attachEvent("onload", ready);
-              }
-        })();
-    </script>
+  <!-- Single-Viewport Developer Feature Page -->
+  <main id="page">
+
+    <section class="hero" id="hero">
+      <div class="hero-top">
+        <p class="eyebrow">Senior Software Engineer &amp; AI Architect</p>
+
+        <div class="audio-player">
+          <button type="button" id="audio-toggle" class="audio-toggle" aria-pressed="false" aria-label="Play music">
+            <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+            <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+          </button>
+          <canvas id="audio-visualizer" aria-hidden="true"></canvas>
+        </div>
+      </div>
+
+      <h1 class="hero-name">NICK<br>RIOS.</h1>
+    </section>
+
+    <section class="services" id="services">
+      <h2 class="section-heading">What I do</h2>
+      <div class="services-grid">
+        <div class="service-item">
+          <h3>Performance Applications</h3>
+          <p>Experienced on multiple platforms</p>
+        </div>
+        <div class="service-item">
+          <h3>AI Automation</h3>
+          <p>Enhance your tools, skip busywork</p>
+        </div>
+        <div class="service-item">
+          <h3>Code Quality</h3>
+          <p>Faster, safer, leaner code</p>
+        </div>
+        <div class="service-item">
+          <h3>App Integrations</h3>
+          <p>APIs, Fintech, n8n &amp; more</p>
+        </div>
+        <div class="service-item">
+          <h3>Creative Solutions</h3>
+          <p>Planning saves time and money</p>
+        </div>
+        <div class="service-item">
+          <h3>Data Systems</h3>
+          <p>Advanced data architectures</p>
+        </div>
+      </div>
+    </section>
+    
+    <section class="services" id="jobs">
+      <h2 class="section-heading">Experience</h2>
+        <ul class="row">
+          <li>DH <span class="date">2020-2022</span></li>
+          <li>CISCO <span class="date">2022-2024</span></li>
+          <li>Nextstar <span class="date">2024-2026</span></li>
+          <li>MultiView <span class="date">2026-2028</span></li>
+          <li>AT&T <span class="date">2028-2030</span></li>
+        </ul>
+    </section>
+    <section class="services" id="skills">
+      <h2 class="section-heading">Technologies</h2>
+      <div>React, node.js, SQL, PHP, Python, Go, Express, Next.js, Tailwind, Bootstrap, Material UI, Redux, React Native, Expo, Firebase, Railway, Docker, Git</div>
+    </section>
+
+    <section class="contact" id="contact">
+      <h2 class="section-heading">Contact</h2>
+      <p class="contact-lead">
+        Email <a href="mailto:nicholas.jay.rios@gmail.com">nicholas.jay.rios@gmail.com</a> or send a message.
+      </p>
+
+      <form id="contact-form">
+        <input type="text" id="form-name" name="name" required placeholder="Your name" aria-label="Name">
+        <input type="email" id="form-email" name="email" required placeholder="you@company.com" aria-label="Email">
+        <input type="text" id="form-message" name="message" required placeholder="Tell me about your project..." aria-label="Message">
+        <button type="submit" class="submit-btn">Send</button>
+      </form>
+
+      <p class="site-footer">&copy; 2026 Nick Rios</p>
+    </section>
+
+  </main>
+
+  <!-- Success Toast Overlay -->
+  <div id="success-toast">
+    <div class="toast-content">
+      <span class="toast-icon">&#10003;</span>
+      <div class="toast-text">
+        <h4>Message Sent!</h4>
+        <p>Thank you. I will reach out within 24 hours.</p>
+      </div>
+    </div>
+  </div>
+
+  <script type="module" src="/src/main.js"></script>
 </body>
-</html>    
+</html>

@@ -1,0 +1,220 @@
+/* Hero */
+
+.hero-top {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 16px;
+  margin-bottom: clamp(8px, 1.5vh, 16px);
+}
+
+.eyebrow {
+  font-size: clamp(13px, 1.4vw, 16px);
+  font-weight: 500;
+  letter-spacing: 0.04em;
+  color: var(--color-txt-secondary);
+}
+
+/* Audio player: play/pause toggle + live spectrum visualizer */
+
+.audio-player {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  flex-shrink: 0;
+}
+
+.audio-toggle {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex-shrink: 0;
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  border: 1px solid var(--color-border);
+  background: rgba(255, 255, 255, 0.06);
+  color: var(--color-txt-bright);
+  cursor: pointer;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+.audio-toggle:hover {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.1);
+}
+
+.audio-toggle:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 2px;
+}
+
+.audio-toggle .icon {
+  width: 14px;
+  height: 14px;
+}
+
+.audio-toggle .icon-pause {
+  display: none;
+}
+
+.audio-toggle.is-playing .icon-play {
+  display: none;
+}
+
+.audio-toggle.is-playing .icon-pause {
+  display: block;
+}
+
+#audio-visualizer {
+  display: block;
+  width: 110px;
+  height: 28px;
+}
+
+.hero-name {
+  /* Bounded by both viewport width and height so the name can go as
+     large as possible while the whole page still fits one screen. */
+  font-size: clamp(56px, min(26vw, 22vh), 460px);
+  font-weight: 900;
+  line-height: 0.84;
+  letter-spacing: -0.03em;
+  color: var(--color-txt-bright);
+  text-transform: uppercase;
+  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
+}
+
+/* Services */
+
+.services-grid {
+  display: grid;
+  grid-template-columns: repeat(3, 1fr);
+  column-gap: clamp(24px, 3vw, 48px);
+  row-gap: clamp(12px, 2vh, 22px);
+}
+
+@media (max-width: 720px) {
+  .services-grid {
+    grid-template-columns: repeat(2, 1fr);
+  }
+}
+
+.service-item h3 {
+  font-size: clamp(15px, 1.6vw, 19px);
+  font-weight: 600;
+  color: var(--color-txt-bright);
+  margin-bottom: 4px;
+}
+
+.service-item p {
+  font-size: clamp(13px, 1.2vw, 15px);
+  font-weight: 300;
+  line-height: 1.4;
+  color: var(--color-txt-secondary);
+}
+
+/* Contact */
+
+.contact-lead {
+  font-size: clamp(14px, 1.4vw, 16px);
+  font-weight: 300;
+  color: var(--color-txt-dim);
+  margin-bottom: 14px;
+}
+
+.contact-lead a {
+  color: var(--color-accent);
+  text-decoration: none;
+  border-bottom: 1px solid currentColor;
+}
+
+.contact-lead a:hover {
+  color: var(--color-txt-bright);
+}
+
+#contact-form {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+}
+
+#contact-form input {
+  flex: 1 1 180px;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  color: var(--color-txt-bright);
+  background: rgba(255, 255, 255, 0.04);
+  border: 1px solid var(--color-border);
+  border-radius: 4px;
+  padding: 10px 12px;
+  outline: none;
+  transition: border-color 0.2s ease, background 0.2s ease;
+}
+
+#contact-form input:focus {
+  border-color: var(--color-accent);
+  background: rgba(255, 255, 255, 0.06);
+}
+
+.submit-btn {
+  flex: 0 0 auto;
+  font-family: var(--font-sans);
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-bg-deep);
+  background: var(--color-accent);
+  border: none;
+  border-radius: 4px;
+  padding: 10px 24px;
+  cursor: pointer;
+  transition: transform 0.15s ease, box-shadow 0.15s ease;
+}
+
+.submit-btn:hover {
+  box-shadow: 0 0 24px var(--color-accent-glow);
+  transform: translateY(-1px);
+}
+
+/* Success Toast */
+
+#success-toast {
+  position: fixed;
+  top: 24px;
+  right: 24px;
+  z-index: 20;
+  background: var(--color-bg-deep);
+  border: 1px solid var(--color-border);
+  border-radius: 8px;
+  padding: 18px 22px;
+  display: flex;
+  align-items: center;
+  gap: 14px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.5);
+  transform: translateY(-20px);
+  opacity: 0;
+  pointer-events: none;
+  transition: transform 0.3s ease, opacity 0.3s ease;
+}
+
+#success-toast.toast-visible {
+  transform: translateY(0);
+  opacity: 1;
+}
+
+.toast-icon {
+  font-size: 20px;
+  color: var(--color-accent);
+}
+
+.toast-text h4 {
+  font-size: 14px;
+  font-weight: 600;
+  color: var(--color-txt-bright);
+  margin-bottom: 2px;
+}
+
+.toast-text p {
+  font-size: 13px;
+  font-weight: 300;
+  color: var(--color-txt-secondary);
+}

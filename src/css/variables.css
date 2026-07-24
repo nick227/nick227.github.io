@@ -1,0 +1,24 @@
+/* Reusable CSS Design Tokens */
+
+:root {
+  /* Colors */
+  --color-bg-deep: #02040a;
+  --color-accent: #daff00;
+  --color-accent-glow: rgba(218, 255, 0, 0.4);
+
+  --color-border: rgba(255, 255, 255, 0.15);
+
+  --color-txt-bright: #ffffff;
+  --color-txt-primary: #f3f4f6;
+  --color-txt-secondary: #9ca3af;
+  --color-txt-dim: #d1d5db;
+  --color-txt-muted: rgba(255, 255, 255, 0.4);
+
+  /* Fonts */
+  --font-sans: 'Outfit', sans-serif;
+
+  /* Layout Rhythm */
+  --space-page-y: clamp(20px, 4vh, 56px);
+  --space-inline: clamp(24px, 6vw, 72px);
+  --width-content: 1100px;
+}
