@@ -43,13 +43,13 @@ export class AtmosphereService {
     this.auroraIntensity = ease(this.auroraIntensity, this.auroraIntensityTarget, dt, 2.0, 0.4);
     this.starSparkle = ease(this.starSparkle, this.starSparkleTarget, dt, 2.0, 0.4);
 
-    // Phenoms arrive fast, leave slowly — the fade-out on music stop.
-    this.skyShift = ease(this.skyShift, this.skyShiftTarget, dt, 3.5, 0.45);
-    this.cloudBoost = ease(this.cloudBoost, this.cloudBoostTarget, dt, 2.2, 0.35);
-    this.rainIntensity = ease(this.rainIntensity, this.rainIntensityTarget, dt, 2.0, 0.28);
-    this.meteorStorm = ease(this.meteorStorm, this.meteorStormTarget, dt, 2.5, 0.4);
-    this.ufoPresence = ease(this.ufoPresence, this.ufoPresenceTarget, dt, 1.8, 0.35);
-    this.monsterPresence = ease(this.monsterPresence, this.monsterPresenceTarget, dt, 1.5, 0.3);
+    // Phenoms ease in gently, leave slowly on music stop.
+    this.skyShift = ease(this.skyShift, this.skyShiftTarget, dt, 1.2, 0.45);
+    this.cloudBoost = ease(this.cloudBoost, this.cloudBoostTarget, dt, 0.9, 0.35);
+    this.rainIntensity = ease(this.rainIntensity, this.rainIntensityTarget, dt, 0.8, 0.28);
+    this.meteorStorm = ease(this.meteorStorm, this.meteorStormTarget, dt, 1.0, 0.4);
+    this.ufoPresence = ease(this.ufoPresence, this.ufoPresenceTarget, dt, 0.7, 0.35);
+    this.monsterPresence = ease(this.monsterPresence, this.monsterPresenceTarget, dt, 0.6, 0.3);
   }
 
   setHazeTarget(amount) { this.hazeTarget = Math.max(0, Math.min(1, amount)); }

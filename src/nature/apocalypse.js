@@ -6,10 +6,10 @@
 
 const STAGE = {
   clouds: 0.0,
-  rain: 0.0,      // heavy from the first frame of play
-  meteors: 4.0,
-  ufos: 8.0,
-  monsters: 12.0
+  rain: 2.5,
+  meteors: 8.0,
+  ufos: 16.0,
+  monsters: 24.0
 };
 
 export class ApocalypseDirector {
@@ -40,30 +40,29 @@ export class ApocalypseDirector {
     if (!this._wasActive) this.age = 0;
     this._wasActive = true;
 
-    // Slow climb — full apocalypse takes ~20s of continuous play.
-    // Intensity/tension only nudge the clock, never gate the early phenoms.
-    const pace = 1.0 + state.intensity * 0.8 + state.tension * 0.4;
+    // Full apocalypse takes ~40s of continuous play.
+    const pace = 0.7 + state.intensity * 0.5 + state.tension * 0.25;
     this.age += dt * pace;
 
     const t = this.age;
-    const force = 0.55 + state.intensity * 0.45; // still heavy at low music
+    const force = 0.55 + state.intensity * 0.45;
 
-    // Sky: unmistakable from frame one of play.
-    const skyShift = 1.0;
+    // Sky leads — still first, but ramps over a few seconds instead of slamming.
+    const skyShift = Math.min(1, t / 3.5);
 
-    // Clouds + extreme rain: the two heavy phenoms that always ride with the sky.
-    const cloudBoost = Math.min(1, 0.85 + force * 0.15);
-    const rainIntensity = Math.min(1, 0.85 + force * 0.15);
+    // Clouds ride with the sky; rain arrives a beat later and fills in slowly.
+    const cloudBoost = Math.min(1, (0.85 + force * 0.15) * Math.min(1, t / 5));
+    const rainGate = t <= STAGE.rain ? 0 : Math.min(1, (t - STAGE.rain) / 6);
+    const rainIntensity = Math.min(1, (0.85 + force * 0.15) * rainGate);
 
-    // Colorful meteor storm — mid escalation.
-    const meteorGate = t <= STAGE.meteors ? 0 : Math.min(1, (t - STAGE.meteors) / 4);
+    // Later phenoms unlock further apart and swell over longer windows.
+    const meteorGate = t <= STAGE.meteors ? 0 : Math.min(1, (t - STAGE.meteors) / 8);
     const meteorStorm = Math.min(1, (0.55 + force * 0.45) * meteorGate);
 
-    // UFOs then monsters — late-game apocalypse.
-    const ufoGate = t <= STAGE.ufos ? 0 : Math.min(1, (t - STAGE.ufos) / 4);
+    const ufoGate = t <= STAGE.ufos ? 0 : Math.min(1, (t - STAGE.ufos) / 8);
     const ufoPresence = Math.min(1, (0.5 + force * 0.5) * ufoGate);
 
-    const monsterGate = t <= STAGE.monsters ? 0 : Math.min(1, (t - STAGE.monsters) / 5);
+    const monsterGate = t <= STAGE.monsters ? 0 : Math.min(1, (t - STAGE.monsters) / 10);
     const monsterPresence = Math.min(1, (0.45 + force * 0.55) * monsterGate);
 
     return {
