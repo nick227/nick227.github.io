@@ -22,6 +22,7 @@
   align-items: center;
   gap: 10px;
   flex-shrink: 0;
+  margin: 20px;
 }
 
 .audio-toggle {
@@ -29,8 +30,8 @@
   align-items: center;
   justify-content: center;
   flex-shrink: 0;
-  width: 34px;
-  height: 34px;
+  width: 44px;
+  height: 44px;
   border-radius: 50%;
   border: 1px solid var(--color-border);
   background: rgba(255, 255, 255, 0.06);
@@ -50,8 +51,8 @@
 }
 
 .audio-toggle .icon {
-  width: 14px;
-  height: 14px;
+  width: 34px;
+  height: 34px;
 }
 
 .audio-toggle .icon-pause {
@@ -67,9 +68,10 @@
 }
 
 #audio-visualizer {
+  margin-left: 20px;
   display: block;
-  width: 110px;
-  height: 28px;
+  width: 170px;
+  height: 40px;
 }
 
 .hero-name {

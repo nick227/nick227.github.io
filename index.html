@@ -42,17 +42,17 @@
     <section class="hero" id="hero">
       <div class="hero-top">
         <p class="eyebrow">Senior Software Engineer &amp; AI Architect</p>
-
-        <div class="audio-player">
-          <button type="button" id="audio-toggle" class="audio-toggle" aria-pressed="false" aria-label="Play music">
-            <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
-            <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-          </button>
-          <canvas id="audio-visualizer" aria-hidden="true"></canvas>
-        </div>
       </div>
 
       <h1 class="hero-name">NICK<br>RIOS.</h1>
+      
+      <div class="audio-player">
+        <button type="button" id="audio-toggle" class="audio-toggle" aria-pressed="false" aria-label="Play music">
+          <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
+          <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
+        </button>
+        <canvas id="audio-visualizer" aria-hidden="true"></canvas>
+      </div>
     </section>
 
     <section class="services" id="services">
@@ -84,50 +84,18 @@
         </div>
       </div>
     </section>
-    
-    <section class="services" id="jobs">
-      <h2 class="section-heading">Experience</h2>
-        <ul class="row">
-          <li>DH <span class="date">2020-2022</span></li>
-          <li>CISCO <span class="date">2022-2024</span></li>
-          <li>Nextstar <span class="date">2024-2026</span></li>
-          <li>MultiView <span class="date">2026-2028</span></li>
-          <li>AT&T <span class="date">2028-2030</span></li>
-        </ul>
-    </section>
-    <section class="services" id="skills">
-      <h2 class="section-heading">Technologies</h2>
-      <div>React, node.js, SQL, PHP, Python, Go, Express, Next.js, Tailwind, Bootstrap, Material UI, Redux, React Native, Expo, Firebase, Railway, Docker, Git</div>
-    </section>
 
     <section class="contact" id="contact">
       <h2 class="section-heading">Contact</h2>
       <p class="contact-lead">
-        Email <a href="mailto:nicholas.jay.rios@gmail.com">nicholas.jay.rios@gmail.com</a> or send a message.
+        Email <a href="mailto:nicholas.jay.rios@gmail.com">nicholas.jay.rios@gmail.com</a>
       </p>
-
-      <form id="contact-form">
-        <input type="text" id="form-name" name="name" required placeholder="Your name" aria-label="Name">
-        <input type="email" id="form-email" name="email" required placeholder="you@company.com" aria-label="Email">
-        <input type="text" id="form-message" name="message" required placeholder="Tell me about your project..." aria-label="Message">
-        <button type="submit" class="submit-btn">Send</button>
-      </form>
 
       <p class="site-footer">&copy; 2026 Nick Rios</p>
     </section>
 
   </main>
 
-  <!-- Success Toast Overlay -->
-  <div id="success-toast">
-    <div class="toast-content">
-      <span class="toast-icon">&#10003;</span>
-      <div class="toast-text">
-        <h4>Message Sent!</h4>
-        <p>Thank you. I will reach out within 24 hours.</p>
-      </div>
-    </div>
-  </div>
 
   <script type="module" src="/src/main.js"></script>
 </body>
