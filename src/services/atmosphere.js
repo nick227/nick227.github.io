@@ -1,74 +1,66 @@
-// Controls the scene's fog/haze, bloom, vignette, and sky-phenomena mood
-// (aurora presence, star sparkle). Haze/bloom/vignette are effects the
-// renderer already had as fixed constants (Compositor.hazeIntensity,
-// PostProcessor bloom/vignette intensities); aurora/sparkle are new but
-// follow the exact same "ease toward a suggested target" pattern as
-// WindField, so NatureDirector controls all five the same way.
+// Scene mood + music-only apocalypse levels. Every field eases toward a
+// target so NatureDirector can slam phenoms on and still get a smooth
+// fade-out when music stops.
+
+function ease(current, target, dt, upRate, downRate) {
+  const rate = target > current ? upRate : downRate;
+  return current + (target - current) * Math.min(1, dt * rate);
+}
 
 export class AtmosphereService {
   constructor() {
-    // Defaults match the renderer's original hardcoded constants, so
-    // registering this service with no NatureDirector input changes
-    // nothing about the baseline look.
     this.haze = 0.42;
     this.hazeTarget = 0.42;
-
     this.bloom = 0.22;
     this.bloomTarget = 0.22;
-
     this.vignette = 0.48;
     this.vignetteTarget = 0.48;
 
-    // Both default to 0 — no aurora/extra sparkle without music at all.
     this.auroraIntensity = 0;
     this.auroraIntensityTarget = 0;
-
     this.starSparkle = 0;
     this.starSparkleTarget = 0;
-
-    // Rain: 0 = clear, 1 = full storm. Driven by NatureDirector's storm
-    // buildup mechanic, not a raw musical signal directly.
     this.rainIntensity = 0;
     this.rainIntensityTarget = 0;
+
+    // Music-only apocalypse phenoms — zero without a track playing.
+    this.skyShift = 0;
+    this.skyShiftTarget = 0;
+    this.cloudBoost = 0;
+    this.cloudBoostTarget = 0;
+    this.meteorStorm = 0;
+    this.meteorStormTarget = 0;
+    this.ufoPresence = 0;
+    this.ufoPresenceTarget = 0;
+    this.monsterPresence = 0;
+    this.monsterPresenceTarget = 0;
   }
 
   update(dt) {
-    const rate = 1.2; // atmosphere should drift, not snap
-    this.haze += (this.hazeTarget - this.haze) * Math.min(1, dt * rate);
-    this.bloom += (this.bloomTarget - this.bloom) * Math.min(1, dt * rate);
-    this.vignette += (this.vignetteTarget - this.vignette) * Math.min(1, dt * rate);
+    this.haze = ease(this.haze, this.hazeTarget, dt, 1.4, 0.35);
+    this.bloom = ease(this.bloom, this.bloomTarget, dt, 1.4, 0.35);
+    this.vignette = ease(this.vignette, this.vignetteTarget, dt, 1.4, 0.35);
+    this.auroraIntensity = ease(this.auroraIntensity, this.auroraIntensityTarget, dt, 2.0, 0.4);
+    this.starSparkle = ease(this.starSparkle, this.starSparkleTarget, dt, 2.0, 0.4);
 
-    const skyRate = 1.5;
-    this.auroraIntensity += (this.auroraIntensityTarget - this.auroraIntensity) * Math.min(1, dt * skyRate);
-    this.starSparkle += (this.starSparkleTarget - this.starSparkle) * Math.min(1, dt * skyRate);
-
-    // Rain rises fast (a storm should feel like it arrives) but clears
-    // more slowly, like real weather trailing off.
-    const rainRate = this.rainIntensityTarget > this.rainIntensity ? 1.2 : 0.3;
-    this.rainIntensity += (this.rainIntensityTarget - this.rainIntensity) * Math.min(1, dt * rainRate);
+    // Phenoms arrive fast, leave slowly — the fade-out on music stop.
+    this.skyShift = ease(this.skyShift, this.skyShiftTarget, dt, 3.5, 0.45);
+    this.cloudBoost = ease(this.cloudBoost, this.cloudBoostTarget, dt, 2.2, 0.35);
+    this.rainIntensity = ease(this.rainIntensity, this.rainIntensityTarget, dt, 2.0, 0.28);
+    this.meteorStorm = ease(this.meteorStorm, this.meteorStormTarget, dt, 2.5, 0.4);
+    this.ufoPresence = ease(this.ufoPresence, this.ufoPresenceTarget, dt, 1.8, 0.35);
+    this.monsterPresence = ease(this.monsterPresence, this.monsterPresenceTarget, dt, 1.5, 0.3);
   }
 
-  setHazeTarget(amount) {
-    this.hazeTarget = Math.max(0, Math.min(1, amount));
-  }
-
-  setBloomTarget(amount) {
-    this.bloomTarget = Math.max(0, Math.min(0.6, amount));
-  }
-
-  setVignetteTarget(amount) {
-    this.vignetteTarget = Math.max(0.15, Math.min(0.7, amount));
-  }
-
-  setAuroraIntensityTarget(amount) {
-    this.auroraIntensityTarget = Math.max(0, Math.min(1, amount));
-  }
-
-  setStarSparkleTarget(amount) {
-    this.starSparkleTarget = Math.max(0, Math.min(1, amount));
-  }
-
-  setRainIntensityTarget(amount) {
-    this.rainIntensityTarget = Math.max(0, Math.min(1, amount));
-  }
+  setHazeTarget(amount) { this.hazeTarget = Math.max(0, Math.min(1, amount)); }
+  setBloomTarget(amount) { this.bloomTarget = Math.max(0, Math.min(0.6, amount)); }
+  setVignetteTarget(amount) { this.vignetteTarget = Math.max(0.15, Math.min(0.7, amount)); }
+  setAuroraIntensityTarget(amount) { this.auroraIntensityTarget = Math.max(0, Math.min(1, amount)); }
+  setStarSparkleTarget(amount) { this.starSparkleTarget = Math.max(0, Math.min(1, amount)); }
+  setRainIntensityTarget(amount) { this.rainIntensityTarget = Math.max(0, Math.min(1, amount)); }
+  setSkyShiftTarget(amount) { this.skyShiftTarget = Math.max(0, Math.min(1, amount)); }
+  setCloudBoostTarget(amount) { this.cloudBoostTarget = Math.max(0, Math.min(1, amount)); }
+  setMeteorStormTarget(amount) { this.meteorStormTarget = Math.max(0, Math.min(1, amount)); }
+  setUfoPresenceTarget(amount) { this.ufoPresenceTarget = Math.max(0, Math.min(1, amount)); }
+  setMonsterPresenceTarget(amount) { this.monsterPresenceTarget = Math.max(0, Math.min(1, amount)); }
 }

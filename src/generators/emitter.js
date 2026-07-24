@@ -1,7 +1,8 @@
 import { CanvasPrimitive } from '../runtime/primitive.js';
 import { registerPrimitive } from '../runtime/registry.js';
-import { drawStars, drawClouds, drawWeather, drawLeaves, drawBirds, drawAurora, drawMeteors } from '../graphics/draw.js';
+import { drawStars, drawClouds, drawWeather, drawLeaves, drawBirds, drawAurora, drawMeteors, drawUfos, drawMonsters } from '../graphics/draw.js';
 import { randomRange, randomChoice, createRandom } from '../utils/math.js';
+import { spawnMusicPhenoms } from './music-phenoms.js';
 
 const AURORA_COLORS = ['rgba(120,255,180,0.9)', 'rgba(90,190,255,0.85)', 'rgba(200,130,255,0.8)'];
 
@@ -17,8 +18,8 @@ export class EmitterPrimitive extends CanvasPrimitive {
     this.seed = config.seed || (7700 + charCodeSum);
     this.prng = createRandom(this.seed);
 
-    // Pre-allocated Particle Pool for zero GC (Garbage Collection) pressure
-    this.poolSize = 1000;
+    // Large enough for extreme music rain + meteor storms
+    this.poolSize = 1600;
     this.particles = Array.from({ length: this.poolSize }, () => ({
       active: false,
       type: '',
@@ -29,9 +30,13 @@ export class EmitterPrimitive extends CanvasPrimitive {
       wobble: 0, wobbleSpeed: 0, wobbleRange: 0,
       thickness: 0, swayScale: 0, angle: 0,
       rotationSpeed: 0, wingPosition: 0,
-      flapTimer: 0, flapInterval: 0
+      flapTimer: 0, flapInterval: 0,
+      facing: 1
     }));
     this.activeCount = 0;
+    this._meteorAcc = 0;
+    this._ufoAcc = 0;
+    this._monsterAcc = 0;
   }
 
   static get capabilities() {
@@ -94,6 +99,7 @@ export class EmitterPrimitive extends CanvasPrimitive {
     p.thickness = 0; p.swayScale = 0; p.angle = 0;
     p.rotationSpeed = 0; p.wingPosition = 0;
     p.flapTimer = 0; p.flapInterval = 0;
+    p.facing = 1;
 
     if (properties) {
       for (const key in properties) {
@@ -142,6 +148,7 @@ export class EmitterPrimitive extends CanvasPrimitive {
     dest.wingPosition = src.wingPosition;
     dest.flapTimer = src.flapTimer;
     dest.flapInterval = src.flapInterval;
+    dest.facing = src.facing;
   }
 
   // Event handler for semantic bird flock spawning
@@ -236,21 +243,23 @@ export class EmitterPrimitive extends CanvasPrimitive {
     }
   }
 
-  // Event handler for music-driven meteor bursts (rare "hero moment" visuals)
   onSpawnMeteors(data) {
     if (this.parallaxFactor > 0.15) return;
 
+    const palette = data.colorful
+      ? ['#ff4d6d', '#ff9f1c', '#ffe66d', '#7bf1a8', '#4cc9f0', '#c77dff', '#ffffff']
+      : ['#ffffff', '#cdeaff', '#ffe9c2'];
     const count = data.count || 2;
     for (let i = 0; i < count; i++) {
-      const startX = randomRange(this.width * 0.1, this.width * 0.8, this.prng);
-      const startY = randomRange(-20, this.height * 0.2, this.prng);
-      const speed = randomRange(500, 800, this.prng);
-      const angle = randomRange(0.35, 0.65, this.prng); // mostly downward-right
+      const startX = randomRange(this.width * 0.05, this.width * 0.9, this.prng);
+      const startY = randomRange(-30, this.height * 0.25, this.prng);
+      const speed = randomRange(480, 920, this.prng);
+      const angle = randomRange(0.3, 0.75, this.prng);
 
       this.spawnParticle('meteor', startX, startY, Math.cos(angle) * speed, Math.sin(angle) * speed, {
-        size: randomRange(2.8, 4.5, this.prng),
+        size: randomRange(3.2, 7.0, this.prng),
         opacity: randomRange(0.85, 1.0, this.prng),
-        color: randomChoice(['#ffffff', '#cdeaff', '#ffe9c2'], this.prng)
+        color: randomChoice(palette, this.prng)
       });
     }
   }
@@ -397,11 +406,29 @@ export class EmitterPrimitive extends CanvasPrimitive {
         expired = p.vx > 0 ? p.x >= this.width + 100 : p.x <= -100;
       }
 
+      else if (p.type === 'ufo') {
+        p.wobble += dt * p.wobbleSpeed;
+        p.x += p.vx * dt;
+        p.y += p.vy * dt + Math.sin(p.wobble) * 8 * dt;
+        expired = p.vx > 0 ? p.x >= this.width + 120 : p.x <= -120;
+      }
+
+      else if (p.type === 'monster') {
+        p.wobble += dt * p.wobbleSpeed;
+        p.x += p.vx * dt;
+        const hills = services.layers && (services.layers['rolling-hills'] || services.layers['mid-mountains']);
+        if (hills) p.y = hills.getHeightAt(p.x);
+        expired = p.x < -80 || p.x > this.width + 80;
+      }
+
       if (expired) {
         this.deactivateParticle(i);
         i--; // Step back to re-evaluate this index containing swapped particle
       }
     }
+
+    // Music-only apocalypse phenoms (extra clouds, meteor storm, UFOs, monsters)
+    spawnMusicPhenoms(this, dt, services.atmosphere, services.layers);
 
     // 2. Spawn Active Weather/Foliage Particles dynamically
     const typesLen = this.particleTypes.length;
@@ -417,18 +444,23 @@ export class EmitterPrimitive extends CanvasPrimitive {
         for (let i = 0; i < this.activeCount; i++) {
           if (this.particles[i].type === 'rain') currentRainCount++;
         }
-        const countToSpawn = Math.min(10, effectiveMax - currentRainCount);
+        // Burst harder at high intensity so extreme rain fills in fast
+        const burst = Math.min(40, 12 + Math.floor(rainIntensity * 32));
+        const countToSpawn = Math.min(burst, effectiveMax - currentRainCount);
+        const rainColor = (services.atmosphere && services.atmosphere.skyShift > 0.3)
+          ? '#a8f0ff'
+          : rainConfig.color;
 
         for (let i = 0; i < countToSpawn; i++) {
           this.spawnParticle('rain',
             randomRange(-100, this.width + 100, this.prng),
-            randomRange(-40, -10, this.prng),
-            randomRange(-10, 10, this.prng),
-            randomRange(rainConfig.fallSpeed * 0.8, rainConfig.fallSpeed * 1.2, this.prng),
+            randomRange(-60, -5, this.prng),
+            randomRange(-18, 18, this.prng),
+            randomRange(rainConfig.fallSpeed * 0.85, rainConfig.fallSpeed * 1.4, this.prng),
             {
-              thickness: rainConfig.thickness,
-              opacity: randomRange(rainConfig.opacity * 0.6, rainConfig.opacity * 1.4, this.prng),
-              color: rainConfig.color
+              thickness: rainConfig.thickness * (0.9 + rainIntensity * 0.6),
+              opacity: randomRange(rainConfig.opacity * 0.7, rainConfig.opacity * 1.4, this.prng),
+              color: rainColor
             }
           );
         }
@@ -491,34 +523,27 @@ export class EmitterPrimitive extends CanvasPrimitive {
   }
 
   draw(ctx, services, lightState) {
-    // 1. Draw Stars (and, at night, the aurora that shares its sky)
-    if (lightState.intensity < 0.8) {
-      const nightWeight = services.time.getDayPhases().night;
-      drawStars(ctx, this.particles, this.activeCount, nightWeight);
+    const atm = services.atmosphere;
+    const apocalypse = atm ? (atm.skyShift > 0.05 || atm.meteorStorm > 0.05 || atm.ufoPresence > 0.05) : false;
+    const nightWeight = services.time.getDayPhases().night;
+    // Music apocalypse forces sky phenomena visible even at noon
+    const skyVisible = lightState.intensity < 0.8 || apocalypse;
 
-      if (services.atmosphere) {
-        drawAurora(ctx, this.auroraRibbons, this.width, services.atmosphere.auroraIntensity * nightWeight);
+    if (skyVisible) {
+      drawStars(ctx, this.particles, this.activeCount, Math.max(nightWeight, atm ? atm.skyShift * 0.7 : 0));
+      if (atm) {
+        drawAurora(ctx, this.auroraRibbons, this.width, atm.auroraIntensity * Math.max(nightWeight, atm.skyShift));
       }
     }
 
-    // 1b. Draw Meteors (visible any time it's dark enough to see stars)
-    if (lightState.intensity < 0.8) {
-      drawMeteors(ctx, this.particles, this.activeCount);
-    }
-
-    // 2. Draw Clouds
     drawClouds(ctx, this.particles, this.activeCount, lightState, services.lighting);
-
-    // 3. Draw Birds
+    // After clouds so saucers/streaks aren't buried under the overcast
+    drawMeteors(ctx, this.particles, this.activeCount);
+    drawUfos(ctx, this.particles, this.activeCount);
+    drawMonsters(ctx, this.particles, this.activeCount);
     drawBirds(ctx, this.particles, this.activeCount);
-
-    // 4. Draw Rain
     drawWeather(ctx, this.particles, 'rain', this.activeCount);
-
-    // 5. Draw Snow (and fireflies)
     drawWeather(ctx, this.particles, 'snow', this.activeCount);
-
-    // 6. Draw Falling Leaves
     drawLeaves(ctx, this.particles, this.activeCount, lightState, services.lighting);
   }
 }

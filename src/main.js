@@ -235,6 +235,15 @@ document.addEventListener('DOMContentLoaded', () => {
           buildup: natureDirector.stormBuildup,
           breatheX: renderer.breatheX
         });
+        audioDebugOverlay.renderExtra('apocalypse', {
+          sky: atmosphere.skyShift,
+          clouds: atmosphere.cloudBoost,
+          rain: atmosphere.rainIntensity,
+          meteors: atmosphere.meteorStorm,
+          ufos: atmosphere.ufoPresence,
+          monsters: atmosphere.monsterPresence,
+          age: natureDirector.apocalypse.age
+        });
       }
 
       // Tick layout layers

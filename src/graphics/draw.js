@@ -404,11 +404,12 @@ export function drawMeteors(ctx, particles, activeCount = particles.length) {
     const p = particles[i];
     if (p.type && p.type !== 'meteor') continue;
 
-    const tailX = p.x - p.vx * 0.09;
-    const tailY = p.y - p.vy * 0.09;
+    const tailX = p.x - p.vx * 0.14;
+    const tailY = p.y - p.vy * 0.14;
 
     const grad = ctx.createLinearGradient(p.x, p.y, tailX, tailY);
     grad.addColorStop(0, p.color);
+    grad.addColorStop(0.35, p.color);
     grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
 
     ctx.strokeStyle = grad;
@@ -422,7 +423,7 @@ export function drawMeteors(ctx, particles, activeCount = particles.length) {
 
     ctx.fillStyle = '#ffffff';
     ctx.beginPath();
-    ctx.arc(p.x, p.y, p.size * 0.5, 0, Math.PI * 2);
+    ctx.arc(p.x, p.y, p.size * 0.65, 0, Math.PI * 2);
     ctx.fill();
   }
 
@@ -517,5 +518,104 @@ export function drawDeerSilhouette(ctx, x, y, size, facingRight, state, stateTim
   ctx.lineTo(-8 * s + Math.sin(leg1Offset) * 8 * s, 0);
 
   ctx.stroke();
+  ctx.restore();
+}
+
+// 13. Draw UFO saucers (music-only apocalypse)
+export function drawUfos(ctx, particles, activeCount = particles.length) {
+  ctx.save();
+  for (let i = 0; i < activeCount; i++) {
+    const p = particles[i];
+    if (p.type !== 'ufo') continue;
+
+    const bob = Math.sin(p.wobble) * 4;
+    ctx.globalAlpha = p.opacity;
+    ctx.translate(p.x, p.y + bob);
+
+    // Beam
+    const beam = ctx.createLinearGradient(0, 0, 0, p.size * 2.2);
+    beam.addColorStop(0, 'rgba(180,255,220,0.35)');
+    beam.addColorStop(1, 'rgba(180,255,220,0)');
+    ctx.fillStyle = beam;
+    ctx.beginPath();
+    ctx.moveTo(-p.size * 0.25, 0);
+    ctx.lineTo(p.size * 0.25, 0);
+    ctx.lineTo(p.size * 0.7, p.size * 2.2);
+    ctx.lineTo(-p.size * 0.7, p.size * 2.2);
+    ctx.closePath();
+    ctx.fill();
+
+    // Hull
+    ctx.fillStyle = p.color;
+    ctx.beginPath();
+    ctx.ellipse(0, 0, p.size * 0.55, p.size * 0.16, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.fillStyle = '#e8fff8';
+    ctx.beginPath();
+    ctx.ellipse(0, -p.size * 0.08, p.size * 0.22, p.size * 0.14, 0, Math.PI, Math.PI * 2);
+    ctx.fill();
+
+    // Lights
+    ctx.fillStyle = '#ff4d6d';
+    for (let L = -2; L <= 2; L++) {
+      ctx.beginPath();
+      ctx.arc(L * p.size * 0.16, p.size * 0.04, 2.2, 0, Math.PI * 2);
+      ctx.fill();
+    }
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
+  ctx.restore();
+}
+
+// 14. Draw lumbering monster silhouettes (music-only apocalypse)
+export function drawMonsters(ctx, particles, activeCount = particles.length) {
+  ctx.save();
+  for (let i = 0; i < activeCount; i++) {
+    const p = particles[i];
+    if (p.type !== 'monster') continue;
+
+    const s = p.size / 40;
+    const stomp = Math.sin(p.wobble) * 3 * s;
+    ctx.globalAlpha = p.opacity;
+    ctx.translate(p.x, p.y);
+    ctx.scale(p.facing >= 0 ? 1 : -1, 1);
+    ctx.fillStyle = p.color;
+
+    // Body
+    ctx.beginPath();
+    ctx.ellipse(0, -22 * s + stomp, 16 * s, 14 * s, 0, 0, Math.PI * 2);
+    ctx.fill();
+
+    // Head / horns
+    ctx.beginPath();
+    ctx.ellipse(14 * s, -34 * s + stomp, 9 * s, 7 * s, -0.2, 0, Math.PI * 2);
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(10 * s, -40 * s + stomp);
+    ctx.lineTo(6 * s, -54 * s + stomp);
+    ctx.lineTo(14 * s, -42 * s + stomp);
+    ctx.closePath();
+    ctx.fill();
+    ctx.beginPath();
+    ctx.moveTo(18 * s, -40 * s + stomp);
+    ctx.lineTo(22 * s, -56 * s + stomp);
+    ctx.lineTo(20 * s, -40 * s + stomp);
+    ctx.closePath();
+    ctx.fill();
+
+    // Legs
+    ctx.fillRect(-12 * s, -10 * s + stomp, 6 * s, 12 * s);
+    ctx.fillRect(4 * s, -10 * s - stomp, 6 * s, 12 * s);
+
+    // Eye glow
+    ctx.fillStyle = '#ff4d6d';
+    ctx.beginPath();
+    ctx.arc(18 * s, -34 * s + stomp, 2.5 * s, 0, Math.PI * 2);
+    ctx.fill();
+
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+  }
   ctx.restore();
 }
