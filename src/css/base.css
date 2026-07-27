@@ -53,8 +53,3 @@ ul {
   );
 }
 
-/* Page content flows over the canvas */
-#page {
-  position: relative;
-  z-index: 2;
-}

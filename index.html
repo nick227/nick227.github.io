@@ -36,66 +36,41 @@
   <!-- Fixed readability scrim, independent of time-of-day/weather brightness -->
   <div id="scrim" aria-hidden="true"></div>
 
-  <!-- Single-Viewport Developer Feature Page -->
   <main id="page">
-
     <section class="hero" id="hero">
-      <div class="hero-top">
-        <p class="eyebrow">Senior Software Engineer &amp; AI Architect</p>
-      </div>
-
       <h1 class="hero-name">NICK<br>RIOS.</h1>
-      
-      <div class="audio-player">
-        <button type="button" id="audio-toggle" class="audio-toggle" aria-pressed="false" aria-label="Play music">
-          <svg class="icon icon-play" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M8 5v14l11-7z"/></svg>
-          <svg class="icon icon-pause" viewBox="0 0 24 24" aria-hidden="true"><path fill="currentColor" d="M6 5h4v14H6zM14 5h4v14h-4z"/></svg>
-        </button>
-        <canvas id="audio-visualizer" aria-hidden="true"></canvas>
-      </div>
-    </section>
-
-    <section class="services" id="services">
-      <h2 class="section-heading">What I do</h2>
-      <div class="services-grid">
-        <div class="service-item">
-          <h3>Performance Applications</h3>
-          <p>Experienced on multiple platforms</p>
-        </div>
-        <div class="service-item">
-          <h3>AI Automation</h3>
-          <p>Enhance your tools, skip busywork</p>
-        </div>
-        <div class="service-item">
-          <h3>Code Quality</h3>
-          <p>Faster, safer, leaner code</p>
-        </div>
-        <div class="service-item">
-          <h3>App Integrations</h3>
-          <p>APIs, Fintech, n8n &amp; more</p>
-        </div>
-        <div class="service-item">
-          <h3>Creative Solutions</h3>
-          <p>Planning saves time and money</p>
-        </div>
-        <div class="service-item">
-          <h3>Data Systems</h3>
-          <p>Advanced data architectures</p>
-        </div>
-      </div>
-    </section>
-
-    <section class="contact" id="contact">
-      <h2 class="section-heading">Contact</h2>
-      <p class="contact-lead">
-        Email <a href="mailto:nicholas.jay.rios@gmail.com">nicholas.jay.rios@gmail.com</a>
+      <h2 class="hero-title">Principal Engineer / Solution Architect</h2>
+      <p class="hero-bio">
+        I design and build complex software systems, from enterprise platforms
+        and data pipelines to AI agents and natural-language interfaces. My work
+        spans architecture, hands-on implementation, and leading teams through
+        difficult technical problems.
       </p>
 
-      <p class="site-footer">&copy; 2026 Nick Rios</p>
+      <nav class="hero-links" aria-label="Contact and résumé">
+        <a href="mailto:nicholas.jay.rios@gmail.com">Email me <span aria-hidden="true">↗</span></a>
+        <a href="/nick-rios.pdf" download>Download résumé <span aria-hidden="true">↓</span></a>
+      </nav>
+
+      <div class="company-strip" aria-label="Companies Nick has worked with">
+        <p>Worked with</p>
+        <div class="company-logos">
+          <div class="company-logo-row">
+            <span class="company-logo company-nexstar">NEXSTAR</span>
+            <span class="company-logo company-multiview">MULTI<em>VIEW</em></span>
+            <span class="company-logo company-cisco">CISCO</span>
+            <span class="company-logo company-harbor">DIGITAL<strong>HARBOR</strong></span>
+          </div>
+          <div class="company-logo-row">
+            <span class="company-logo company-impre">impre<span>media</span></span>
+            <span class="company-logo company-armory">ARMORY <em>AGENCY</em></span>
+            <span class="company-logo company-drako">DRAKO<strong>MOTORS</strong></span>
+            <span class="company-logo company-att">AT&amp;T</span>
+          </div>
+        </div>
+      </div>
     </section>
-
   </main>
-
 
   <script type="module" src="/src/main.js"></script>
 </body>
