@@ -1,21 +1,37 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
   <meta charset="UTF-8">
   <meta http-equiv="X-UA-Compatible" content="IE=edge">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="color-scheme" content="dark">
   <title>Nick Rios | Senior Software Engineer &amp; AI Architect</title>
-  <meta name="description" content="Portfolio of Nick Rios, Senior Software Engineer &amp; AI solutions provider. Enterprise architectures, LLM automations, Web/Mobile developer.">
-  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2302040a'/%3E%3Ctext x='50' y='68' font-family='Arial,sans-serif' font-size='54' font-weight='900' fill='%23daff00' text-anchor='middle'%3ENR%3C/text%3E%3C/svg%3E">
+  <meta name="description"
+    content="Portfolio of Nick Rios, Senior Software Engineer &amp; AI solutions provider. Enterprise architectures, LLM automations, Web/Mobile developer.">
+  <link rel="icon"
+    href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'%3E%3Crect width='100' height='100' rx='18' fill='%2302040a'/%3E%3Ctext x='50' y='68' font-family='Arial,sans-serif' font-size='54' font-weight='900' fill='%23daff00' text-anchor='middle'%3ENR%3C/text%3E%3C/svg%3E">
 
   <!-- Critical First Paint Minimum CSS -->
   <style>
-    * { box-sizing: border-box; margin: 0; padding: 0; }
-    html, body { width: 100%; background-color: #02040a; }
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+    }
+
+    html,
+    body {
+      width: 100%;
+      background-color: #02040a;
+    }
+
     #nature-canvas {
       position: fixed;
-      top: 0; left: 0; width: 100%; height: 100%;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
       z-index: 0;
       display: block;
       background-color: #02040a;
@@ -29,6 +45,7 @@
   <!-- Root Stylesheet Imports CSS Modules -->
   <link rel="stylesheet" href="index.css">
 </head>
+
 <body>
   <!-- High-Performance Generative Nature Canvas Background -->
   <canvas id="nature-canvas"></canvas>
@@ -36,42 +53,91 @@
   <!-- Fixed readability scrim, independent of time-of-day/weather brightness -->
   <div id="scrim" aria-hidden="true"></div>
 
-  <main id="page">
-    <section class="hero" id="hero">
-      <h1 class="hero-name">NICK<br>RIOS.</h1>
-      <h2 class="hero-title">Principal Engineer / Solution Architect</h2>
-      <p class="hero-bio">
-        I design and build complex software systems, from enterprise platforms
-        and data pipelines to AI agents and natural-language interfaces. My work
-        spans architecture, hands-on implementation, and leading teams through
-        difficult technical problems.
-      </p>
+  <div class="site-shell" id="site-shell">
+    <main class="page">
+      <section class="hero">
+        <h1 class="hero-name">NICK<br>RIOS.</h1>
+        <h2 class="hero-title">Principal Engineer / Solution Architect</h2>
+        <p class="hero-bio">
+          I design and build complex software systems, from enterprise platforms
+          and data pipelines to AI agents and natural-language interfaces. My work
+          spans architecture, hands-on implementation, and leading teams through
+          difficult technical problems.
+        </p>
 
-      <nav class="hero-links" aria-label="Contact and résumé">
-        <a href="mailto:nicholas.jay.rios@gmail.com">Email me <span aria-hidden="true">↗</span></a>
-        <a href="/nick-rios.pdf" download>Download résumé <span aria-hidden="true">↓</span></a>
-      </nav>
+        <nav class="hero-links" aria-label="Contact and résumé">
+          <a href="mailto:nicholas.jay.rios@gmail.com">Email me <span aria-hidden="true">↗</span></a>
+          <a href="/nick-rios.pdf" download>Download résumé <span aria-hidden="true">↓</span></a>
+        </nav>
 
-      <div class="company-strip" aria-label="Companies Nick has worked with">
-        <p>Worked with</p>
-        <div class="company-logos">
-          <div class="company-logo-row">
-            <span class="company-logo company-nexstar">NEXSTAR</span>
-            <span class="company-logo company-multiview">MULTI<em>VIEW</em></span>
-            <span class="company-logo company-cisco">CISCO</span>
-            <span class="company-logo company-harbor">DIGITAL<strong>HARBOR</strong></span>
-          </div>
-          <div class="company-logo-row">
-            <span class="company-logo company-impre">impre<span>media</span></span>
-            <span class="company-logo company-armory">ARMORY <em>AGENCY</em></span>
-            <span class="company-logo company-drako">DRAKO<strong>MOTORS</strong></span>
-            <span class="company-logo company-att">AT&amp;T</span>
+        <div class="company-strip" aria-label="Companies Nick has worked with">
+          <p>Worked with</p>
+          <div class="company-logos">
+            <div class="company-logo-row">
+              <span class="company-logo company-nexstar">NEXSTAR</span>
+              <span class="company-logo company-multiview">MULTI<em>VIEW</em></span>
+              <span class="company-logo company-cisco">CISCO</span>
+              <span class="company-logo company-harbor">DIGITAL<strong>HARBOR</strong></span>
+            </div>
+            <div class="company-logo-row">
+              <span class="company-logo company-impre">impre<span>media</span></span>
+              <span class="company-logo company-armory">ARMORY <em>AGENCY</em></span>
+              <span class="company-logo company-drako">DRAKO<strong>MOTORS</strong></span>
+              <span class="company-logo company-att">AT&amp;T</span>
+            </div>
           </div>
         </div>
+      </section>
+    </main>
+
+    <section class="page">
+      <h2 class="articles-heading">My Blog</h2>
+      <ol class="blog-list"></ol>
+      <ol class="blog-list-more hidden"></ol>
+      <div class="contact-bar">
+        <a href="mailto:nicholas.jay.rios@gmail.com">Let's talk</a>
       </div>
     </section>
-  </main>
+  </div>
+
+  <dialog class="article-reader" id="article-reader" aria-labelledby="reader-title">
+    <div class="reader-surface">
+      <nav class="reader-nav" aria-label="Article reader">
+        <span class="reader-brand" aria-label="Nick Rios">NR<span>.</span></span>
+        <button class="reader-close" type="button" data-reader-close>
+          <span aria-hidden="true">←</span>
+          Back to writing
+        </button>
+      </nav>
+
+      <article class="reader-article">
+        <header class="reader-header">
+          <p class="reader-eyebrow">Nick Rios / Writing</p>
+          <h1 class="reader-title" id="reader-title"></h1>
+          <p class="reader-description hidden"></p>
+          <p class="reader-meta"></p>
+        </header>
+
+        <div class="reader-body"></div>
+
+        <a class="next-article-link" data-reader-next href="#">
+          <span class="next-article-eyebrow">Next Article</span>
+          <span class="next-article-title"></span>
+        </a>
+        <footer class="reader-footer">
+          <span>Nick Rios<span class="reader-accent">.</span></span>
+          <button class="reader-footer-close" type="button" data-reader-close>
+            Back to all articles
+          </button>
+        </footer>
+      </article>
+    </div>
+  </dialog>
+
+
+  <div id="share-toast" class="share-toast" role="status" aria-live="polite" aria-atomic="true">Link copied!</div>
 
   <script type="module" src="/src/main.js"></script>
 </body>
+
 </html>

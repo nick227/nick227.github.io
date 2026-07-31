@@ -1,0 +1,163 @@
+<p>
+  Bulk image generation is an orchestration problem. The image model is only
+  one component; the system around it must control variation, respect API
+  limits, isolate failures, record activity, organize output, and keep large
+  batches reviewable.
+</p>
+
+<p>
+  I began building that system in 2022 to create art for dropshipping products.
+  Repeating the manual cycle of writing a prompt, submitting it, downloading the
+  result, and naming the file was not viable at scale. My first replacement was
+  a Node.js command-line application that generated batches overnight and
+  organized them into folders by type.
+</p>
+
+<p>
+  Several versions later, the system has generated tens of thousands of images
+  for apparel, storyboards, icons, clip art, concept work, and YouTube
+  thumbnails. That volume exposed the parts of image generation that a
+  single-prompt interface does not address.
+</p>
+
+<h2>Useful variation requires structure</h2>
+
+<p>
+  Increasing the number of API calls was easy. Producing images that were
+  meaningfully different without losing the original subject or style was the
+  harder problem.
+</p>
+
+<p>
+  I built a prompt renderer around typed collections of terms. Templates
+  contain tokens such as <code>{colors}</code>, <code>{fashion_style}</code>,
+  and <code>{camera_angle}</code>. Each token can only select a value from its
+  corresponding collection, so individual details vary while the prompt
+  retains a defined structure.
+</p>
+
+<pre><code>{subject} + {fashion_style} + {colors} + {camera_angle}
+     ↓              ↓             ↓             ↓
+ selected subject   streetwear    pastel blue   low angle</code></pre>
+
+<p>
+  Every manual run identified another ten or twenty terms worth retaining. The
+  database eventually grew beyond one thousand entries, ranging from basic,
+  pastel, and hair colors to camera angles, fashion styles, strange dreams, and
+  mythological monsters.
+</p>
+
+<p>
+  I previously referred to one version as a spider, but it was more accurately
+  a controlled combination engine. It selected terms from defined collections,
+  assembled prompts, and submitted the resulting combinations for processing.
+  The variation came from the interaction between typed values rather than
+  unrestricted randomness.
+</p>
+
+<p>
+  A later version added an LLM enhancement pass. The enhancer preserves the
+  generated concept, keeps the subject in focus, and expands short fragments
+  into the level of visual detail expected by the image model. Prompt assembly
+  and prompt enhancement remain separate so that either stage can change
+  without affecting the other.
+</p>
+
+<h2>Bulk processing required a fail-fast queue</h2>
+
+<p>
+  An unattended batch cannot treat every request as an isolated button click.
+  Sending jobs directly to a provider made it too easy for failures, limits, or
+  malformed work to disrupt the rest of the run. It also made the behavior of a
+  long batch difficult to reconstruct afterward.
+</p>
+
+<p>
+  I placed generation work behind a fail-fast queue with logging. Each job
+  either completed or failed without holding the rest of the batch open. A
+  failure was recorded, the job exited, and processing continued. This kept one
+  bad request from blocking the queue and prevented failing work from repeatedly
+  pressuring the API endpoint.
+</p>
+
+<p>
+  Logging was essential because most large runs were unattended. The logs made
+  it possible to separate provider failures from prompt or application
+  failures, inspect what happened after the run, and change the next batch
+  without relying on memory.
+</p>
+
+<p>
+  The processing path became:
+</p>
+
+<pre><code>typed term collections
+        ↓
+dynamic prompt renderer
+        ↓
+LLM prompt enhancement
+        ↓
+fail-fast queue + logging
+        ↓
+provider adapter
+        ↓
+organized output</code></pre>
+
+<p>
+  Folder organization served the same operational purpose. Results were grouped
+  for comparison rather than placed in one directory. Most outputs could be
+  rejected quickly, while the useful variations remained easy to identify and
+  refine.
+</p>
+
+<h2>OpenAI was the initial learning ground</h2>
+
+<p>
+  OpenAI was where I first learned the practical constraints of both image
+  generation and LLM-based prompt processing. It provided the initial
+  environment for testing prompt structure, asynchronous batch behavior,
+  failure handling, and the cost of repeated generation.
+</p>
+
+<p>
+  Usage limits became part of the architecture. To increase the limits on my
+  account, I had to increase my OpenAI spending. That experience made request
+  volume and failure control concrete concerns rather than later optimization
+  work. A bulk tool must account for rate limits and cost before it starts a
+  large run, not after the invoice or errors arrive.
+</p>
+
+<p>
+  I later compared Gemini, Grok, Dezgo and FLUX, along with diffusion models on
+  my local RTX 3060. I currently prefer Gemini when output quality is the main
+  requirement. Local diffusion is sufficient for development and repeated
+  pipeline tests without a per-image API charge. Dezgo and FLUX remain useful
+  for lower-cost bulk work, including YouTube thumbnails.
+</p>
+
+<p>
+  These comparisons did not produce a permanent provider ranking. They produced
+  a provider-adapter boundary. Development, broad exploration, and final
+  rendering have different cost and quality requirements, so they do not need
+  to use the same model.
+</p>
+
+<h2>AutoImage is the current iteration</h2>
+
+<p>
+  The latest public version is
+  <a href="https://autoimage.up.railway.app/" target="_blank" rel="noopener">AutoImage</a>.
+  It supports unattended generation and exposes the prompt controls used to
+  create structured variation. I still use the dynamic prompt builder because
+  generating ten controlled options provides a better comparison set than
+  repeatedly revising one unstructured prompt.
+</p>
+
+<p>
+  The image providers remain replaceable. The parts that continue to carry
+  forward are the typed language database, prompt pipeline, queue, logging,
+  adapter boundary, and review process. The same design can support other
+  prompt-driven systems: define which fields may vary, constrain their values,
+  fail individual jobs cleanly, and preserve enough information to evaluate the
+  run afterward.
+</p>

@@ -20,5 +20,5 @@
   /* Layout Rhythm */
   --space-page-y: clamp(20px, 4vh, 56px);
   --space-inline: clamp(24px, 6vw, 72px);
-  --width-content: 1100px;
+  --width-content: 740px;
 }

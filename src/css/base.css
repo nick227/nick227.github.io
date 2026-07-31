@@ -23,6 +23,10 @@ ul {
   list-style: square;
 }
 
+.hidden {
+  display: none;
+}
+
 /* Background Canvas fixed behind scrolling page content */
 #nature-canvas {
   position: fixed;

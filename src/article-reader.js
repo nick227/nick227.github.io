@@ -3,15 +3,14 @@ const SITE_TRANSITION_FALLBACK = 360;
 const READER_TRANSITION_FALLBACK = 400;
 const SHARE_TOAST_DURATION = 2200;
 
-let initialized = false;
+let mounted = false;
 let state = 'closed';
+let activeSlug = null;
 let activeTrigger = null;
+let articles = [];
 let articleLookup = new Map();
-
-// Whether UI close should history.back() instead of replaceState.
-// true  → article sits on its own history entry (click push, Back/Forward, or hashchange)
-// false → article was the initial URL hash; replaceState cleans it without adding an entry
 let closeViaBack = false;
+let suppressRouteHandling = false;
 
 let dialog;
 let siteShell;
@@ -20,51 +19,29 @@ let readerTitle;
 let readerDescription;
 let readerMeta;
 let readerBody;
+let nextLink;
+let nextTitle;
 let closeButtons;
 let shareToast;
 let shareToastTimer = null;
 
-// ─── Lookup ───────────────────────────────────────────────────────────────────
-
-function setArticleLookup(list) {
-  articleLookup = new Map(list.map((a) => [a.slug, a]));
-}
-
-// ─── Routing helpers ──────────────────────────────────────────────────────────
-
-function slugFromHash(hash) {
-  const match = hash.match(/^#article\/(.+)$/);
-  if (!match) return null;
-  try {
-    return decodeURIComponent(match[1]);
-  } catch {
-    return null;
-  }
-}
+// ─── Mount ────────────────────────────────────────────────────────────────────
 
 /**
- * Called once on page load. Opens the article if the initial URL contains a
- * valid slug. If the slug is invalid the bad hash is silently replaced so the
- * URL is clean without affecting session history.
+ * Single entry point: owns lookup, routing, history, share, render, and nav.
+ * @param {Array<{ slug: string, title: string, document?: string }>} articleList
+ *   Ordered list (articleMetadata order) — canonical for next/previous.
  */
-function checkInitialRoute() {
-  const slug = slugFromHash(location.hash);
-  if (!slug) return;
-
-  const article = articleLookup.get(slug);
-  if (article) {
-    // Hash was part of the initial load — no push, and close via replaceState.
-    open(article, null, { fromNavigation: true, replaceOnClose: true });
-  } else {
-    // Unknown slug — clean the URL without creating a history entry.
-    history.replaceState(null, '', location.pathname + location.search);
-  }
+function mount(articleList) {
+  articles = articleList;
+  articleLookup = new Map(articleList.map((a) => [a.slug, a]));
+  if (!bindDom()) return false;
+  checkInitialRoute();
+  return true;
 }
 
-// ─── Init ─────────────────────────────────────────────────────────────────────
-
-function init() {
-  if (initialized) return true;
+function bindDom() {
+  if (mounted) return true;
 
   dialog = document.getElementById('article-reader');
   siteShell = document.getElementById('site-shell');
@@ -76,18 +53,17 @@ function init() {
   readerDescription = dialog.querySelector('.reader-description');
   readerMeta = dialog.querySelector('.reader-meta');
   readerBody = dialog.querySelector('.reader-body');
+  nextLink = dialog.querySelector('[data-reader-next]');
+  nextTitle = dialog.querySelector('.next-article-title');
   closeButtons = dialog.querySelectorAll('[data-reader-close]');
   const transitionTargets = siteShell.querySelectorAll('.page > :not(.hidden)');
   siteTransitionTarget = transitionTargets[transitionTargets.length - 1];
 
-  if (!readerSurface || !readerTitle || !readerBody || !siteTransitionTarget) {
+  if (!readerSurface || !readerTitle || !readerBody || !siteTransitionTarget || !nextLink || !nextTitle) {
     return false;
   }
 
-  // Close buttons and backdrop use closeFromUI(), which handles history.
-  closeButtons.forEach((button) => {
-    button.addEventListener('click', closeFromUI);
-  });
+  closeButtons.forEach((button) => button.addEventListener('click', closeFromUI));
 
   dialog.addEventListener('cancel', (event) => {
     event.preventDefault();
@@ -98,69 +74,135 @@ function init() {
     if (event.target === dialog) closeFromUI();
   });
 
-  // Both fire for Back/Forward that change the hash; handleRouteChange is
-  // idempotent so a double call is a no-op once state already matches the URL.
+  nextLink.addEventListener('click', (event) => {
+    // Ctrl/Cmd/Shift/middle-click keep native new-tab / modified behavior.
+    if (isModifiedClick(event)) return;
+    event.preventDefault();
+    next();
+  });
+
+  // Idempotent: both may fire for the same Back/Forward hash change.
   window.addEventListener('popstate', handleRouteChange);
-  // hashchange alone covers typed hashes / location.hash without pushState.
   window.addEventListener('hashchange', handleRouteChange);
 
-  initialized = true;
+  mounted = true;
   return true;
 }
 
-/**
- * Shared logic for popstate and hashchange: open, switch, or close the reader
- * to match the current URL. Safe to call twice for the same navigation.
- */
-function handleRouteChange() {
+function checkInitialRoute() {
   const slug = slugFromHash(location.hash);
+  if (!slug) return;
 
-  if (slug) {
-    const article = articleLookup.get(slug);
-    // Unknown slug: leave the URL as-is (user typed it) but don't open.
-    if (!article) return;
+  if (articleLookup.has(slug)) {
+    navigate(slug, { fromNavigation: true, replaceOnClose: true });
+  } else {
+    history.replaceState(null, '', location.pathname + location.search);
+  }
+}
 
-    if (state === 'closed') {
-      open(article, null, { fromNavigation: true });
-    } else if (state === 'open') {
-      // Already open — sync content for article→article hash changes.
-      renderArticle(article);
-      dialog.scrollTop = 0;
+// ─── Slug helpers ─────────────────────────────────────────────────────────────
+
+function slugFromHash(hash) {
+  const match = hash.match(/^#article\/(.+)$/);
+  if (!match) return null;
+  try {
+    return decodeURIComponent(match[1]);
+  } catch {
+    return null;
+  }
+}
+
+function articleHash(slug) {
+  return `#article/${encodeURIComponent(slug)}`;
+}
+
+function nextSlug() {
+  if (!articles.length || !activeSlug) return null;
+  const i = articles.findIndex((a) => a.slug === activeSlug);
+  if (i < 0) return null;
+  return articles[(i + 1) % articles.length].slug;
+}
+
+function previousSlug() {
+  if (!articles.length || !activeSlug) return null;
+  const i = articles.findIndex((a) => a.slug === activeSlug);
+  if (i < 0) return null;
+  return articles[(i - 1 + articles.length) % articles.length].slug;
+}
+
+// ─── Navigate (single path for cards, Next, browser) ──────────────────────────
+
+/**
+ * @param {string} slug
+ * @param {{ trigger?: Element|null, fromNavigation?: boolean, replaceOnClose?: boolean }} options
+ */
+function navigate(slug, {
+  trigger = null,
+  fromNavigation = false,
+  replaceOnClose = false,
+} = {}) {
+  if (!mounted && !bindDom()) return false;
+
+  const article = articleLookup.get(slug);
+  if (!article) return false;
+
+  if (state === 'closed') {
+    return openReader(article, trigger, { fromNavigation, replaceOnClose });
+  }
+
+  if (state === 'open') {
+    if (activeSlug === slug) return true;
+
+    if (!fromNavigation) {
+      history.pushState({ article: slug }, '', articleHash(slug));
+      closeViaBack = true;
     }
+
+    activeSlug = slug;
+    activeTrigger = trigger ?? activeTrigger;
+    renderArticle(article);
+    dialog.scrollTop = 0;
+    return true;
+  }
+
+  return false;
+}
+
+function next() {
+  const slug = nextSlug();
+  return slug ? navigate(slug) : false;
+}
+
+function previous() {
+  const slug = previousSlug();
+  return slug ? navigate(slug) : false;
+}
+
+function handleRouteChange() {
+  if (suppressRouteHandling) return;
+
+  const slug = slugFromHash(location.hash);
+  if (slug) {
+    navigate(slug, { fromNavigation: true });
   } else if (state === 'open') {
     closeUI();
   }
 }
 
-// ─── Open ─────────────────────────────────────────────────────────────────────
+// ─── Open / close ─────────────────────────────────────────────────────────────
 
-/**
- * @param {object} article
- * @param {Element|null} trigger  – the element that triggered the open (for focus-return)
- * @param {{ fromNavigation?: boolean, replaceOnClose?: boolean }} options
- *   fromNavigation: true when opened by the browser (popstate/hashchange/initial load).
- *     The caller has already changed the URL, so we must NOT push again.
- *   replaceOnClose: true only for initial-hash load — close cleans URL via replaceState.
- *     Omit for Back/Forward/hashchange so close uses history.back() and preserves the stack.
- */
-async function open(article, trigger = document.activeElement, {
-  fromNavigation = false,
-  replaceOnClose = false,
-} = {}) {
-  if (!init() || state !== 'closed' || !article) return false;
+async function openReader(article, trigger, { fromNavigation, replaceOnClose }) {
+  if (state !== 'closed') return false;
 
   state = 'activating';
-  activeTrigger = trigger;
-  activeTrigger?.classList.add('article-link-activating');
+  activeSlug = article.slug;
+  activeTrigger = trigger ?? document.activeElement;
+  activeTrigger?.classList?.add('article-link-activating');
 
-  // Push the route exactly once — only when triggered by user interaction,
-  // not when the browser has already navigated (popstate/hashchange/initial load).
   if (!fromNavigation) {
-    history.pushState({ article: article.slug }, '', `#article/${encodeURIComponent(article.slug)}`);
+    history.pushState({ article: article.slug }, '', articleHash(article.slug));
     closeViaBack = true;
   } else {
-    // Forward onto a prior article entry must still close via back(), or replaceState
-    // would overwrite that entry and leave a duplicate base page in the stack.
     closeViaBack = !replaceOnClose;
   }
 
@@ -179,7 +221,6 @@ async function open(article, trigger = document.activeElement, {
   siteShell.inert = true;
   state = 'reader-entering';
   dialog.classList.add('reader-visible');
-
   await waitForTransition(dialog, READER_TRANSITION_FALLBACK);
 
   state = 'open';
@@ -187,38 +228,35 @@ async function open(article, trigger = document.activeElement, {
   return true;
 }
 
-// ─── Close ────────────────────────────────────────────────────────────────────
-
-/**
- * Called by UI controls (buttons, backdrop, ESC).
- * Fixes history before closing the UI.
- */
 async function closeFromUI() {
-  if (!initialized || state !== 'open') return false;
+  if (!mounted || state !== 'open') return false;
+
+  const listUrl = location.pathname + location.search;
 
   if (closeViaBack) {
-    // Undo the article entry (our push, or one reached via Forward/hashchange).
-    // history.back() fires popstate asynchronously; by then state will be
-    // 'reader-exiting' or 'closed', so handleRouteChange() is a no-op.
+    // Undo the current article entry. If Next stacked articles, one back() may
+    // land on another article hash — clear that so the UI exit matches the URL.
     closeViaBack = false;
+    suppressRouteHandling = true;
     history.back();
+    setTimeout(() => {
+      if (slugFromHash(location.hash)) {
+        history.replaceState(null, '', listUrl);
+      }
+      suppressRouteHandling = false;
+    }, 0);
   } else {
-    // Initial-hash open — replace the hash so no extra entry is added and
-    // pressing Back leaves the site entirely.
-    history.replaceState(null, '', location.pathname + location.search);
+    history.replaceState(null, '', listUrl);
   }
 
   return closeUI();
 }
 
-/**
- * Pure UI close — no history manipulation. Called by closeFromUI() and by
- * handleRouteChange() when the browser has already moved in history.
- */
 async function closeUI() {
-  if (!initialized || state !== 'open') return false;
+  if (!mounted || state !== 'open') return false;
 
   closeViaBack = false;
+  activeSlug = null;
   state = 'reader-exiting';
   dialog.classList.remove('reader-visible');
 
@@ -227,7 +265,7 @@ async function closeUI() {
   dialog.close();
   document.body.classList.remove('reader-active');
   state = 'site-entering';
-  activeTrigger?.classList.remove('article-link-activating');
+  activeTrigger?.classList?.remove('article-link-activating');
   siteShell.classList.remove('site-shell-exiting');
 
   await waitForTransition(siteTransitionTarget, SITE_TRANSITION_FALLBACK);
@@ -242,39 +280,30 @@ async function closeUI() {
   return true;
 }
 
-// Keep the public `close` alias pointing to the UI-only close for any external
-// callers; history is managed internally.
-const close = closeFromUI;
-
 // ─── Share ────────────────────────────────────────────────────────────────────
 
-async function share(slug, title) {
-  const url = `${location.origin}${location.pathname}#article/${encodeURIComponent(slug)}`;
+async function share(slug) {
+  const article = articleLookup.get(slug);
+  const title = article?.title || '';
+  const url = `${location.origin}${location.pathname}${articleHash(slug)}`;
 
-  // 1. Native share sheet (mobile / supported desktop browsers)
   if (navigator.share) {
     try {
       await navigator.share({ title, url });
-      return; // shared successfully
+      return;
     } catch (err) {
-      // AbortError = user dismissed the share sheet — silent, no fallback.
       if (err.name === 'AbortError') return;
-      // Any other error (e.g. DataError, NotAllowedError): fall through to clipboard.
     }
   }
 
-  // 2. Async Clipboard API (HTTPS or localhost only)
   if (navigator.clipboard?.writeText) {
     try {
       await navigator.clipboard.writeText(url);
       showShareToast('Link copied!');
       return;
-    } catch {
-      // Permission denied or unavailable — fall through.
-    }
+    } catch { /* fall through */ }
   }
 
-  // 3. Legacy execCommand fallback (HTTP, older browsers, some iframes)
   const textArea = document.createElement('textarea');
   textArea.value = url;
   textArea.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
@@ -292,7 +321,6 @@ async function share(slug, title) {
     return;
   }
 
-  // 4. Last resort: browser prompt (always works, never throws)
   prompt('Copy this link:', url);
 }
 
@@ -322,14 +350,22 @@ function renderArticle(article) {
     readerDescription.classList.add('hidden');
   }
 
-  // Blog documents are local, author-controlled HTML.
   readerBody.innerHTML = content ||
     '<p class="reader-status">This essay is currently being prepared.</p>';
+
+  updateNextLink();
+}
+
+function updateNextLink() {
+  const slug = nextSlug();
+  if (!slug) return;
+  const article = articleLookup.get(slug);
+  nextLink.href = articleHash(slug);
+  nextTitle.textContent = article?.title || 'Untitled';
 }
 
 function getArticleMeta(content) {
   if (!content) return 'Nick Rios · Essay in progress';
-
   const wordCount = stripMarkup(content).split(/\s+/).filter(Boolean).length;
   const readingTime = Math.max(1, Math.ceil(wordCount / 220));
   return `Nick Rios · ${readingTime} min read`;
@@ -342,6 +378,10 @@ function stripMarkup(content) {
 }
 
 // ─── Utilities ────────────────────────────────────────────────────────────────
+
+function isModifiedClick(event) {
+  return event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0;
+}
 
 function nextFrame() {
   return new Promise((resolve) => {
@@ -369,7 +409,6 @@ function waitForTransition(element, fallbackDuration) {
       if (event.target === element && event.propertyName === 'opacity') finish();
     };
     const fallbackTimer = setTimeout(finish, fallbackDuration + 80);
-
     element.addEventListener('transitionend', onTransitionEnd);
   });
 }
@@ -379,10 +418,10 @@ function prefersReducedMotion() {
 }
 
 export const ArticleReader = Object.freeze({
-  init,
-  open,
-  close,
+  mount,
+  navigate,
+  next,
+  previous,
+  close: closeFromUI,
   share,
-  setArticleLookup,
-  checkInitialRoute,
 });
