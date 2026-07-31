@@ -1,142 +1,106 @@
 <p>
-  Heroku was my PaaS for years. It taught me how to ship without babysitting
-  servers. Then the economics and the ceiling changed, and I moved on.
+  Heroku was my PaaS provider for years. I have fully switched to Railway. I
+  really like Vercel. This is a high-level feature comparison with my usage
+  baked in.
 </p>
 
 <p>
-  Now I am fully on Railway. I really like Vercel. This is not a dunk piece.
-  It is a high-level feature comparison filtered through what I actually run:
-  APIs, workers, databases, real-time sockets, static frontends, and the
-  occasional GPU job that none of these three should own.
+  The short version: Railway handles anything I throw at it for normal app
+  work. The only gap is GPU, and for that I spin up a service on
+  <a href="https://modal.com" target="_blank" rel="noopener">Modal</a>.
 </p>
 
-<h2>What each one is optimizing for</h2>
+<h2>What each one is for</h2>
 
 <p>
-  <strong>Heroku</strong> optimized for the classic twelve-factor app: git push,
-  dynos, add-ons, predictable mental model. It still works. It feels like the
-  platform that invented the comfortable middle of PaaS.
+  <strong>Heroku</strong> is the classic PaaS shape: git push, dynos, add-ons,
+  web and worker processes. Predictable. Still fine for that model.
 </p>
 
 <p>
-  <strong>Vercel</strong> optimizes for the frontend edge of the modern web:
-  previews on every PR, great Next.js defaults, CDN-shaped delivery, serverless
-  functions as the backend companion. When the product is mostly UI and light
-  API surface, it feels unfairly good.
+  <strong>Vercel</strong> is strongest as a frontend platform: preview
+  deployments, Next.js defaults, CDN delivery, serverless functions beside the
+  UI. If most of the product is the web app and light API surface, it is a
+  great fit.
 </p>
 
 <p>
-  <strong>Railway</strong> optimizes for running the whole application graph:
-  services, databases, workers, env groups, private networking, logs you can
-  live in. It is closer to "bring the architecture you already have" than
-  "reshape the app to fit our function model."
+  <strong>Railway</strong> is built around running a full service graph:
+  APIs, workers, databases, and long-running processes in one project. You
+  bring the architecture instead of reshaping everything into functions.
 </p>
 
-<h2>Feature comparison, high level</h2>
+<h2>Feature comparison</h2>
 
 <ul>
   <li>
     <strong>App shape</strong> — Heroku: web + worker dynos. Vercel: frontend
-    + serverless/edge functions. Railway: arbitrary services that stay up,
-    talk to each other, and look like a real system diagram.
+    + serverless/edge functions. Railway: multiple long-running services that
+    talk to each other.
   </li>
   <li>
-    <strong>Databases</strong> — Heroku: mature add-on marketplace, Postgres
-    as a long-time default. Vercel: storage partners and external DBs more than
-    "the database lives next to the app by default." Railway: first-class
-    databases beside the services, which matches how I actually build.
+    <strong>Databases</strong> — Heroku: add-on marketplace, Postgres as a
+    common default. Vercel: usually an external or partner database. Railway:
+    databases sit beside the services in the same project.
   </li>
   <li>
-    <strong>Long-running process</strong> — Heroku: yes, that was always the
-    point. Vercel: not the sweet spot; timeouts and function economics push you
-    elsewhere for sockets, queues, and chunky workers. Railway: yes, and this
-    is a big reason I switched.
+    <strong>Long-running processes</strong> — Heroku: yes. Vercel: not the
+    focus; sockets, queues, and heavy workers usually live elsewhere. Railway:
+    yes.
   </li>
   <li>
-    <strong>Frontend DX</strong> — Vercel wins. Preview URLs, framework
-    awareness, edge delivery. Railway can host the frontend fine. Vercel still
-    feels purpose-built for that lane.
+    <strong>Frontend DX</strong> — Vercel leads: previews, framework
+    awareness, edge delivery. Railway can host frontends. Vercel is still the
+    specialist here.
   </li>
   <li>
-    <strong>Ops surface</strong> — Heroku: familiar and stable. Vercel: low
-    ops if you stay inside the model. Railway: enough knobs to deploy mixed
-    stacks without leaving the platform.
+    <strong>Mixed stacks</strong> — Heroku covers the classic dyno split.
+    Vercel covers frontend-first architectures. Railway covers monorepos with
+    several services and data stores without leaving the platform.
   </li>
   <li>
-    <strong>GPU</strong> — None of these three is my answer. For GPU work I
-    spin up
-    <a href="https://modal.com" target="_blank" rel="noopener">Modal</a>.
-    That is the one case Railway does not cover for me, and I do not need it to.
+    <strong>GPU</strong> — Not what I use any of these three for. Modal covers
+    that lane.
   </li>
 </ul>
 
-<h2>Heroku: respect, then exit</h2>
+<h2>How I place them</h2>
 
 <p>
-  I am not rewriting history. Heroku made deployment boring in the best way.
-  Dynos, buildpacks, add-ons, a culture of ship-it. For a long time that was
-  enough.
+  Heroku trained a lot of us on PaaS. I am not putting new systems there.
 </p>
 
 <p>
-  What ended the relationship was not one dramatic outage. It was the slow
-  realization that my apps wanted a denser graph of services and data, and I
-  wanted a platform that felt current for that shape without turning into raw
-  AWS theater. Railway took that seat.
-</p>
-
-<h2>Vercel: loved, not exclusive</h2>
-
-<p>
-  I do really like Vercel. For marketing sites, Next apps, preview-driven
-  collaboration, and frontend-heavy products, it is excellent. If the backend
-  is mostly functions and managed third parties, stay there and be happy.
+  Vercel stays in rotation when the job is frontend delivery and preview
+  workflow. I like it. It is not my default for the whole backend.
 </p>
 
 <p>
-  My work keeps including things that want a persistent process: websocket
-  rooms, workers, always-on API servers, databases in the same project. Vercel
-  can participate in that world. It does not want to be the whole world.
+  Railway is the default. APIs, workers, databases, real-time servers, static
+  frontends when I want them in the same place. So far it has taken every
+  non-GPU workload I have given it.
 </p>
 
-<h2>Railway: the default now</h2>
-
-<p>
-  Railway can handle anything I throw at it in the normal application tier.
-  Monorepos, multiple services, Postgres, Redis-shaped needs, cron-ish workers,
-  production URLs without a ceremony tax. I still use the right tool for the
-  frontend edge when Vercel is clearly better. I still send GPU jobs to Modal.
-  Everything else landed on Railway and stayed there.
-</p>
-
-<p>
-  That is the opinion inside the comparison. Heroku was the past default.
-  Vercel is the specialist I respect. Railway is the generalist I actually live
-  on.
-</p>
-
-<h2>Current standings</h2>
+<h2>Standings</h2>
 
 <ul>
   <li>
-    <strong>Railway</strong> — default PaaS for full app graphs; only gap in my
-    world is GPU.
+    <strong>Railway</strong> — default for full applications; GPU is the only
+    gap in my setup.
   </li>
   <li>
-    <strong>Vercel</strong> — best frontend/preview experience; keep it in the
-    rotation for that job.
+    <strong>Vercel</strong> — best frontend and preview experience of the
+    three.
   </li>
   <li>
-    <strong>Heroku</strong> — foundational PaaS education; no longer where I
-    put new systems.
+    <strong>Heroku</strong> — former default; not where I deploy now.
   </li>
   <li>
-    <strong>Modal</strong> — the GPU lane these three are not trying to win for
-    me.
+    <strong>Modal</strong> — GPU jobs.
   </li>
 </ul>
 
 <p>
-  Pick the platform that matches the shape of the work. If the work is a real
-  service graph, I stop debating and open Railway.
+  Use Vercel when the product is mostly the frontend. Use Railway when you need
+  the rest of the system to live next to it. Keep GPU somewhere built for GPU.
 </p>
