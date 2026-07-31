@@ -1,1 +1,137 @@
- 
+<p>
+  Every website is only two pages: an index of items, and the item page.
+</p>
+
+<p>
+  That is an oversimplification, of course. Real products have settings,
+  onboarding, checkout, search, admin, empty states, and a dozen other
+  surfaces. From a high enough systems and visual-design altitude, though, it
+  is still true. Almost everything you ship is either a list of things or one
+  thing in focus.
+</p>
+
+<p>
+  Holding that frame changes how you design APIs, pages, and navigation. It
+  keeps the product in perspective when the feature list starts pretending it
+  needs twelve unique layouts.
+</p>
+
+<h2>The two shapes</h2>
+
+<p>
+  An index answers: what exists, and which one do I care about next? Feeds,
+  search results, dashboards, inboxes, galleries, tables, notification lists,
+  category pages. Different costumes. Same job. Scan, filter, pick.
+</p>
+
+<p>
+  An item page answers: what is this, and what can I do with it? A post, a
+  product, a profile, an invoice, a ticket, a document. Detail, actions,
+  related context. Still one primary subject.
+</p>
+
+<p>
+  Settings is a list of setting groups, then a setting. Checkout is a cart
+  list, then a line item or an order. Admin is indexes all the way down until
+  you open a record. Even a chat thread is a list of messages with one
+  composer focused on the next item you are about to create.
+</p>
+
+<p>
+  Once you see it, you stop inventing a new page type for every noun.
+</p>
+
+<h2>Why this matters for the API</h2>
+
+<p>
+  If the product is only indexes and items, the API should feel that way too.
+  Most endpoints collapse into a short vocabulary:
+</p>
+
+<ul>
+  <li>list resources, with filters, sort, and cursor pagination</li>
+  <li>get one resource by id</li>
+  <li>create, update, delete that resource</li>
+  <li>list related resources hanging off the item</li>
+</ul>
+
+<p>
+  That is not every endpoint you will ever need. It is the shape you should
+  default to before inventing a special snowflake route. When a new screen
+  appears, ask which collection it is listing and which entity it is opening.
+  If you cannot answer, the screen is probably confused.
+</p>
+
+<p>
+  Spec-first designs benefit from this immediately. One list contract. One
+  detail contract. Shared pagination. Shared error shapes. The frontend stops
+  growing a new fetch style for every page.
+</p>
+
+<h2>Prescriptions</h2>
+
+<p>
+  Design the index before the chrome. Decide the primary entity, the fields
+  needed to choose among rows, and the filters that actually change a
+  decision. Then decorate. Navigation, sidebars, and marketing modules are
+  supporting cast.
+</p>
+
+<p>
+  Make list and detail share a vocabulary. The same title, status, image, and
+  identity that appear in the index should appear on the item page without
+  translation. If the card says one thing and the detail says another, users
+  feel lost even when the data is correct.
+</p>
+
+<p>
+  Put actions where the object lives. Bulk actions belong on the index.
+  Object actions belong on the item. If an action needs five fields of
+  context, it probably wanted the detail view all along.
+</p>
+
+<p>
+  Prefer one universal list pattern. Cards or rows, cursor pagination or
+  load-more, search and filters in a stable place. Specialize the contents,
+  not the interaction model. Teams burn months inventing a new list widget
+  for each domain when one good one would have finished the product.
+</p>
+
+<p>
+  Let nested indexes ride under the item. Comments on a post. Versions on a
+  document. Orders for a customer. That is still the same two-page system,
+  recursively. Do not promote every nested list into its own top-level
+  product area unless people need to start there.
+</p>
+
+<p>
+  Treat creation as an item with no id yet. New post, new ticket, new
+  product. Same form shape as edit whenever you can. The create screen is not
+  a third page type. It is the item page before persistence.
+</p>
+
+<p>
+  Keep special pages rare and honest. Login, pricing, billing portal, legal.
+  Those can break the pattern. Just do not let every feature claim the same
+  exemption. If everything is special, nothing is designed.
+</p>
+
+<h2>The perspective check</h2>
+
+<p>
+  When a feature request arrives, run it through the two-page test. Is this
+  a new collection people need to browse? Is this richer detail on an entity
+  we already have? Or is someone asking for a unique layout because the
+  existing index and item pages were never made strong enough?
+</p>
+
+<p>
+  Most of the time the answer is not a new kind of page. It is better sorting
+  on the index, clearer hierarchy on the item, or a related list tucked under
+  the thing people already opened.
+</p>
+
+<p>
+  Every website is only two pages. Build those two until they are excellent.
+  Then notice how little else you needed.
+</p>
