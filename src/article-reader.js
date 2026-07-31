@@ -9,8 +9,14 @@ let activeSlug = null;
 let activeTrigger = null;
 let articles = [];
 let articleLookup = new Map();
-let closeViaBack = false;
+
+// How many article history entries sit above the list. closeFromUI uses go(-depth).
+let articleDepth = 0;
 let suppressRouteHandling = false;
+
+// Latest desired destination while opening/closing. undefined = none; null = want closed.
+let pendingSlug = undefined;
+let pendingOpts = null;
 
 let dialog;
 let siteShell;
@@ -75,13 +81,11 @@ function bindDom() {
   });
 
   nextLink.addEventListener('click', (event) => {
-    // Ctrl/Cmd/Shift/middle-click keep native new-tab / modified behavior.
     if (isModifiedClick(event)) return;
     event.preventDefault();
     next();
   });
 
-  // Idempotent: both may fire for the same Back/Forward hash change.
   window.addEventListener('popstate', handleRouteChange);
   window.addEventListener('hashchange', handleRouteChange);
 
@@ -130,6 +134,30 @@ function previousSlug() {
   return articles[(i - 1 + articles.length) % articles.length].slug;
 }
 
+// ─── History depth ────────────────────────────────────────────────────────────
+
+function pushArticle(slug) {
+  articleDepth += 1;
+  history.pushState({ article: slug, depth: articleDepth }, '', articleHash(slug));
+}
+
+function syncDepthFromHistory(slug, { replaceOnClose = false } = {}) {
+  if (replaceOnClose) {
+    articleDepth = 0;
+    return;
+  }
+
+  const stamped = history.state?.depth;
+  if (typeof stamped === 'number') {
+    articleDepth = stamped;
+    return;
+  }
+
+  // Hashchange / unstamped entry: count it and stamp so later go(-depth) is exact.
+  articleDepth += 1;
+  history.replaceState({ article: slug, depth: articleDepth }, '', articleHash(slug));
+}
+
 // ─── Navigate (single path for cards, Next, browser) ──────────────────────────
 
 /**
@@ -153,9 +181,10 @@ function navigate(slug, {
   if (state === 'open') {
     if (activeSlug === slug) return true;
 
-    if (!fromNavigation) {
-      history.pushState({ article: slug }, '', articleHash(slug));
-      closeViaBack = true;
+    if (fromNavigation) {
+      syncDepthFromHistory(slug);
+    } else {
+      pushArticle(slug);
     }
 
     activeSlug = slug;
@@ -165,7 +194,10 @@ function navigate(slug, {
     return true;
   }
 
-  return false;
+  // Opening/closing: queue and reconcile once the transition settles.
+  pendingSlug = slug;
+  pendingOpts = { trigger, fromNavigation, replaceOnClose };
+  return true;
 }
 
 function next() {
@@ -184,9 +216,35 @@ function handleRouteChange() {
   const slug = slugFromHash(location.hash);
   if (slug) {
     navigate(slug, { fromNavigation: true });
-  } else if (state === 'open') {
-    closeUI();
+    return;
   }
+
+  // Hash cleared — want the list.
+  articleDepth = 0;
+  if (state === 'open') {
+    closeUI();
+  } else if (state !== 'closed') {
+    pendingSlug = null;
+    pendingOpts = null;
+  }
+}
+
+async function reconcilePending() {
+  if (pendingSlug === undefined) return;
+
+  const slug = pendingSlug;
+  const opts = pendingOpts;
+  pendingSlug = undefined;
+  pendingOpts = null;
+
+  if (slug === null) {
+    if (state !== 'open') return;
+    // Mid-open UI close may leave an article hash; unwind depth if needed.
+    if (slugFromHash(location.hash)) return closeFromUI();
+    return closeUI();
+  }
+
+  return navigate(slug, opts ?? { fromNavigation: true });
 }
 
 // ─── Open / close ─────────────────────────────────────────────────────────────
@@ -200,10 +258,9 @@ async function openReader(article, trigger, { fromNavigation, replaceOnClose }) 
   activeTrigger?.classList?.add('article-link-activating');
 
   if (!fromNavigation) {
-    history.pushState({ article: article.slug }, '', articleHash(article.slug));
-    closeViaBack = true;
+    pushArticle(article.slug);
   } else {
-    closeViaBack = !replaceOnClose;
+    syncDepthFromHistory(article.slug, { replaceOnClose });
   }
 
   renderArticle(article);
@@ -225,28 +282,29 @@ async function openReader(article, trigger, { fromNavigation, replaceOnClose }) 
 
   state = 'open';
   closeButtons[0]?.focus({ preventScroll: true });
+  await reconcilePending();
   return true;
 }
 
 async function closeFromUI() {
-  if (!mounted || state !== 'open') return false;
+  if (!mounted) return false;
 
-  const listUrl = location.pathname + location.search;
+  if (state !== 'open') {
+    if (state === 'closed') return false;
+    pendingSlug = null;
+    pendingOpts = null;
+    return true;
+  }
 
-  if (closeViaBack) {
-    // Undo the current article entry. If Next stacked articles, one back() may
-    // land on another article hash — clear that so the UI exit matches the URL.
-    closeViaBack = false;
+  const depth = articleDepth;
+  articleDepth = 0;
+
+  if (depth > 0) {
     suppressRouteHandling = true;
-    history.back();
-    setTimeout(() => {
-      if (slugFromHash(location.hash)) {
-        history.replaceState(null, '', listUrl);
-      }
-      suppressRouteHandling = false;
-    }, 0);
+    history.go(-depth);
+    setTimeout(() => { suppressRouteHandling = false; }, 0);
   } else {
-    history.replaceState(null, '', listUrl);
+    history.replaceState(null, '', location.pathname + location.search);
   }
 
   return closeUI();
@@ -255,7 +313,7 @@ async function closeFromUI() {
 async function closeUI() {
   if (!mounted || state !== 'open') return false;
 
-  closeViaBack = false;
+  articleDepth = 0;
   activeSlug = null;
   state = 'reader-exiting';
   dialog.classList.remove('reader-visible');
@@ -277,6 +335,7 @@ async function closeUI() {
     activeTrigger.focus({ preventScroll: true });
   }
   activeTrigger = null;
+  await reconcilePending();
   return true;
 }
 
@@ -284,15 +343,17 @@ async function closeUI() {
 
 async function share(slug) {
   const article = articleLookup.get(slug);
-  const title = article?.title || '';
+  if (!article) return false;
+
+  const title = article.title || '';
   const url = `${location.origin}${location.pathname}${articleHash(slug)}`;
 
   if (navigator.share) {
     try {
       await navigator.share({ title, url });
-      return;
+      return true;
     } catch (err) {
-      if (err.name === 'AbortError') return;
+      if (err.name === 'AbortError') return false;
     }
   }
 
@@ -300,7 +361,7 @@ async function share(slug) {
     try {
       await navigator.clipboard.writeText(url);
       showShareToast('Link copied!');
-      return;
+      return true;
     } catch { /* fall through */ }
   }
 
@@ -318,10 +379,11 @@ async function share(slug) {
 
   if (copied) {
     showShareToast('Link copied!');
-    return;
+    return true;
   }
 
   prompt('Copy this link:', url);
+  return true;
 }
 
 function showShareToast(message) {
