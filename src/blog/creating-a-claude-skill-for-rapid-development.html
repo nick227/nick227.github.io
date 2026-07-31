@@ -1,1 +1,164 @@
- 
+<p>
+  I have been building online applications long enough to get very particular
+  about how systems should be designed. The key is a single source of truth
+  throughout.
+</p>
+
+<p>
+  I despise boilerplate. I was automating NgRx before AI was even a thing. I
+  aggressively enforce declarative, model-driven architectures. I do not trust
+  my own eyes and fingers when a computer can do the work for us. So I try to
+  write everything as generic, config-driven generators.
+</p>
+
+<p>
+  AI does not naturally take that posture. It builds like a mid-level
+  developer would: long brittle threads from data to UI. It will happily dump
+  thirty unevenly named scripts into a folder. And like a mid-level developer,
+  it is setting you up for pain later.
+</p>
+
+<p>
+  So there is still work for humans. Someone has to know for sure the AI is
+  doing the right thing. That is how I ended up writing a Claude skill instead
+  of repeating myself on every new project.
+</p>
+
+<h2>What a Claude skill actually is</h2>
+
+<p>
+  A Claude skill follows the standard agent-skills model most providers are
+  converging on. In practice it is a folder:
+</p>
+
+<pre><code>skill-name/
+  SKILL.md
+  scripts/
+  templates/
+  references/
+  assets/</code></pre>
+
+<p>
+  Think of it as a reusable playbook: instructions, examples, scripts, and
+  resources the agent loads when the job matches. Rather than explaining my
+  architecture preferences at the start of every chat, I packaged them once as
+  <code>nick-webapp-factory</code>.
+</p>
+
+<h2>What it builds</h2>
+
+<p>
+  The skill scaffolds a production-shaped full-stack MVP. It is extremely
+  biased toward Node.js, Prisma, React, and Vite. You describe the idea,
+  answer four discovery questions, approve a compact MVP definition, and it
+  works through a six-phase build: contract, server, frontend shell, feature
+  pages, polish, documentation.
+</p>
+
+<p>
+  The architectural spine it enforces looks like this:
+</p>
+
+<pre><code>OpenAPI spec  →  generated SDK types  →  typed API client  →  React Query hooks  →  pages
+OpenAPI spec  →  fastify-openapi-glue  →  operationId handlers  →  services  →  Prisma</code></pre>
+
+<p>
+  The spec is the single source of truth for routes. No hand-written route
+  registration. No raw fetch in pages. No manually authored generated types.
+  If it is not in the OpenAPI file, it does not exist.
+</p>
+
+<p>
+  That is the strongest part of the whole thing. Frontend-backend shape drift
+  is the number one way AI full-stack apps fall apart. Spec-first generation
+  removes most of that class of bug before it starts.
+</p>
+
+<h2>The insane part is the template registry</h2>
+
+<p>
+  Your agent can regenerate boilerplate from scratch every time. Why would you
+  let it?
+</p>
+
+<p>
+  The skill has four layers. Orchestration lives in <code>SKILL.md</code>.
+  Phase-specific guides live in <code>references/</code> and load on demand.
+  Canonical files live in <code>templates/</code> and get copied verbatim:
+  configs, components, server, SDK, scripts, plugins, frontend packs. Install
+  automation copies packs in, appends env vars, and stages schema and spec
+  patches.
+</p>
+
+<p>
+  Copy-first is the token saver. Google auth does not need to be reinvented
+  for the five-hundredth time. Harden the templates over time and every future
+  project inherits the improvement. Working on the skill becomes working on
+  your next app.
+</p>
+
+<p>
+  Antigravity reviewed the skill and landed on the same points I care about:
+  copy-first templates, spec-driven wiring, strict phase gates, a portable SDK
+  layer, and a bias toward action instead of endless summaries. The rigidity
+  adds friction. That is also the point.
+</p>
+
+<h2>How I actually use it</h2>
+
+<p>
+  Install it once:
+</p>
+
+<pre><code>git clone https://github.com/nicholasrios/nick-webapp-factory \
+  ~/.claude/skills/nick-webapp-factory</code></pre>
+
+<p>
+  Claude Code picks it up on the next session. Pre-answer the four discovery
+  questions in one message if you want to skip the interview and go straight
+  to the MVP definition. Approve with something like "build it," then let it
+  run the phases.
+</p>
+
+<p>
+  Better still, seed the folder first. After a long conversation about the
+  product somewhere else, I ask for a zip of project documents: PRD, personas,
+  site map, flows, feature prioritization, schema outline, design brief, auth
+  roles, integrations. Drop that into the project. Then start the skill.
+</p>
+
+<p>
+  Mid-build you can still grow the system:
+</p>
+
+<pre><code>pnpm factory:add plugin file-upload
+pnpm factory:add frontend-pack activity-feed</code></pre>
+
+<p>
+  Plugins cover things like uploads, R2, Google auth, AI chat, image and video
+  generation, Railway, and Vercel. Frontend packs cover themes, feed
+  components, charts, animation, designer workflow, and mock content. The
+  catalogs live in the skill, so extending it means adding a folder and a
+  catalog row, not rewriting the whole playbook.
+</p>
+
+<h2>Why this saves more than time</h2>
+
+<p>
+  AI is excellent at filling in code. It is mediocre at holding a long-term
+  architecture in its head across a greenfield build. A skill is how you give
+  it your taste as a durable constraint system.
+</p>
+
+<p>
+  Phase gates keep it from painting React screens before the contract is real.
+  Templates keep it from hallucinating a new auth stack every Monday. The
+  OpenAPI spine keeps the server and client honest with each other. And when
+  you improve the skill, you improve every app you will generate after that.
+</p>
+
+<p>
+  That is the feeling I like. Not prompt-and-pray. Portable standards, copied
+  baselines, generated types, and an agent that keeps building until the tests
+  are green.
+</p>
