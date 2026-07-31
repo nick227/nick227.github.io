@@ -1,1 +1,85 @@
- 
+<p>
+  n8n is a very powerful event orchestration platform. Developers shy away
+  from it because it feels clunky and uncomfortable to bring online. Fair.
+  For team infrastructure, that friction matters.
+</p>
+
+<p>
+  For individual projects where I am the only user, and I am just trying to
+  get things done, it is amazingly helpful.
+</p>
+
+<p>
+  Centralizing authentication for all my providers and servers alone is worth
+  the effort. On top of that, the node-based visual system is what most of my
+  automation projects would become eventually anyway. I usually start in the
+  CLI. An hour later I am rewriting the same glue code I have written a dozen
+  times. Putting those blinders on with n8n and focusing on the prompts frees
+  up time for the part that actually matters.
+</p>
+
+<h2>You still get to code</h2>
+
+<p>
+  This is not a no-code sermon. n8n supports inline JavaScript and can call
+  any kind of script. When a task gets too complex, break out a helper and
+  call it from a node. Keep the orchestration visual. Keep the hard logic in
+  real code. That split works.
+</p>
+
+<p>
+  I used n8n to stand up half a dozen blogs, on subjects from AI content to
+  movie and music reviews. I scraped financial data and YouTube channels and
+  published financial and real-estate content. Webhooks, chat, agents,
+  timers, credentials. The free version already has enough surface area that
+  I strongly advise developers to give it an honest try.
+</p>
+
+<h2>A basic flow</h2>
+
+<p>
+  One of my common patterns was simple. Connect to Google Sheets. Keep a list
+  of blog ideas with a status column. On a timer, n8n checks the sheet for
+  new rows and processes them one at a time. A single row could hit dozens of
+  LLM calls before it was done.
+</p>
+
+<p>
+  For song analysis, I passed in the name of a song and let specialized
+  agents take sections. One wrote about the genre. Another covered lyrics,
+  beats, and timing. Another generated how to play that song on guitar. We
+  had sections that dove into the artist. An agent generated the thumbnail.
+  I generated voice, and at times talking video, to read an excerpt or a
+  welcome message. LLM nodes and code nodes, chained together, still leaving
+  room to validate the work before it went live.
+</p>
+
+<p>
+  That is the appeal. You stop rebuilding the same pipeline and start
+  composing the content system.
+</p>
+
+<h2>Where it gets awkward</h2>
+
+<p>
+  Inner loops are tricky and cumbersome. Nesting iteration inside iteration in
+  a visual graph gets messy fast. That is a real limitation, and it slowed me
+  down more than once.
+</p>
+
+<p>
+  That is not what turned me off n8n.
+</p>
+
+<p>
+  What actually did it was losing my workflows. It is a long story. The
+  short version is enough: after losing hours of work, I have not been able
+  to go back into n8n.
+</p>
+
+<p>
+  So this is both recommendation and warning. Use it. Centralize your auth.
+  Build the graph you were going to invent in code anyway. Export and back up
+  your workflows like they are source code, because for solo automation they
+  are. The platform is cool. Losing the work is what made me hate it.
+</p>
