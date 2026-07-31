@@ -1,1 +1,132 @@
- 
+<p>
+  Building a poker app is not hard because of the cards. It is hard because
+  the table has to keep moving when people disconnect, rejoin, go all-in,
+  leave mid-street, and expect their chips to still add up.
+</p>
+
+<p>
+  <a href="https://github.com/nick227/poker-champ" target="_blank" rel="noopener">Poker Champ</a>
+  is a real-time multiplayer Texas Hold'em platform: Colyseus rooms, a dealer
+  engine, Prisma-backed economy, Expo client, bots, tournaments, lessons,
+  hand history, the works. The feature list looks ambitious. The testing story
+  is where it got insane.
+</p>
+
+<h2>Happy-path tests are not enough</h2>
+
+<p>
+  A fold that works once in a unit test is worthless if the hand deadlocks on
+  the twentieth reconnect. Poker state is a moving machine: streets, timers,
+  seats, pots, side pots, showdowns, auto-actions for disconnected players.
+  Money has to conserve. Turns have to stay owned by someone eligible. Snapshots
+  have to keep advancing. If any of that stalls, the table feels broken even
+  when the rules code is "correct."
+</p>
+
+<p>
+  So the standard I ended up enforcing was not "does this scenario pass." It
+  was closer to: can this engine survive randomized legal play, seat churn,
+  and long runs without losing chips or freezing the street.
+</p>
+
+<h2>Layers on layers</h2>
+
+<p>
+  The repo grew into a stack of confidence gates instead of one test folder.
+</p>
+
+<p>
+  At the bottom: betting rules, side pots, showdown determinism, ledger
+  accounting, fold-path equivalence, money-safety suites. Fast, specific,
+  mean when they fail.
+</p>
+
+<p>
+  Above that: fuzz and random-walk soaks against the dealer itself. Dozens of
+  hands, legal actions only, disconnect and reconnect injected on purpose,
+  chip-mass checks on every settlement. These are not "long tests for
+  coverage." They hunt deadlocks, livelocks, stale queued auto-actions, and
+  payout drift.
+</p>
+
+<p>
+  Then room-level multi-table soaks: concurrent <code>PokerRoom</code>
+  instances, humans and bots, hand-completion rates and rejection budgets.
+  Nightly profiles push harder. A validation script can spin multiple tables
+  and fail the run if hands stop completing cleanly.
+</p>
+
+<p>
+  Then headless churn harnesses against a live local server. Join, leave,
+  thrash seats, fold storms, all-in ladders. Strict mode fails fast. Collect
+  mode keeps going and aggregates findings. On failure it writes repro
+  artifacts: event timelines, diagnostics, the violation that ended the run.
+  That alone changed how fast I could debug intermittent hangs.
+</p>
+
+<p>
+  Then Playwright. Two-browser stack consistency. Seat churn. Rejoin and
+  buy-in edge cases. Lessons runtime. Tournaments busting out. The UI had to
+  agree with the engine, not just look fine in one happy session.
+</p>
+
+<p>
+  And still more: bot brain heatmaps, tournament milestone integration suites
+  stretching across abandon, rebuy, late reg, orphan tables, payouts, and
+  freezeout endings. Client unit tests for stores, realtime guards, action
+  bars, money adapters. A <code>verify</code> script that chains SDK checks,
+  core server tests, soak, headless harness, knip, dependency graphs, and more
+  before you pretend you are done.
+</p>
+
+<h2>What the insane bugs actually looked like</h2>
+
+<p>
+  The failures that taught me the most were timing bugs, not rule typos.
+</p>
+
+<p>
+  A bot auto-action queued on one street could get discarded during an
+  automatic street transition, then never re-driven. The table stalled on the
+  flop with nobody acting. Intermittent. Seed-dependent. Invisible to a tidy
+  unit test that never raced the queue against <code>AUTO_TRANSITION</code>.
+</p>
+
+<p>
+  Ghost tables were another gift. Rooms configured not to auto-dispose so
+  players could reconnect. Fine, until a human left and bots kept a room
+  "alive" forever in a half-started street. Stall monitors screamed. Nobody
+  was really playing. The soak and observability work made those rooms
+  impossible to ignore.
+</p>
+
+<p>
+  Rejoin grace periods, sitting out until next hand, mid-hand joiners who must
+  wait for the next deal, abandoned seats, cash-out idempotency: every one of
+  those is a tiny state machine living inside a bigger one. Miss an invariant
+  and you do not get a polite error. You get a quiet table and angry money.
+</p>
+
+<h2>Why it had to be this heavy</h2>
+
+<p>
+  Because poker is adversarial toward incomplete testing. Players invent the
+  chaos for free. They refresh. They open two tabs. They leave on their turn.
+  They come back after the auto-fold. They join a tournament late. They expect
+  the pot to be fair anyway.
+</p>
+
+<p>
+  So I stopped treating tests as a chore at the end of a feature and started
+  treating them as the product surface that proves the table can survive
+  contact with humans. Unit tests protect the rules. Soaks protect time.
+  Churn harnesses protect seats. Money invariants protect trust. E2E protects
+  the story the player sees.
+</p>
+
+<p>
+  If that sounds like overkill for a side project, good. Real-time multiplayer
+  with chips is not a todo app. The insane part was not writing a lot of tests.
+  The insane part was realizing how many different kinds of tests you need
+  before a poker hand can be boring again.
+</p>
