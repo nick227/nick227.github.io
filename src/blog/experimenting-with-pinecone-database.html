@@ -1,1 +1,73 @@
- 
+<p>
+  I have worked with relational databases, document stores, and graph
+  databases. Now I can add vector databases to the list.
+</p>
+
+<p>
+  Vector databases were really in fashion in 2024, and they still are when the
+  data will not fit in a context window. At that point a vector store is not a
+  trend. It is a necessity. You need a way to retrieve the right slices before
+  the model ever sees the prompt.
+</p>
+
+<h2>The use case</h2>
+
+<p>
+  My project was importing a team's daily scrum messages into Pinecone and
+  attaching that index to a chat interface. The starting point was hundreds of
+  pages of mismatched spreadsheet data. Different formats, uneven columns,
+  notes that only made sense to the person who wrote them that morning.
+</p>
+
+<p>
+  Product and program management needed a way to ask questions across all of
+  it. Not by hunting through tabs. By chatting with an assistant that could
+  find the relevant status updates, blockers, and history on demand.
+</p>
+
+<p>
+  That is a classic RAG shape: ingest the messy corpus, embed it, retrieve the
+  nearest context, then answer. Pinecone was the retrieval layer.
+</p>
+
+<h2>What surprised me</h2>
+
+<p>
+  Ingestion is fast now. What used to feel like a data migration takes less
+  than a minute for our load. The vector database slices through messy input
+  and lets the model decide which fragments belong together for a given
+  question.
+</p>
+
+<p>
+  For our use case, that retrieval was nearly flawless. Not because the
+  spreadsheets were clean. Because semantic search does not need the rows to
+  agree with each other first. It needs embeddings that preserve meaning well
+  enough to surface the right neighborhood of text.
+</p>
+
+<p>
+  That is the real pitch. You stop boiling the ocean of spreadsheet cleanup
+  before anyone can ask a useful question. You ingest, index, and let
+  relevance do the first pass.
+</p>
+
+<h2>Where it sits for me</h2>
+
+<p>
+  I have set up a couple of RAG systems with DH. This was probably the most
+  complicated one: noisy operational text, mixed authorship, daily cadence,
+  and a chat UI that had to feel trustworthy to people who already lived in
+  those spreadsheets.
+</p>
+
+<p>
+  Relational databases still own structure. Document stores still own flexible
+  records. Graphs still own relationships. Vector databases own "find me the
+  meaning near this question" at a scale the prompt window cannot hold.
+</p>
+
+<p>
+  Once you have a corpus that large and that uneven, chatting with the archive
+  stops being a demo and starts being the interface.
+</p>
