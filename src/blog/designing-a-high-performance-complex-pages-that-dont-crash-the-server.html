@@ -1,1 +1,217 @@
- 
+<p>
+  I have watched complex pages turn into accidental load tests one feature at a
+  time. A screen starts with a table, then adds the current user, permissions,
+  totals, filters, and a few related records for every row. Nothing sounds
+  unreasonable on its own. Then the browser asks for all of it at once.
+</p>
+
+<p>
+  By the time real data and traffic arrive, that page may be fanning a dozen
+  requests into far more database work than anyone intended. My instinct is not
+  to keep adding handwritten endpoints and wait for a performance sprint. I
+  want the limits built into the contract from the beginning.
+</p>
+
+<p>
+  That is why I have been working on a single-source-of-truth code generator.
+  The basic idea is to define the business model once, turn it into a clean
+  machine-readable map, and generate the repetitive backend and frontend layers
+  from it. I am not trying to generate every decision in the application. I am
+  trying to make the routine server work predictable before the page reaches
+  production.
+</p>
+
+<h2>The server gets buried one reasonable request at a time</h2>
+
+<p>
+  Most slow pages do not begin with one obviously disastrous query. They grow
+  gradually. A table needs an owner name, so the frontend requests owners. Each
+  row needs a count, so another endpoint is added. Filters need metadata.
+  Permissions are checked in a different controller. Soon one page depends on a
+  collection of routes that were designed separately.
+</p>
+
+<p>
+  The problems are familiar:
+</p>
+
+<ul>
+  <li>The frontend requests fields it does not need.</li>
+  <li>Relations turn into repeated queries and N+1 behavior.</li>
+  <li>Lists load without firm pagination limits.</li>
+  <li>Different endpoints interpret filters and permissions differently.</li>
+  <li>Client types drift away from runtime validation.</li>
+  <li>Several components request the same data with different cache keys.</li>
+</ul>
+
+<p>
+  Each decision looks manageable in isolation. Together, they make it difficult
+  to answer a basic question: how much work can this page ask the server to do?
+</p>
+
+<h2>I would rather compile the boring parts</h2>
+
+<p>
+  The pipeline begins with <code>schema.prisma</code>. Prisma already describes
+  the models, fields, types, nullability, and relations, and it gives me a clean
+  migration history. When Prisma runs a generator, it exposes that schema as
+  DMMF—structured metadata that another program can read.
+</p>
+
+<p>
+  I normalize the DMMF into one model map. That normalization step matters. I do
+  not want the DTO generator, route generator, and OpenAPI generator each
+  deciding for themselves what a nullable relation or read-only field means.
+  They all receive the same interpretation.
+</p>
+
+<pre><code>schema.prisma
+      ↓
+Prisma DMMF
+      ↓
+normalized model map
+      ↓
+DTOs · Zod · services · loaders · OpenAPI · SDK</code></pre>
+
+<p>
+  The templates are intentionally boring. They format decisions that have
+  already been made by the normalized model, policy map, projection map, and
+  operator table. Thin templates are easier to test and much less likely to
+  produce subtle differences across layers.
+</p>
+
+<h2>The page should ask for a known shape</h2>
+
+<p>
+  A complex page should not be able to invent an unlimited query. It should ask
+  for named projections and operations that the server already understands.
+</p>
+
+<p>
+  A projection defines the fields and relations available for a particular
+  response. A policy defines who may read or write them. An operator table
+  defines which filters and sorts are legal. Pagination rules put an upper bound
+  on collection work.
+</p>
+
+<p>
+  Imagine an admin page showing products, owners, inventory counts, and recent
+  activity. Instead of assembling that screen from unrelated requests, the page
+  uses generated SDK functions based on approved projections. The server knows
+  which fields to select, which relations to batch, which filters are indexed,
+  and how many rows may be returned.
+</p>
+
+<p>
+  The declarative part is still specific. It moves the expensive choices into
+  data where they can be reviewed before code is generated.
+</p>
+
+<h2>Put the performance limits in the contract</h2>
+
+<p>
+  Code generation does not make a database fast by itself. Its value is that the
+  same performance rules can be applied everywhere instead of depending on each
+  developer remembering them.
+</p>
+
+<ul>
+  <li>
+    <strong>Generated projections reduce over-fetching.</strong> Response shapes
+    select known fields instead of returning entire records by default.
+  </li>
+  <li>
+    <strong>Generated DataLoaders batch relation work.</strong> Repeated requests
+    for the same related model can be collected and deduplicated within a
+    request.
+  </li>
+  <li>
+    <strong>Generated pagination keeps lists bounded.</strong> Cursor helpers
+    and maximum page sizes prevent a table from requesting the full database.
+  </li>
+  <li>
+    <strong>Generated filters stay consistent.</strong> The SDK, runtime
+    validator, service, and OpenAPI documentation all use the same allowed
+    operators.
+  </li>
+  <li>
+    <strong>Generated hooks share stable cache keys.</strong> Components asking
+    for the same resource can reuse cached data instead of creating duplicate
+    network traffic.
+  </li>
+</ul>
+
+<p>
+  These rules make load testing more useful too. If every list has a known
+  maximum and every page uses named projections, the test covers a known set of
+  operations. Without those boundaries, the client can create new query shapes
+  faster than the server team can measure them.
+</p>
+
+<h2>TypeScript stops at the network</h2>
+
+<p>
+  TypeScript catches mistakes during development, but API input arrives at
+  runtime. The same model map therefore generates DTOs for compile-time types
+  and Zod schemas for runtime validation.
+</p>
+
+<p>
+  Those contracts also feed the OpenAPI document. OpenAPI is an output of the
+  pipeline, not another document someone has to maintain by hand. The generated
+  specification then drives the SDK, documentation, mocks, contract tests, and
+  API-gateway checks.
+</p>
+
+<p>
+  The frontend receives a generated SDK with typed endpoint functions, request
+  and response types, pagination helpers, error unions, and optional query
+  hooks. When a schema change affects the contract, the DTO, validator, OpenAPI
+  document, SDK, and tests change together.
+</p>
+
+<h2>Generated code should be easy to throw away</h2>
+
+<p>
+  Generated files should be disposable. Everything under <code>/gen</code> can
+  be deleted and rebuilt, which means nobody fixes a generated controller by
+  hand and quietly loses the change during the next run.
+</p>
+
+<p>
+  Custom business behavior lives beside generated code in extension files such
+  as <code>*.ext.ts</code>. The generator owns standard transport, validation,
+  CRUD, policies, and telemetry. The application owns the behavior that is
+  actually specific to the product.
+</p>
+
+<p>
+  After generation, a post-processing step sorts and formats the output,
+  validates the OpenAPI artifact, and writes a manifest hash. CI can regenerate
+  the stack and fail when committed artifacts drift from the schema. That turns
+  “remember to update the client” into a build rule rather than a team habit.
+</p>
+
+<h2>The payoff is consistency, not fewer files</h2>
+
+<p>
+  This architecture still produces a lot of code: DTOs, validators, routes,
+  controllers, services, DataLoaders, auth guards, OpenAPI, SDK functions,
+  contract tests, and telemetry wrappers. The difference is that people are not
+  writing each copy of the same model contract independently.
+</p>
+
+<p>
+  A field's type, nullability, permissions, filter behavior, and response shape
+  are defined once and carried through the stack. A complex page can still be
+  complex, but its requests are typed, bounded, batchable, and visible before
+  the page starts sending traffic.
+</p>
+
+<p>
+  I do not expect a generator to rescue a bad query or replace normal
+  performance work. What it can do is control what the page is allowed to ask
+  for, keep the routine layers aligned, and leave custom logic in a clear place.
+  That gives me more time to optimize the parts that are actually specific to
+  the product instead of chasing contract drift and accidental query fan-out.
+</p>

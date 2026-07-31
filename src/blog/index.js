@@ -11,7 +11,7 @@ const articleMetadata = [
   },
   {
     slug: 'designing-a-high-performance-complex-pages-that-dont-crash-the-server',
-    title: 'Designing a high-performance complex pages that don\'t crash the server'
+    title: 'Designing high-performance complex pages that don\'t crash the server'
   },
   {
     slug: 'my-insane-testing-experience-creating-a-poker-app',
@@ -63,7 +63,7 @@ const articleMetadata = [
   },
   {
     slug: 'my-strong-opinions-for-system-design-and-architecture',
-    title: 'My strong opinions for system design and architecture'
+    title: 'My strong opinions on system design and architecture'
   },
   {
     slug: 'experimenting-with-pinecone-database',
@@ -83,7 +83,7 @@ const articleMetadata = [
   },
   {
     slug: 'my-definition-of-the-perfect-ux-ui',
-    title: 'My definition of the perfect ux/ui'
+    title: 'My definition of perfect UX/UI'
   }
 ];
 

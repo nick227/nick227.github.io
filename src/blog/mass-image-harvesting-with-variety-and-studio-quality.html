@@ -1,39 +1,28 @@
 <p>
-  Bulk image generation is an orchestration problem. The image model is only
-  one component; the system around it must control variation, respect API
-  limits, isolate failures, record activity, organize output, and keep large
-  batches reviewable.
+  I have been rebuilding versions of the same image-generation project since
+  2022. It started as a Node.js command-line tool for creating batches of art
+  for dropshipping products. The first goal was straightforward: give the tool
+  a direction, let it run, and organize the results so I could review them
+  later.
 </p>
 
 <p>
-  I began building that system in 2022 to create art for dropshipping products.
-  Repeating the manual cycle of writing a prompt, submitting it, downloading the
-  result, and naming the file was not viable at scale. My first replacement was
-  a Node.js command-line application that generated batches overnight and
-  organized them into folders by type.
+  The project quickly became less about calling an image API and more about
+  building a reliable process around it. I needed controlled prompt variation,
+  safe limits on paid requests, useful logs, organized storage, and a way to
+  change providers without rebuilding the application. Those supporting parts
+  of AutoImage have outlasted any individual model integration.
 </p>
 
-<p>
-  Several versions later, the system has generated tens of thousands of images
-  for apparel, storyboards, icons, clip art, concept work, and YouTube
-  thumbnails. That volume exposed the parts of image generation that a
-  single-prompt interface does not address.
-</p>
-
-<h2>Useful variation requires structure</h2>
+<h2>The prompt builder is the best part</h2>
 
 <p>
-  Increasing the number of API calls was easy. Producing images that were
-  meaningfully different without losing the original subject or style was the
-  harder problem.
-</p>
-
-<p>
-  I built a prompt renderer around typed collections of terms. Templates
-  contain tokens such as <code>{colors}</code>, <code>{fashion_style}</code>,
-  and <code>{camera_angle}</code>. Each token can only select a value from its
-  corresponding collection, so individual details vary while the prompt
-  retains a defined structure.
+  Sending the same request hundreds of times was easy. To make those requests
+  different without losing the intended subject or style, I built a database of
+  terms grouped by type. Prompts contain placeholders such as
+  <code>{colors}</code>, <code>{fashion_style}</code>, or
+  <code>{camera_angle}</code>, and each placeholder receives a value from its
+  matching group.
 </p>
 
 <pre><code>{subject} + {fashion_style} + {colors} + {camera_angle}
@@ -41,123 +30,154 @@
  selected subject   streetwear    pastel blue   low angle</code></pre>
 
 <p>
-  Every manual run identified another ten or twenty terms worth retaining. The
-  database eventually grew beyond one thousand entries, ranging from basic,
-  pastel, and hair colors to camera angles, fashion styles, strange dreams, and
+  The groups keep the random choices within useful boundaries. A color
+  placeholder always produces a color. A camera-angle placeholder always
+  produces a camera angle. The details change while the prompt keeps the same
+  basic structure.
+</p>
+
+<p>
+  Every manual run gave me another ten or twenty terms to save. The database
+  eventually grew beyond one thousand entries, including basic colors, pastel
+  colors, hair colors, camera angles, fashion styles, strange dreams, and
   mythological monsters.
 </p>
 
 <p>
-  I previously referred to one version as a spider, but it was more accurately
-  a controlled combination engine. It selected terms from defined collections,
-  assembled prompts, and submitted the resulting combinations for processing.
-  The variation came from the interaction between typed values rather than
-  unrestricted randomness.
+  The current process goes beyond selecting stored words. AutoImage uses
+  Compromise.js and the Datamuse API to work with word types and related terms.
+  An LLM then expands the assembled prompt while following a narrow set of
+  rules: preserve the idea, keep the subject in focus, and add enough visual
+  detail for the image model. The database controls what may vary, language
+  processing finds alternatives, and the LLM improves how the final idea is
+  expressed.
+</p>
+
+<h2>The first priority is protecting the tokens</h2>
+
+<p>
+  In this project, tokens and API requests represent real spending. A bulk run
+  can become expensive if a failed request keeps retrying or one user fills the
+  entire queue. I put generation work behind a queue that controls concurrency,
+  priority, and per-user rate limits. A single user cannot consume all available
+  provider capacity, and a large batch cannot send every request at once.
 </p>
 
 <p>
-  A later version added an LLM enhancement pass. The enhancer preserves the
-  generated concept, keeps the subject in focus, and expands short fragments
-  into the level of visual detail expected by the image model. Prompt assembly
-  and prompt enhancement remain separate so that either stage can change
-  without affecting the other.
+  “Fail fast” does not mean that every error is abandoned immediately. The
+  system first separates temporary failures from requests that are unlikely to
+  succeed:
 </p>
 
-<h2>Bulk processing required a fail-fast queue</h2>
+<ul>
+  <li>
+    Network errors, rate limits, timeouts, and temporary server errors can be
+    retried.
+  </li>
+  <li>
+    Retries use exponential backoff, starting at 500 milliseconds and doubling
+    with a small amount of random jitter.
+  </li>
+  <li>
+    Invalid client requests and content-policy failures stop immediately rather
+    than spending more tokens on the same work.
+  </li>
+</ul>
 
 <p>
-  An unattended batch cannot treat every request as an isolated button click.
-  Sending jobs directly to a provider made it too easy for failures, limits, or
-  malformed work to disrupt the rest of the run. It also made the behavior of a
-  long batch difficult to reconstruct afterward.
+  Every queue event is logged. Because many batches run unattended, the logs
+  need to show whether a problem came from the prompt, my application, a rate
+  limit, or the provider itself. The admin queue monitor exposes waiting and
+  active jobs, completed and failed counts, per-user throttling, and the stored
+  queue history. One bad job can be inspected later without blocking the rest
+  of the batch or repeatedly hitting a paid endpoint.
 </p>
 
+<h2>About my system design</h2>
+
 <p>
-  I placed generation work behind a fail-fast queue with logging. Each job
-  either completed or failed without holding the rest of the batch open. A
-  failure was recorded, the job exited, and processing continued. This kept one
-  bad request from blocking the queue and prevented failing work from repeatedly
-  pressuring the API endpoint.
+  A provider response is only the middle of the generation process. Before an
+  image appears in a user's feed, AutoImage has to validate the request, protect
+  the user's balance, store the file, and leave a reliable accounting record.
 </p>
 
-<p>
-  Logging was essential because most large runs were unattended. The logs made
-  it possible to separate provider failures from prompt or application
-  failures, inspect what happened after the run, and change the next batch
-  without relying on memory.
-</p>
+<ol>
+  <li>The prompt is checked for length and disallowed content.</li>
+  <li>Optional enhancement and semantic substitutions are applied.</li>
+  <li>The user's credit balance is checked before the work enters the queue.</li>
+  <li>The selected provider generates the image.</li>
+  <li>The returned image data and file size are validated.</li>
+  <li>The image is uploaded to Cloudflare R2 object storage.</li>
+  <li>Credits are deducted atomically and recorded in the credit ledger.</li>
+  <li>The image and its metadata are saved to MySQL through Prisma.</li>
+</ol>
 
 <p>
-  The processing path became:
-</p>
-
-<pre><code>typed term collections
-        ↓
-dynamic prompt renderer
-        ↓
-LLM prompt enhancement
-        ↓
-fail-fast queue + logging
-        ↓
-provider adapter
-        ↓
-organized output</code></pre>
-
-<p>
-  Folder organization served the same operational purpose. Results were grouped
-  for comparison rather than placed in one directory. Most outputs could be
-  rejected quickly, while the useful variations remained easy to identify and
-  refine.
-</p>
-
-<h2>OpenAI was the initial learning ground</h2>
-
-<p>
-  OpenAI was where I first learned the practical constraints of both image
-  generation and LLM-based prompt processing. It provided the initial
-  environment for testing prompt structure, asynchronous batch behavior,
-  failure handling, and the cost of repeated generation.
+  The credit ledger matters because a displayed balance is not enough for paid
+  generation. Every purchase, promotion, and image deduction needs a record
+  that can be audited. The user's current balance is convenient to read, but the
+  ledger explains how that balance changed.
 </p>
 
 <p>
-  Usage limits became part of the architecture. To increase the limits on my
-  account, I had to increase my OpenAI spending. That experience made request
-  volume and failure control concrete concerns rather than later optimization
-  work. A bulk tool must account for rate limits and cost before it starts a
-  large run, not after the invoice or errors arrive.
+  Cloud storage solved another practical issue. Providers often return base64
+  image data, which is not how I want to serve a permanent gallery. AutoImage
+  validates the result, moves it into Cloudflare R2, and stores the image record
+  separately in the database.
+</p>
+
+<h2>Image providers and local diffusion</h2>
+
+<p>
+  DALL-E 2 was my first serious playground for image generation, and OpenAI was
+  also where I began learning how LLMs could improve prompts. The images were
+  rough compared with current models, but the API provided a useful place to
+  learn prompt structure, batching, rate limits, and failure handling.
 </p>
 
 <p>
-  I later compared Gemini, Grok, Dezgo and FLUX, along with diffusion models on
-  my local RTX 3060. I currently prefer Gemini when output quality is the main
-  requirement. Local diffusion is sufficient for development and repeated
-  pipeline tests without a per-image API charge. Dezgo and FLUX remain useful
-  for lower-cost bulk work, including YouTube thumbnails.
+  To increase the usage limits on my account, I had to increase my OpenAI
+  spending. That made accounting and rate limiting early requirements. It was
+  not enough for the application to submit a valid request; it also needed to
+  know how much work a user could send and what each successful image should
+  cost.
 </p>
 
 <p>
-  These comparisons did not produce a permanent provider ranking. They produced
-  a provider-adapter boundary. Development, broad exploration, and final
-  rendering have different cost and quality requirements, so they do not need
-  to use the same model.
+  I later tested Gemini, Grok, Dezgo and FLUX, along with diffusion models on my
+  local RTX 3060. I currently prefer Gemini when final quality matters most. I
+  use local diffusion for development because I can test the pipeline without
+  paying for every image. Dezgo and FLUX remain useful for lower-cost batch work,
+  including YouTube thumbnails.
 </p>
 
-<h2>AutoImage is the current iteration</h2>
+<p>
+  AutoImage keeps provider-specific code behind a common interface. Provider
+  and model records live in the database, including their cost per image and
+  whether they are currently active. That means I can enable a model, disable
+  one that is unavailable, or change what users can select without rebuilding
+  the interface or deploying new frontend code.
+</p>
+
+<h2>Where AutoImage is now</h2>
 
 <p>
   The latest public version is
   <a href="https://autoimage.up.railway.app/" target="_blank" rel="noopener">AutoImage</a>.
-  It supports unattended generation and exposes the prompt controls used to
-  create structured variation. I still use the dynamic prompt builder because
-  generating ten controlled options provides a better comparison set than
-  repeatedly revising one unstructured prompt.
+  It has grown from a personal batch script into a multi-user application with
+  image storage, credits, billing, galleries, search, moderation, and an admin
+  view of the generation queue.
 </p>
 
 <p>
-  The image providers remain replaceable. The parts that continue to carry
-  forward are the typed language database, prompt pipeline, queue, logging,
-  adapter boundary, and review process. The same design can support other
-  prompt-driven systems: define which fields may vary, constrain their values,
-  fail individual jobs cleanly, and preserve enough information to evaluate the
-  run afterward.
+  I still use the dynamic prompt builder regularly. Generating ten structured
+  variations gives me a useful comparison set. I can see which terms helped,
+  discard weak images, and use the strongest result to guide the next run.
+</p>
+
+<p>
+  The providers will continue to change. The part I expect to keep is the
+  process around them: control what can vary, decide which failures deserve a
+  retry, account for every paid operation, preserve the output, and leave enough
+  information to understand the run afterward.
 </p>

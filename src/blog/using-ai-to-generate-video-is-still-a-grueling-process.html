@@ -1,1 +1,195 @@
- 
+<p>
+  AI video demos make the process look finished. Write a prompt, wait a minute,
+  and receive a cinematic clip with camera movement, lighting, sound, and a
+  subject that behaves exactly as requested.
+</p>
+
+<p>
+  Making an actual video is still nothing like that. A usable project needs the
+  right shots, consistent subjects, controlled motion, sensible timing, and
+  enough coverage to survive an edit. Generating one impressive clip is easy
+  compared with generating ten clips that belong together.
+</p>
+
+<p>
+  I have had the best results by treating AI video as a source of individual
+  shots, not as a finished production system. Even then, model choice, failed
+  generations, and repeated attempts make the process expensive in both time
+  and money.
+</p>
+
+<h2>The prices are not as comparable as they look</h2>
+
+<p>
+  Video models charge by the clip or by the generated second. Resolution, audio,
+  model tier, and output length all affect the total, so there is no perfect
+  one-line comparison. Using fal.ai as a common provider, this was the pricing I
+  found in July 2026:
+</p>
+
+<ul>
+  <li>
+    <strong><a href="https://fal.ai/pricing" target="_blank" rel="noopener">MiniMax Hailuo 2.3 Standard</a>:</strong>
+    about $0.28 for a six-second 768p generation. Hailuo Pro is listed around
+    $0.49 per generation.
+  </li>
+  <li>
+    <strong><a href="https://fal.ai/models/fal-ai/ltx-2.3/text-to-video" target="_blank" rel="noopener">LTX 2.3</a>:</strong>
+    roughly $0.06–$0.08 per second at 1080p, or about $0.36–$0.48 for six
+    seconds.
+  </li>
+  <li>
+    <strong><a href="https://fal.ai/models/fal-ai/veo3.1" target="_blank" rel="noopener">Veo 3.1 Fast</a>:</strong>
+    $0.10 per second without audio and $0.15 with audio at 720p or 1080p. Six
+    seconds costs about $0.60 or $0.90.
+  </li>
+  <li>
+    <strong>Veo 3.1 Standard:</strong> $0.20 per second without audio and $0.40
+    with audio at 720p or 1080p. Six seconds costs about $1.20 or $2.40.
+  </li>
+</ul>
+
+<p>
+  These prices will change, and the outputs are not equivalent. A cheap clip
+  that cannot be used is more expensive than a higher-priced clip that makes the
+  final edit. The cost I care about is not the price per generated second. It is
+  the price per usable second.
+</p>
+
+<h2>LTX has not been usable for me</h2>
+
+<p>
+  LTX is attractive on paper. It is open, fast, and inexpensive enough for
+  experimentation. In my own tests, the results have not been usable. The clips
+  may demonstrate motion, but they have not given me the visual quality or
+  consistency I need to keep them in a finished project.
+</p>
+
+<p>
+  That does not mean LTX has no value. It may work for rough previs, local
+  experiments, or workflows that can tolerate obvious artifacts. It simply has
+  not cleared my minimum bar for final footage.
+</p>
+
+<h2>MiniMax can get the job done</h2>
+
+<p>
+  MiniMax has been a practical middle option. It is affordable enough to try
+  several versions of a shot, and I can get clips that survive the edit. It does
+  not consistently give me the detail or interpretation I get from Veo, but it
+  can turn a clear prompt or source image into workable motion.
+</p>
+
+<p>
+  This matters because most prompts need more than one attempt. The subject may
+  move correctly while the camera does not. The first half may be useful while
+  the last two seconds collapse. A background object may begin doing something
+  nobody requested. MiniMax gives me enough room in the budget to rerun those
+  shots.
+</p>
+
+<h2>Veo feels like a different generation</h2>
+
+<p>
+  Moving from MiniMax to Veo is a night-and-day quality change in my experience.
+  Veo adds detail, secondary motion, environmental behavior, and more imagination
+  to the scene. It often understands that an animation needs more than moving
+  the central subject from one position to another.
+</p>
+
+<p>
+  The output feels more directed. Lighting changes across the shot, backgrounds
+  remain active, and camera movement has more purpose. Veo is also considerably
+  more expensive, especially with audio, so I do not want to use the highest
+  tier while I am still deciding what the shot should be.
+</p>
+
+<p>
+  My preferred workflow is to develop the composition with still images and
+  lower-cost generations, then spend Veo money once the shot has a clear job in
+  the edit.
+</p>
+
+<h2>fal.ai makes comparison much easier</h2>
+
+<p>
+  I use
+  <a href="https://fal.ai/explore/text-to-video-apis" target="_blank" rel="noopener">fal.ai</a>
+  because it puts a large number of video models behind one account and a
+  similar API pattern. I can compare MiniMax, Veo, LTX, Kling, Wan, Seedance,
+  and other models without building a new integration and billing relationship
+  for every test.
+</p>
+
+<p>
+  fal.ai charges according to each model's output unit, usually per second or
+  per video. Failed server requests and time waiting in the queue are not billed.
+  More importantly for development, switching models is often an endpoint
+  change rather than a new application architecture.
+</p>
+
+<p>
+  The wide selection can also become its own problem. Testing every new model
+  consumes the same budget and attention I am trying to save. I now want a
+  reason to try a model: lower iteration cost, better character consistency,
+  stronger audio, or a quality improvement large enough to change the final
+  result.
+</p>
+
+<h2>Hedra is my choice for lip syncing</h2>
+
+<p>
+  Full scene generation and character performance are different problems. When
+  I already have a character image and need that character to perform audio, I
+  am a big fan of Hedra.
+</p>
+
+<p>
+  Hedra has worked well for lip syncing speech and even music. Keeping that as a
+  specialized step gives me more control than asking a general video model to
+  invent the character, scene, performance, and audio synchronization in one
+  attempt.
+</p>
+
+<h2>I still need to try Higgsfield and Seedance</h2>
+
+<p>
+  I have not tested Higgsfield or Seedance enough to give either a fair review.
+  Seedance may end up being one of the strongest options based on the examples
+  and controls I have seen, but it has not passed through my own workflow yet.
+</p>
+
+<p>
+  That distinction matters. A model can look exceptional in a selected demo and
+  still be frustrating when asked to produce a specific list of shots on a real
+  budget.
+</p>
+
+<h2>The hard part begins after generation</h2>
+
+<p>
+  Most first attempts at AI video fail because the tools are presented as if
+  generation is the production. It is not. The production still needs shot
+  planning, prompt development, continuity, selection, timing, sound, and
+  editing.
+</p>
+
+<p>
+  A five-second clip may require five attempts. A one-minute video may need
+  twenty planned shots and many more generations. The successful clips still
+  need to be trimmed, sequenced, color matched, and supported by audio. Model
+  quality has improved faster than this workflow has disappeared.
+</p>
+
+<p>
+  For now, simple visual styles remain the most reliable approach for me. Line
+  drawings and limited animation ask the model to maintain fewer details across
+  frames. Small inconsistencies look less destructive, and separate clips are
+  easier to combine into one visual language.
+</p>
+
+<p>
+  Veo proves that AI video can produce genuinely impressive footage. It does not
+  prove that making a good video has become easy. The gap between a generated
+  clip and a finished piece is still where most of the work lives.
+</p>

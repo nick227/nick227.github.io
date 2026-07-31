@@ -1,1 +1,199 @@
- 
+<p>
+  I get uncomfortable when I open a frontend codebase and find a large folder
+  of handwritten API functions. Not because writing <code>fetch</code> is
+  difficult. It is because the server already knows everything required to
+  generate that code.
+</p>
+
+<p>
+  The same is true on the backend. If the schema describes a model and the API
+  contract describes how that model moves across the network, there is very
+  little reason to hand-write another CRUD route, controller, validator, DTO, or
+  client function.
+</p>
+
+<p>
+  This is one of my strongest opinions about system design: if code can be
+  derived from an existing source of truth, people should not be responsible
+  for keeping another copy of it correct.
+</p>
+
+<h2>If the schema knows it, do not type it again</h2>
+
+<p>
+  I like to begin with the product's data model. A Prisma schema already knows
+  the models, fields, types, nullability, defaults, and relations. Prisma can
+  expose that information as DMMF, which gives a generator a structured view of
+  the entire model.
+</p>
+
+<p>
+  I normalize that metadata once and use it to generate the routine backend
+  layers:
+</p>
+
+<ul>
+  <li>DTOs and runtime validators</li>
+  <li>CRUD routes and controllers</li>
+  <li>Standard services and repositories</li>
+  <li>Read and write projections</li>
+  <li>Filters, sorting, and pagination</li>
+  <li>Authorization guards and policy checks</li>
+  <li>OpenAPI request and response schemas</li>
+</ul>
+
+<p>
+  None of those files should have its own interpretation of the model. A field
+  cannot be optional in the controller, required in the validator, missing from
+  the DTO, and documented differently in OpenAPI. They all come from the same
+  normalized description.
+</p>
+
+<h2>OpenAPI already contains the client</h2>
+
+<p>
+  OpenAPI is not just documentation. A complete OpenAPI contract contains the
+  routes, HTTP methods, parameters, request bodies, response shapes, status
+  codes, and error contracts needed to build a client.
+</p>
+
+<p>
+  Once that contract exists, handwritten client-side API code feels like manual
+  transcription. The developer is reading a server contract and recreating it
+  as TypeScript functions, types, error handling, and query hooks. Every line is
+  another opportunity for the two sides to drift.
+</p>
+
+<p>
+  I would rather have the server pipeline generate a compact, predictable SDK:
+</p>
+
+<pre><code>schema.prisma
+      ↓
+generated server contracts
+      ↓
+validated OpenAPI
+      ↓
+typed client SDK
+      ↓
+generated query hooks</code></pre>
+
+<p>
+  The SDK should contain typed endpoint functions, request and response types,
+  error unions, pagination helpers, authentication hooks, and stable cache keys.
+  It should be small, tree-shakable, and boring to read. Boring is a compliment
+  when the code controls every request leaving the browser.
+</p>
+
+<h2>CRUD is not where I want creativity</h2>
+
+<p>
+  A standard create route does not need a unique personality. Neither does a
+  patch validator or a list endpoint. These layers should follow the same rules
+  every time, because consistency is more valuable than local cleverness.
+</p>
+
+<p>
+  Product behavior still needs custom code. A pricing calculation, approval
+  workflow, recommendation system, or unusual database operation belongs to the
+  application. I keep that work beside the generated layer in explicit
+  extension files.
+</p>
+
+<p>
+  The boundary is simple: generated files are disposable and custom files are
+  owned by the application. Nobody fixes a generated controller by hand.
+  Regeneration should be safe at any time.
+</p>
+
+<h2>I will spend more time on the generator</h2>
+
+<p>
+  I despise boilerplate enough that I will spend longer building a generator
+  than it would take to write the first few files manually. That can look
+  inefficient when the project has one model and four endpoints. It looks very
+  different after the tenth model, the third client, and the first major schema
+  change.
+</p>
+
+<p>
+  A handwritten fix improves one file. A generator fix improves every current
+  file and every file generated later. The payoff is not only typing less. It is
+  knowing that the same naming, validation, policy, formatting, and error rules
+  were applied everywhere.
+</p>
+
+<p>
+  “Perfect” generated code does not mean trusting the template blindly. The
+  generator needs tests, deterministic output, formatting, contract validation,
+  and a build hash. CI should regenerate the artifacts and fail if the committed
+  output has drifted from the source.
+</p>
+
+<h2>AI made me more strict about this</h2>
+
+<p>
+  I shaped applications this way before AI coding tools became part of my daily
+  work. AI has made the position stronger, not weaker.
+</p>
+
+<p>
+  AI can produce a controller, SDK wrapper, or React hook in seconds. That makes
+  boilerplate cheap to create, but it does not make boilerplate cheap to own.
+  Ten plausible implementations are still ten implementations that can drift,
+  handle errors differently, and interpret the contract in slightly different
+  ways.
+</p>
+
+<p>
+  I would rather use AI to improve the generator, templates, normalization
+  rules, and tests. Then every generated artifact benefits from the work. Asking
+  AI to recreate the same route repeatedly is still repetition, even if nobody
+  had to type it.
+</p>
+
+<h2>What I still want engineers to write</h2>
+
+<p>
+  When I say we should not be hand-coding anything, I mean anything the system
+  can derive. I still want engineers making the decisions that require product
+  knowledge:
+</p>
+
+<ul>
+  <li>Which operations should exist at all</li>
+  <li>Which data a role is allowed to see or change</li>
+  <li>Which queries need a custom performance strategy</li>
+  <li>Which business rules must remain true</li>
+  <li>How the user should move through the product</li>
+  <li>Where the generic path is no longer the correct path</li>
+</ul>
+
+<p>
+  Those decisions become configuration, policies, projections, or custom
+  extensions. The generator handles the mechanical translation into routes,
+  validators, contracts, SDK calls, and tests.
+</p>
+
+<h2>The architecture should preserve meaning</h2>
+
+<p>
+  System design is largely a decision about where meaning lives. If the same
+  field is described independently in the database, server DTO, validator,
+  OpenAPI document, client type, and form hook, the meaning is spread across the
+  stack and maintained by memory.
+</p>
+
+<p>
+  I want that meaning defined once and compiled outward. The database schema
+  establishes the model. Policies and projections establish how it may be used.
+  OpenAPI establishes the network contract. The server and client artifacts are
+  generated results.
+</p>
+
+<p>
+  At that point, writing another client API wrapper does not feel productive to
+  me. It feels like bypassing the architecture. I would rather put that effort
+  into the source of truth and know that the next regeneration will produce the
+  same compact, pristine result across the entire application.
+</p>

@@ -1,0 +1,146 @@
+<p>
+  WordPress has been declared dead for years, but it continues to appear every
+  time I work with independent businesses. WooCommerce stores are still running,
+  still selling products, and still looking for affordable ways to reach new
+  customers.
+</p>
+
+<p>
+  That made me interested in a simple question: what if those stores could
+  advertise for one another?
+</p>
+
+<p>
+  I built WP Advertising for my own WordPress sites. A store owner can select a
+  WooCommerce product page, create an ad that matches the product, and opt into
+  a shared network. In exchange for contributing an ad, the site displays ads
+  submitted by other participating stores.
+</p>
+
+<h2>A community network instead of an ad marketplace</h2>
+
+<p>
+  The network is intentionally simple. There is no bidding system, behavioral
+  targeting, or auction for placement. Participating sites contribute one ad,
+  and the service rotates eligible ads across the network. A store never
+  receives its own ad.
+</p>
+
+<p>
+  This is not intended to compete with a major advertising platform. It is a
+  cooperative distribution system for independent WooCommerce sites. Each site
+  contributes some of its available space and receives exposure elsewhere in
+  the network.
+</p>
+
+<p>
+  I think that model is useful because small stores usually have the least
+  leverage in paid advertising. They may not have enough traffic or budget to
+  optimize a conventional campaign, but they can still participate in a shared
+  pool of other merchants.
+</p>
+
+<h2>The plugin needed a service outside WordPress</h2>
+
+<p>
+  A WordPress plugin can create and display the ad, but the network needs a
+  shared source of truth. I built a separate Node.js and TypeScript service,
+  hosted on Railway, with Express, Prisma, and MySQL.
+</p>
+
+<p>
+  Each WordPress site registers with the service and receives an API key. It can
+  then opt in, submit or update its ad, request the next community ad, and send
+  impression or click events. The service also tracks heartbeats so the network
+  knows which sites are still active.
+</p>
+
+<p>
+  The separation keeps the WordPress side relatively small. The plugin handles
+  the store experience, while the Railway service manages membership, rotation,
+  tracking, and shared network state.
+</p>
+
+<h2>Serving an ad should not slow down the store</h2>
+
+<p>
+  The most important technical requirement was keeping the serve path fast. A
+  WooCommerce page should not wait on unnecessary database work just to display
+  a community ad.
+</p>
+
+<p>
+  Ad requests are served from an in-memory rotation cache. The cache is built
+  from MySQL, refreshed every 30 seconds, and uses a round-robin selection that
+  excludes the requesting site's own ad. The request that chooses an ad does
+  not write to the database.
+</p>
+
+<p>
+  Impression and click tracking follow a different path. Those events enter an
+  in-memory queue and are written to MySQL in batches. If a database write
+  fails, the events can be requeued rather than delaying the storefront
+  response. Signed event tokens protect the tracking URLs from being rewritten
+  or submitted with arbitrary values.
+</p>
+
+<pre><code>WooCommerce page
+       ↓
+cached round-robin ad selection
+       ↓
+ad displayed immediately
+       ↓
+impression or click queued
+       ↓
+events written to MySQL in batches</code></pre>
+
+<p>
+  The service also has separate rate limits for serving ads, recording events,
+  registering sites, and performing administrative work. Health and metrics
+  endpoints expose the state of the cache, event queue, and rate limiter.
+</p>
+
+<h2>I kept the first version deliberately small</h2>
+
+<p>
+  The current deployment runs as a single Railway replica because its rotation
+  cache and rate limiter live in process memory. That is a deliberate limit,
+  not something hidden in the deployment. If the network needs horizontal
+  scaling, those responsibilities can move to Redis before additional replicas
+  are added.
+</p>
+
+<p>
+  For the network I actually have today, the simpler design is easier to operate
+  and less expensive. It still has the boundaries I would need later: the
+  WordPress plugin, the community API, MySQL persistence, cached delivery, and
+  asynchronous event processing.
+</p>
+
+<h2>Is WordPress dead?</h2>
+
+<p>
+  In many modern development conversations, yes. New applications are rarely
+  presented as WordPress projects, and Shopify has become the more visible
+  choice for hosted commerce.
+</p>
+
+<p>
+  In the independent market, the answer is less clear. WordPress remains common
+  because businesses already own their sites, understand the workflow, and can
+  change the code without asking a platform for permission. That installed base
+  still creates room for tools that connect independent stores in new ways.
+</p>
+
+<p>
+  I would like to build the same kind of exchange for Shopify. The concept is
+  not specific to WordPress: merchants contribute distribution and receive
+  distribution from the network. WordPress simply gave me a direct place to
+  build and test it for myself.
+</p>
+
+<p>
+  I do not know whether a community WooCommerce ad network becomes a large
+  business. I do think it is a useful model: independent stores sharing reach
+  through infrastructure they can opt into and leave at any time.
+</p>

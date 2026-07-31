@@ -1,1 +1,197 @@
- 
+<p>
+  I chose LangChain for an AI-agent-to-API platform because it seemed like the
+  stable, corporate answer. I was building a system that had to interpret a
+  request, choose the right API operation, validate the arguments, run it, and
+  return a useful result. LangChain already had models for chains, tools,
+  structured output, and agent state, so using the established framework felt
+  more responsible than inventing my own.
+</p>
+
+<p>
+  Some of that decision paid off. I appreciated the hardened types and the way
+  the library pushed important concepts into clear contracts. The problem was
+  that the codebase became busy and abstract much faster than the application
+  became capable. Before long, I was spending more time fitting a simple process
+  into the framework than improving the process itself.
+</p>
+
+<p>
+  That experience changed how I think about AI frameworks. LangChain contains
+  many good ideas, but most applications do not need all of those ideas wrapped
+  in a general-purpose library. For a small team building a focused agent, I
+  would usually borrow the architecture and write the thinner system myself.
+</p>
+
+<h2>Why LangChain looked like the safe choice</h2>
+
+<p>
+  Agent code can become unreliable very quickly. A demo only needs a prompt and
+  a model call. A real application needs validated inputs, structured outputs,
+  tool definitions, retries, logging, error handling, provider differences,
+  state, and limits on what the model is allowed to do.
+</p>
+
+<p>
+  LangChain takes those concerns seriously. Its abstractions give teams a shared
+  vocabulary, and its integrations save time when models and providers change.
+  The structured-output support was especially useful for my platform. When a
+  model is selecting and calling an API, “close enough” is not a valid response.
+  The operation and its arguments need to match an actual schema.
+</p>
+
+<p>
+  I also understand why a larger company would like the consistency. If several
+  teams are building agents, standard tool interfaces and lifecycle hooks can
+  be more valuable than keeping every individual service small. LangChain did
+  not become popular by solving imaginary problems.
+</p>
+
+<h2>The abstraction bill arrived early</h2>
+
+<p>
+  My problem was not that LangChain could not do what I needed. It was that a
+  straightforward execution path became spread across framework concepts. The
+  prompt, model, tool, state, parser, callbacks, and execution flow each had
+  their own layer. Every layer was reasonable on its own, but together they made
+  the behavior harder to see.
+</p>
+
+<p>
+  Debugging exposed the cost. When an API call had the wrong arguments, I first
+  had to work backward through framework types and execution steps before I
+  could get to the model response and application decision I actually cared
+  about. The framework was designed to make many workflows possible, while I
+  needed one workflow to be obvious.
+</p>
+
+<p>
+  I believe I could have built the same platform in about one-third of the code
+  by using the provider SDKs directly and defining a few small interfaces of my
+  own. More importantly, that version would have given me finer control over
+  retries, errors, logging, token usage, and the exact point where an API action
+  was approved or rejected.
+</p>
+
+<h2>The agent loop was not actually that complicated</h2>
+
+<p>
+  Underneath the framework, my core process was easy to describe:
+</p>
+
+<ol>
+  <li>Validate the user's request and load the available API operations.</li>
+  <li>Send the model only the tool schemas it is allowed to use.</li>
+  <li>Validate the selected operation and arguments against the API contract.</li>
+  <li>Apply permissions, limits, and any required confirmation.</li>
+  <li>Execute the request, log the result, and return a clear response.</li>
+</ol>
+
+<p>
+  That loop may branch or retry, but it is still a loop I want to read from top
+  to bottom. I do not need a graph abstraction just because the model can choose
+  between tools. I need explicit state, strict boundaries, and useful logs.
+</p>
+
+<p>
+  This matters even more for an agent that can operate an API. The risky part is
+  not calling the language model. It is deciding what the model may do, proving
+  that its arguments are valid, and keeping a record of what happened. I want
+  those controls visible in application code instead of distributed through a
+  framework lifecycle.
+</p>
+
+<h2>Simple code is a production feature</h2>
+
+<p>
+  Frameworks are often sold as the production-ready option, but simplicity has
+  production value too. A direct implementation is easier to trace during an
+  incident. It is easier to see which request consumed tokens, why a retry
+  happened, and whether an error came from the model, the validator, the remote
+  API, or my own policy.
+</p>
+
+<p>
+  It is also easier to test. I can give the model adapter a fixed response, pass
+  the result through the same schema validation used in production, and assert
+  that the correct API request would be made. Each boundary has a small contract
+  and there is very little hidden execution behavior between them.
+</p>
+
+<p>
+  Less code does not automatically mean better code. A homegrown agent can turn
+  into its own undocumented framework if the team keeps adding special cases.
+  The goal is not to reject structure. The goal is to keep only the structure
+  the application has earned.
+</p>
+
+<h2>I would copy the design before installing the library</h2>
+
+<p>
+  LangChain is still a useful reference for how to shape an agent system. I
+  would keep a standard model interface, typed tool schemas, structured output,
+  explicit state, middleware-style hooks, and consistent tracing. Those are
+  solid patterns whether LangChain owns them or not.
+</p>
+
+<p>
+  The difference is that I would implement them at the scale of the application.
+  A model adapter can be a small interface. A tool can be a name, description,
+  input schema, and function. A run can have a plain state object and a visible
+  sequence of steps. Logging can wrap each boundary without becoming the
+  architecture.
+</p>
+
+<p>
+  This approach also makes provider changes less intimidating. The application
+  owns the narrow contract, so switching a model does not require the entire
+  system to speak a framework's language. I only need another adapter that
+  returns the same structured result.
+</p>
+
+<h2>There is a scale where I would reconsider it</h2>
+
+<p>
+  If I were working in an industrial environment with hundreds of agents, I
+  would revisit LangChain and LangGraph. At that scale, shared orchestration,
+  durable state, streaming, human approval, persistence, tracing, and common
+  deployment patterns can justify a substantial platform layer. Multiple teams
+  need conventions, and the cost of everyone inventing a different agent loop
+  can exceed the cost of the framework.
+</p>
+
+<p>
+  I would also consider it for a genuinely long-running workflow that must pause,
+  survive a failure, resume later, and preserve state across several systems.
+  That is a different problem from a focused service that turns a request into
+  a controlled API call.
+</p>
+
+<p>
+  The threshold is not literally a certain number of agents. It is the point
+  where coordination and durability become harder than understanding the
+  framework. Until then, the extra abstraction can be an expensive way to avoid
+  writing a small amount of direct code.
+</p>
+
+<h2>“Overrated” does not mean useless</h2>
+
+<p>
+  LangChain solves real problems and offers a thoughtful model for building
+  agent systems. I simply think it is recommended too early, before a project
+  has proved that it needs framework-level orchestration.
+</p>
+
+<p>
+  My preference now is to begin with the smallest explicit loop that can safely
+  do the work. I add typed contracts, validation, logs, limits, and tests from
+  the start. I add durable state or orchestration when the workflow requires it.
+  If the system eventually grows into the kind of operation LangChain was built
+  to coordinate, adopting it becomes an informed trade rather than a default
+  decision.
+</p>
+
+<p>
+  For most agent projects, that leaves less code, more control, and a system I
+  can explain without first explaining the framework. That is the version I
+  would rather put into production.
+</p>

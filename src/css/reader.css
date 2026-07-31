@@ -521,6 +521,7 @@ body.reader-active #scrim::after {
   text-decoration: none;
   color: var(--color-txt-bright);
   transition: color 180ms ease;
+  width: min(100%, 700px);
 }
 
 .next-article-eyebrow {
@@ -544,6 +545,7 @@ body.reader-active #scrim::after {
 }
 
 .reader-footer {
+  margin-top: 20px;
   width: min(100%, 700px);
   padding-top: 24px;
   border-top: 1px solid var(--color-border);

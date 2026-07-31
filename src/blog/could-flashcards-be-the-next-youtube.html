@@ -1,1 +1,156 @@
- 
+<p>
+  Flashcards tend to have a short career. Someone creates a set for a class or
+  an exam, studies it for a few weeks, and then leaves it in a private library
+  forever. That always felt like a waste of useful work.
+</p>
+
+<p>
+  I started wondering what would happen if a flashcard set behaved more like a
+  published piece of content. What if it had a creator, a thumbnail, views,
+  likes, categories, and a chance to be discovered by someone who did not make
+  it?
+</p>
+
+<p>
+  That idea became
+  <a href="https://flashcard-client-phi.vercel.app/" target="_blank" rel="noopener">Flashcard Academy</a>,
+  a community for creating, publishing, browsing, and studying flashcard sets.
+  I modeled parts of the experience after YouTube—not because flashcards are
+  about to replace video, but because YouTube understands how to make individual
+  uploads feel like part of a much larger library.
+</p>
+
+<h2>What if a deck behaved like an upload?</h2>
+
+<p>
+  Most flashcard apps are built around “my cards.” That makes sense for studying,
+  but it keeps every useful set inside the account that created it. Someone else
+  may be trying to learn the same subject and starting from an empty screen.
+</p>
+
+<p>
+  Flashcard Academy treats each set as a small publication. It has a title,
+  creator, thumbnail, category, card count, views, and likes. People can search
+  by subject, browse categories, and visit a creator's profile to find more
+  sets.
+</p>
+
+<p>
+  The home page is a grid of things to learn rather than a dashboard full of
+  study statistics. A set about UML can sit next to algebra, chess openings,
+  literature, chemistry, or comedy writing. That mix is part of the appeal. You
+  can arrive looking for one subject and leave curious about another.
+</p>
+
+<p>
+  The YouTube comparison is mostly about that discovery loop:
+</p>
+
+<ul>
+  <li>A creator publishes something useful.</li>
+  <li>The title and thumbnail give it an identity.</li>
+  <li>Search and categories help people find it later.</li>
+  <li>Views and likes give the creator basic feedback.</li>
+  <li>A profile turns one set into a growing collection.</li>
+</ul>
+
+<h2>AI helps get past card one</h2>
+
+<p>
+  Creating a good set is more work than filling in two text boxes. The author
+  has to choose the scope, divide the subject into useful questions, avoid
+  repetition, and keep the answers short enough to review.
+</p>
+
+<p>
+  I added AI to the flashcard wizard to make that first draft easier. A user can
+  start with a topic, generate an initial group of cards, and then review and
+  edit the set before publishing it.
+</p>
+
+<p>
+  AI is useful here because an editable draft is much easier to work with than
+  an empty form. It does not need to replace the creator. It needs to provide a
+  reasonable starting point that the creator can correct, trim, and organize.
+</p>
+
+<h2>Then I gave n8n an API</h2>
+
+<p>
+  Once the browser workflow was working, I opened an API for creating sets and
+  connected it to n8n. That let me build workflows that proposed subjects,
+  generated cards, and submitted complete sets in batches.
+</p>
+
+<p>
+  This helped populate the community with enough material to test the actual
+  product. A discovery page with three sets will look tidy no matter how weak
+  the search and categories are. A larger catalog quickly exposes repeated
+  topics, poor thumbnails, vague titles, and sets that are technically valid
+  but not very useful.
+</p>
+
+<p>
+  Batch generation also pushed the project beyond normal school subjects. I
+  could experiment with sets about software architecture, art, writing, games,
+  food, finance, and other topics that fit the flashcard format in less obvious
+  ways.
+</p>
+
+<h2>Vercel out front, Railway out back</h2>
+
+<p>
+  The application is split between a frontend hosted on Vercel and a backend
+  hosted on Railway. Vercel serves the public community experience: discovery,
+  profiles, the flashcard player, and the creation wizard. Railway runs the API
+  used for users, sets, AI generation, and outside integrations such as n8n.
+</p>
+
+<p>
+  I like the separation because the public interface and the generation
+  workflows do not have to move together. I can update the browsing experience
+  without changing the automation, and I can add another API workflow without
+  rebuilding the frontend.
+</p>
+
+<h2>A bigger library needs better taste</h2>
+
+<p>
+  AI is very good at filling shelves. It is less qualified to decide what
+  deserves the best spot on the shelf.
+</p>
+
+<p>
+  A generated set can be accurate and still be repetitive, too broad, or too
+  shallow to teach much. That is where creator identity, editing, views, likes,
+  and eventually better recommendations become important. Automation can help
+  start the library, but people still decide which material is worth their time.
+</p>
+
+<p>
+  If the community grows, I expect curation to matter as much as generation.
+  Duplicate detection, clearer categories, stronger creator tools, and useful
+  recommendations would add more value than simply producing another thousand
+  sets.
+</p>
+
+<h2>So, could it be the next YouTube?</h2>
+
+<p>
+  Not by audience size or economics. The comparison is about turning a familiar
+  format into a publishing system. Creators contribute to a shared catalog,
+  learners discover material through browsing and search, and a useful set can
+  continue finding people long after it was created.
+</p>
+
+<p>
+  Flashcards are compact, reusable, and flexible enough for almost any subject.
+  AI makes the first draft faster, the API makes creation programmable, and the
+  community gives the finished work somewhere to go.
+</p>
+
+<p>
+  I am less interested in building another private deck manager than in seeing
+  what people will publish when a flashcard set is treated as content. That is
+  the part of the project I still want to explore.
+</p>
