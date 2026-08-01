@@ -151,7 +151,7 @@
   Each coin is a hop of that size that costs one move. A 5-hop jumps from 0 to
   5. A 1-hop steps from 5 to 6. The fewest coins is simply the cheapest route
   to 6. Landing on 6 from 5 is again best(6) = 1 + best(5), drawn as travel
-  instead of recursion or a table.
+  along stops instead of recursion or a growing table of answers.
 </p>
 
 <figure class="dp-visual" aria-label="Cheapest path from 0 to 6">
