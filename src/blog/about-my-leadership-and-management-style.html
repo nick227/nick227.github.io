@@ -1,1 +1,136 @@
- 
+<p>
+  This article is about how I lead and manage engineering work: a mix of
+  technical practice and personal trust, built around a clear delivery loop and
+  shared responsibility instead of hero ownership.
+</p>
+
+<p>
+  You will get the trust model I use, the clarify-to-learn loop, how I assign
+  implementer and reviewer pairs, the merge go/no-go junction, and how I try to
+  lead by example without becoming unapproachable.
+</p>
+
+<h2>Trust comes first</h2>
+
+<p>
+  My strategy is technical and personal at the same time. The first job is
+  building trust. That happens through social interaction and proof of work to
+  each other. People need to see that you show up, that your work holds, and
+  that you will help when something is stuck.
+</p>
+
+<p>
+  A mentor once told me relationships are the most important part of business.
+  Working together is why we are a company. Collaboration and those
+  relationships are some of the things I love best about this work.
+</p>
+
+<h2>The essential loop</h2>
+
+<p>
+  The delivery loop is:
+</p>
+
+<pre><code>clarify → commit → align → implement → review → verify → release → learn</code></pre>
+
+<p>
+  Every step matters. Clarify is especially critical because it comes first. If
+  the work is clear, the rest of the process gets easier. Vague tickets create
+  thrash in every later stage.
+</p>
+
+<ul>
+  <li>
+    <strong>Clarify</strong> — enough requirements and ticket planning that
+    implementers know what done looks like.
+  </li>
+  <li>
+    <strong>Commit</strong> — assign each ticket an implementer and a reviewer
+    up front. Two people own acceptance.
+  </li>
+  <li>
+    <strong>Align</strong> — settle UI, API, database, security, and error
+    contracts before parallel development. Cross-cutting agreement first.
+  </li>
+  <li>
+    <strong>Implement</strong> — small, testable changes. Raise blockers and
+    scope changes early.
+  </li>
+  <li>
+    <strong>Review</strong> — correctness, architecture, security,
+    maintainability, and tests. Shared responsibility, not a rubber stamp.
+  </li>
+  <li>
+    <strong>Verify</strong> — the change does what the ticket promised.
+  </li>
+  <li>
+    <strong>Release</strong> — ship with eyes open.
+  </li>
+  <li>
+    <strong>Learn</strong> — feed what broke or surprised you back into the
+    next clarify step.
+  </li>
+</ul>
+
+<p>
+  Daily stand-ups are for coordination, not management reporting. What is
+  blocked, what needs another person, what changed since yesterday. That is
+  enough.
+</p>
+
+<h2>The merge junction</h2>
+
+<p>
+  I like having a developer or small team do a final merge check. By then a
+  feature may span many branches and several code reviews. Someone still has to
+  look across the whole cut and produce one clear go/no-go decision.
+</p>
+
+<p>
+  That role is not paperwork. It is synthesis. Conflicts between branches,
+  missing contract pieces, tests that passed in isolation but not together,
+  release risk. The same person or group should stay involved through
+  deployment verification so the decision does not end at merge.
+</p>
+
+<p>
+  This is where shared responsibility becomes real. The implementer and
+  reviewer already signed the unit of work. The merge check asks whether the
+  assembled system is ready.
+</p>
+
+<h2>Lead by example, stay approachable</h2>
+
+<p>
+  Personally, I try to lead by example. That means taking on big, meaningful
+  cuts of work myself and setting the bar through transparency and quality. I
+  keep it casual enough to stay approachable. I want the team to know I am
+  eager to help.
+</p>
+
+<p>
+  I believe in the get-up-and-walk-over philosophy of work, and in now being
+  better than later. Problems get cheaper when they are still small and someone
+  is willing to stand up, ask, and unblock.
+</p>
+
+<h2>Internal goals ahead of the product checklist</h2>
+
+<p>
+  A development team needs internal goals that set it up to meet and exceed
+  leadership’s goals. Finishing one product is not enough. The point is
+  building a compounding system that hardens during development instead of
+  fragmenting.
+</p>
+
+<p>
+  Standards, contracts, review habits, merge discipline, and trust between
+  people are part of that system. When those hold, delivery gets calmer and the
+  team can get ahead of leadership with options instead of always answering the
+  latest ticket from behind.
+</p>
+
+<p>
+  Lead the technical loop. Protect the relationships. Keep helping early. That
+  is the style I am aiming for.
+</p>
