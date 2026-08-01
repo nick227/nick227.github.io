@@ -116,6 +116,10 @@ const primaryArticleMetadata = [
   {
     slug: 'benefits-and-trade-offs-of-database-technologies',
     title: 'Benefits and trade-offs of database technologies'
+  },
+  {
+    slug: 'the-secrets-of-lightning-fast-pages',
+    title: 'The secrets of lightning-fast pages'
   }
 ];
 
