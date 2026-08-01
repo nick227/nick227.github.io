@@ -1,24 +1,14 @@
 <p>
-  I have watched complex pages turn into accidental load tests one feature at a
-  time. A screen starts with a table, then adds the current user, permissions,
-  totals, filters, and a few related records for every row. Nothing sounds
-  unreasonable on its own. Then the browser asks for all of it at once.
+  This article covers how I design complex list and detail pages so they stay
+  fast under real data: put hard limits in the API contract, stop the frontend
+  from inventing unbounded work, and generate the repetitive server and client
+  layers from one model map instead of handwriting every endpoint.
 </p>
 
 <p>
-  By the time real data and traffic arrive, that page may be fanning a dozen
-  requests into far more database work than anyone intended. My instinct is not
-  to keep adding handwritten endpoints and wait for a performance sprint. I
-  want the limits built into the contract from the beginning.
-</p>
-
-<p>
-  That is why I have been working on a single-source-of-truth code generator.
-  The basic idea is to define the business model once, turn it into a clean
-  machine-readable map, and generate the repetitive backend and frontend layers
-  from it. I am not trying to generate every decision in the application. I am
-  trying to make the routine server work predictable before the page reaches
-  production.
+  You will get the failure pattern I see most often, the Prisma-to-generator
+  pipeline I use, and the concrete controls that keep a page from turning into
+  an accidental load test.
 </p>
 
 <h2>The server gets buried one reasonable request at a time</h2>
