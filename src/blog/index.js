@@ -91,6 +91,10 @@ const moreArticleMetadata = [
   {
     slug: 'my-adventures-trying-to-start-an-online-music-platform',
     title: 'My adventures trying to start an online music platform'
+  },
+  {
+    slug: 'a-generic-ai-prompt-to-make-all-code-a-little-bit-better',
+    title: 'A generic AI prompt to make all code a little bit better'
   }
 ];
 

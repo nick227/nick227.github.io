@@ -1,0 +1,123 @@
+<p>
+  This article is a generic AI prompt I keep nearby when I want an agent to
+  make existing code a little better without inventing a new architecture
+  religion mid-diff.
+</p>
+
+<p>
+  You will get ten review axes in plain language: performance, structure,
+  boundaries, purity, models, single sources of truth, generation over
+  copy-paste, and how to measure that the change actually helped.
+</p>
+
+<h2>1. Eliminate duplicate work</h2>
+
+<p>
+  Fuse repeated traversals. Flatten nested loops when one pass is enough.
+  Delete intermediate collections that only exist to feed the next loop.
+  Short-circuit as soon as the answer is known. If the same array is walked
+  three times for three boolean flags, that is usually one walk with three
+  accumulators, or one better structure upstream.
+</p>
+
+<h2>2. Reduce memory pressure</h2>
+
+<p>
+  Stop allocating temporary objects on hot paths just to throw them away.
+  Reuse buffers when the shape is stable. Stream large data instead of
+  loading the whole thing because it was easier to debug once. Reserve
+  collection capacity when you already know the size. Keep caches bounded
+  so “helpfulness” does not become a leak with a marketing name.
+</p>
+
+<h2>3. Improve algorithms and structures</h2>
+
+<p>
+  Replace O(n²) scans with maps, sets, indexes, sorting, binary search, or
+  lookup tables. Nested loops that hunt for matches by id are a smell. The
+  fix is usually not a clever micro-optimization. It is the right structure
+  for the question you keep asking.
+</p>
+
+<h2>4. Simplify control flow</h2>
+
+<p>
+  Prefer small single-purpose functions. Use guard clauses instead of deep
+  nesting. Keep scopes tight. Pass explicit parameters instead of ambient
+  mystery state. Reach for polymorphism or strategy objects before another
+  sprawling conditional that knows every special case in the company.
+</p>
+
+<h2>5. Strengthen module boundaries</h2>
+
+<p>
+  Group code by domain, not by accident of file age. Prevent dependency
+  cycles. Hide internals. Inject dependencies instead of reaching through
+  globals. Put third-party libraries behind adapters so their quirks do not
+  become your domain language. A module should have a clear inside and a
+  clear outside.
+</p>
+
+<h2>6. Separate computation from effects</h2>
+
+<p>
+  Keep core logic pure when you can. Make mutation explicit. Push I/O to
+  the boundaries. Batch effects instead of sprinkling writes through the
+  happy path. Handle async cancellation and errors like first-class
+  behavior, not afterthoughts. Pure cores are easier to test. Effect shells
+  are easier to replace.
+</p>
+
+<h2>7. Establish canonical models</h2>
+
+<p>
+  Explicitly define entities, relationships, states, lifecycle rules, and
+  precise types. Invalid states should be hard to represent. If “pending”
+  and “deleted” can both be true because two booleans drifted, the model is
+  lying. Fix the model before you add another null check.
+</p>
+
+<h2>8. Enforce one source of truth</h2>
+
+<p>
+  Centralize schemas, constants, defaults, validation, metadata, provider
+  registries, and business rules. Drift is what happens when two files both
+  think they own the same fact. One source of truth is not dogma. It is how
+  you stop paying tax on every rename.
+</p>
+
+<h2>9. Replace repetition systematically</h2>
+
+<p>
+  Do not copy-paste setup for the twelfth time and call it pragmatism. Use
+  typed declarative configuration, generic factories, and deterministic
+  generated artifacts. Generated code is fine when the generator is the
+  contract. Handwritten twins of a schema are how systems rot.
+</p>
+
+<h2>10. Measure and protect quality</h2>
+
+<p>
+  Profile hot paths and frontend responsiveness instead of guessing. Remove
+  dead code. Centralize typed error handling. Design units that are
+  deterministic and fast to test. If you cannot measure it and you cannot
+  test it, you did not improve it. You rearranged it.
+</p>
+
+<h2>How to use this</h2>
+
+<p>
+  Paste the ten axes into an AI prompt when you want a focused improvement
+  pass: eliminate duplicate work, reduce memory pressure, improve algorithms
+  and structures, simplify control flow, strengthen module boundaries,
+  separate computation from effects, establish canonical models, enforce one
+  source of truth, replace repetition systematically, and measure and protect
+  quality.
+</p>
+
+<p>
+  Ask for small, verifiable edits. Prefer deleting and clarifying over
+  inventing frameworks. The point is not to make the codebase impressive.
+  The point is to make the next change cheaper, the hot path honest, and the
+  invalid state harder to ship.
+</p>
