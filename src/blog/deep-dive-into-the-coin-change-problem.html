@@ -87,30 +87,36 @@
 <h2>Same solution, multiple views</h2>
 
 <p>
-  It helps to conceptualize the same idea more than one way so the relationship
-  sticks.
+  There is only one core relationship:
+  <code>best(x) = 1 + min(best(x - coin))</code>.
+  The three views below are not three different algorithms. They are three ways
+  to picture that same relationship so it is easier to implement and remember.
 </p>
 
 <p>
-  <strong>Recursive view:</strong> to make <code>amount</code>, try each coin,
-  then solve <code>amount - coin</code>. Cache those results so identical calls
-  return immediately.
+  <strong>Recursive view</strong> — start from the target and ask smaller
+  questions. “To make 11, try a 5 and then ask: fewest coins for 6?” If you
+  ask “fewest for 6” again later, return the cached answer. The call tree is
+  the relationship written as questions.
 </p>
 
 <p>
-  <strong>Table view:</strong> build an array <code>minCoins[0..amount]</code>.
-  For each amount, try every coin and keep the minimum. You are filling the
-  answers in increasing order.
+  <strong>Table view</strong> — fill answers from small to large.
+  <code>minCoins[0] = 0</code>, then compute 1, then 2, up to the target. When
+  you reach 11, <code>minCoins[6]</code> is already known, so adding a 5 is
+  just a lookup. Same relationship, stored in an array instead of a call stack.
 </p>
 
 <p>
-  <strong>Graph view:</strong> each amount is a node. A coin is an edge that
-  moves you forward by that value at cost 1. Coin change is the shortest path
-  from 0 to the target on that graph.
+  <strong>Graph view</strong> — treat each amount as a point on a number line.
+  A coin is a step of that size with cost 1. Finding fewest coins is the
+  cheapest path from 0 to the target. Same relationship again: each step is
+  “arrive at <code>x</code> from <code>x - coin</code> by paying one coin.”
 </p>
 
 <p>
-  Same subproblems. Same recurrence. Different pictures of why reuse wins.
+  Pick the picture that clicks. They all solve the same subproblems in the same
+  order of dependency.
 </p>
 
 <h2>Optimal bottom-up version</h2>
