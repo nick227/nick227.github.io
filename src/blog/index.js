@@ -89,22 +89,6 @@ const primaryArticleMetadata = [
 
 const moreArticleMetadata = [
   {
-    slug: 'your-agent-needs-a-smaller-toolbox',
-    title: 'Your agent needs a smaller toolbox'
-  },
-  {
-    slug: 'what-i-look-for-in-a-pull-request',
-    title: 'What I look for in a pull request'
-  },
-  {
-    slug: 'write-the-contract-before-the-code',
-    title: 'Write the contract before the code'
-  },
-  {
-    slug: 'the-cost-of-a-clever-abstraction',
-    title: 'The cost of a clever abstraction'
-  },
-  {
     slug: 'my-adventures-trying-to-start-an-online-music-platform',
     title: 'My adventures trying to start an online music platform'
   }
