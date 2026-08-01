@@ -91,28 +91,127 @@
   <code>best(x) = 1 + min(best(x - coin))</code>.
   The three views below are not three different algorithms. They are three ways
   to picture that same relationship so it is easier to implement and remember.
+  Example throughout: coins <code>[1, 5]</code>, target <code>6</code>.
 </p>
 
 <p>
   <strong>Recursive view</strong> — start from the target and ask smaller
-  questions. “To make 11, try a 5 and then ask: fewest coins for 6?” If you
-  ask “fewest for 6” again later, return the cached answer. The call tree is
-  the relationship written as questions.
+  questions. “To make 6, try a 5 and then ask: fewest coins for 1?” If you ask
+  the same smaller question again later, return the cached answer.
 </p>
+
+<figure class="dp-visual dp-tree" aria-label="Recursive call tree for coin change">
+  <figcaption>Call tree: each box asks best(x). Cached reuse is marked.</figcaption>
+  <div class="dp-tree-root">
+    <div class="dp-node">best(6)</div>
+    <div class="dp-tree-branches">
+      <div class="dp-tree-branch">
+        <span class="dp-edge">coin 1 →</span>
+        <div class="dp-node">best(5)</div>
+        <div class="dp-tree-branches">
+          <div class="dp-tree-branch">
+            <span class="dp-edge">coin 1 →</span>
+            <div class="dp-node">best(4)</div>
+          </div>
+          <div class="dp-tree-branch">
+            <span class="dp-edge">coin 5 →</span>
+            <div class="dp-node dp-node-base">best(0) = 0</div>
+          </div>
+        </div>
+      </div>
+      <div class="dp-tree-branch">
+        <span class="dp-edge">coin 5 →</span>
+        <div class="dp-node">best(1)</div>
+        <div class="dp-tree-branches">
+          <div class="dp-tree-branch">
+            <span class="dp-edge">coin 1 →</span>
+            <div class="dp-node dp-node-base">best(0) = 0</div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+  <p class="dp-note">If best(5) is asked again from another path, hit the cache instead of rebuilding the subtree.</p>
+</figure>
 
 <p>
   <strong>Table view</strong> — fill answers from small to large.
-  <code>minCoins[0] = 0</code>, then compute 1, then 2, up to the target. When
-  you reach 11, <code>minCoins[6]</code> is already known, so adding a 5 is
-  just a lookup. Same relationship, stored in an array instead of a call stack.
+  <code>minCoins[0] = 0</code>, then compute 1 through 6. When you reach 6,
+  <code>minCoins[1]</code> and <code>minCoins[5]</code> are already known, so
+  each coin choice is a lookup.
 </p>
 
+<figure class="dp-visual" aria-label="Bottom-up minCoins table">
+  <figcaption>Table fill: each cell is best(x). Highlight shows 6 reading smaller cells.</figcaption>
+  <div class="dp-table-wrap">
+    <table class="dp-table">
+      <thead>
+        <tr>
+          <th scope="row">x</th>
+          <th>0</th>
+          <th>1</th>
+          <th>2</th>
+          <th>3</th>
+          <th>4</th>
+          <th class="dp-ref">5</th>
+          <th class="dp-focus">6</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <th scope="row">minCoins</th>
+          <td>0</td>
+          <td class="dp-ref">1</td>
+          <td>2</td>
+          <td>3</td>
+          <td>4</td>
+          <td class="dp-ref">1</td>
+          <td class="dp-focus">2</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+  <p class="dp-note">For x=6: try coin 1 → minCoins[5]+1 = 2; try coin 5 → minCoins[1]+1 = 2. Store 2.</p>
+</figure>
+
 <p>
-  <strong>Graph view</strong> — treat each amount as a point on a number line.
-  A coin is a step of that size with cost 1. Finding fewest coins is the
-  cheapest path from 0 to the target. Same relationship again: each step is
-  “arrive at <code>x</code> from <code>x - coin</code> by paying one coin.”
+  <strong>Graph view</strong> — each amount is a point. A coin is a step of that
+  size with cost 1. Fewest coins is the cheapest path from 0 to 6.
 </p>
+
+<figure class="dp-visual" aria-label="Amount graph with coin edges">
+  <figcaption>Graph: nodes are amounts, edges are coins (cost 1 each).</figcaption>
+  <div class="dp-graph" role="img" aria-label="Path from 0 to 6 using coins of 1 and 5">
+    <div class="dp-graph-row">
+      <span class="dp-graph-node dp-graph-start">0</span>
+      <span class="dp-graph-edge" title="coin 1">—1→</span>
+      <span class="dp-graph-node">1</span>
+      <span class="dp-graph-edge" title="coin 1">—1→</span>
+      <span class="dp-graph-node">2</span>
+      <span class="dp-graph-edge" title="coin 1">—1→</span>
+      <span class="dp-graph-node">3</span>
+      <span class="dp-graph-edge" title="coin 1">—1→</span>
+      <span class="dp-graph-node">4</span>
+      <span class="dp-graph-edge" title="coin 1">—1→</span>
+      <span class="dp-graph-node dp-ref">5</span>
+      <span class="dp-graph-edge" title="coin 1">—1→</span>
+      <span class="dp-graph-node dp-focus">6</span>
+    </div>
+    <div class="dp-graph-jumps">
+      <div class="dp-graph-jump">
+        <span class="dp-graph-node dp-graph-start">0</span>
+        <span class="dp-graph-edge dp-graph-edge-jump" title="coin 5">———— 5 ————→</span>
+        <span class="dp-graph-node dp-ref">5</span>
+      </div>
+      <div class="dp-graph-jump">
+        <span class="dp-graph-node">1</span>
+        <span class="dp-graph-edge dp-graph-edge-jump" title="coin 5">———— 5 ————→</span>
+        <span class="dp-graph-node dp-focus">6</span>
+      </div>
+    </div>
+  </div>
+  <p class="dp-note">One cheapest path: 0 →5→ 5 →1→ 6 (two coins). Same as best(6) = 1 + best(5).</p>
+</figure>
 
 <p>
   Pick the picture that clicks. They all solve the same subproblems in the same

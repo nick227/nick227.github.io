@@ -569,6 +569,156 @@ body.reader-active #scrim::after {
   white-space: nowrap;
 }
 
+.reader-body .dp-visual {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.28);
+  overflow-x: auto;
+}
+
+.reader-body .dp-visual figcaption {
+  margin-bottom: 14px;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.reader-body .dp-note {
+  margin-top: 14px;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
+.reader-body .dp-node {
+  display: inline-block;
+  padding: 6px 10px;
+  border: 1px solid var(--color-border);
+  color: var(--color-txt-bright);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  white-space: nowrap;
+}
+
+.reader-body .dp-node-base {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.reader-body .dp-tree-root {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.reader-body .dp-tree-branches {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 16px 28px;
+  margin-left: 12px;
+  padding-left: 14px;
+  border-left: 1px solid var(--color-border);
+}
+
+.reader-body .dp-tree-branch {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reader-body .dp-edge {
+  color: var(--color-txt-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.reader-body .dp-table-wrap {
+  overflow-x: auto;
+}
+
+.reader-body .dp-table {
+  width: 100%;
+  min-width: 420px;
+  border-collapse: collapse;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+  text-align: center;
+}
+
+.reader-body .dp-table th,
+.reader-body .dp-table td {
+  padding: 8px 10px;
+  border: 1px solid var(--color-border);
+}
+
+.reader-body .dp-table th[scope="row"] {
+  text-align: left;
+  color: var(--color-txt-secondary);
+  font-weight: 500;
+}
+
+.reader-body .dp-ref {
+  color: var(--color-txt-bright);
+  background: rgba(218, 255, 0, 0.08);
+}
+
+.reader-body .dp-focus {
+  color: var(--color-accent);
+  background: rgba(218, 255, 0, 0.14);
+  font-weight: 700;
+}
+
+.reader-body .dp-graph {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 13px;
+}
+
+.reader-body .dp-graph-row,
+.reader-body .dp-graph-jump {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 4px 2px;
+}
+
+.reader-body .dp-graph-node {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 28px;
+  height: 28px;
+  padding: 0 6px;
+  border: 1px solid var(--color-border);
+  border-radius: 999px;
+  color: var(--color-txt-bright);
+}
+
+.reader-body .dp-graph-start {
+  border-color: var(--color-txt-secondary);
+}
+
+.reader-body .dp-graph-edge {
+  color: var(--color-txt-muted);
+  font-size: 12px;
+  white-space: nowrap;
+}
+
+.reader-body .dp-graph-edge-jump {
+  color: var(--color-accent);
+}
+
+.reader-body .dp-graph-jumps {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  padding-top: 4px;
+  border-top: 1px dashed var(--color-border);
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;
