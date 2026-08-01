@@ -100,6 +100,10 @@ const primaryArticleMetadata = [
   {
     slug: 'what-does-the-future-of-technology-look-like',
     title: 'What does the future of technology look like?'
+  },
+  {
+    slug: 'how-to-solve-the-two-sum-coding-challenge',
+    title: 'How to solve the two-sum coding challenge'
   }
 ];
 

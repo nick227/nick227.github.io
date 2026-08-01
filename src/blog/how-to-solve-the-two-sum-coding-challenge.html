@@ -1,0 +1,74 @@
+<p>
+  This article is a short walkthrough of the two-sum coding challenge: what it
+  asks, the naive nested-loop approach, and the hash-map version that keeps
+  time and space under control.
+</p>
+
+<h2>What the question is asking</h2>
+
+<p>
+  You get an array of numbers and a target sum. Can you find two numbers in
+  that array that add up to the target?
+</p>
+
+<p>
+  In plain terms: go through the numbers and their pairings, and check whether
+  any pair equals the target. The pattern underneath is being able to exhaust
+  an array’s combinations in optimal time and space.
+</p>
+
+<h2>The naive approach</h2>
+
+<p>
+  Nest a loop. For each item, compare it against its siblings. If two values
+  add up to the target, record the answer. That works. It also walks a lot of
+  repeated ground: roughly every pair, so the cost grows with the square of the
+  array size.
+</p>
+
+<h2>Making it efficient</h2>
+
+<p>
+  Use a hash map. As you walk the array once, store each value you have seen.
+  For the current number, ask whether
+  <code>target - current</code> is already in the map. If it is, you found the
+  pair. If not, store the current number and keep going.
+</p>
+
+<p>
+  That turns the sibling search into a lookup. You still cover the combinations
+  that matter, but you do not re-scan the whole list for every item. The hash
+  map path is especially clean when inputs are unique enough that each value
+  maps to one index.
+</p>
+
+<pre><code>function twoSum(nums, target) {
+  const seen = new Map();
+
+  for (let i = 0; i &lt; nums.length; i++) {
+    const need = target - nums[i];
+    if (seen.has(need)) {
+      return [seen.get(need), i];
+    }
+    seen.set(nums[i], i);
+  }
+
+  return null;
+}</code></pre>
+
+<h2>Where this pattern shows up</h2>
+
+<p>
+  Completing a cart to a promo threshold: given item prices, find two that hit
+  an exact discount total.
+</p>
+
+<p>
+  Matching ledger entries: given transaction amounts, find a debit and credit
+  that cancel to a reconciliation target.
+</p>
+
+<p>
+  Pairing inventory SKUs by combined weight or cost limit: scan once, look up
+  the complement, avoid comparing every SKU to every other SKU.
+</p>
