@@ -103,6 +103,10 @@ const moreArticleMetadata = [
   {
     slug: 'the-cost-of-a-clever-abstraction',
     title: 'The cost of a clever abstraction'
+  },
+  {
+    slug: 'my-adventures-trying-to-start-an-online-music-platform',
+    title: 'My adventures trying to start an online music platform'
   }
 ];
 

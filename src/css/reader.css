@@ -66,6 +66,11 @@ body.reader-active #scrim::after {
   line-height: 0.95;
 }
 
+.blog-lists {
+  display: flex;
+  flex-direction: column;
+}
+
 .blog-list {
   border-top: 1px solid var(--color-border);
 }
