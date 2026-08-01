@@ -27,18 +27,6 @@ function BlogListGenerator() {
       ArticleReader.navigate(blog.slug, { trigger: button });
     });
 
-    shareBtn.className = 'article-share-btn';
-    shareBtn.type = 'button';
-    shareBtn.setAttribute('aria-label', `Share "${blog.title}"`);
-    shareBtn.innerHTML = SHARE_ICON_SVG;
-    shareBtn.addEventListener('click', (event) => {
-      event.stopPropagation();
-      ArticleReader.share(blog.slug);
-    });
-
-    const arrow = button.querySelector('.article-link-arrow');
-    button.insertBefore(shareBtn, arrow);
-
     listItem.appendChild(button);
     blogListContainer.appendChild(listItem);
   });
