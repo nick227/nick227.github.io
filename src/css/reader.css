@@ -729,6 +729,137 @@ body.reader-active #scrim::after {
   }
 }
 
+.reader-body .fe-visual {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.reader-body .fe-visual figcaption {
+  margin-bottom: 14px;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.reader-body .fe-parts {
+  display: grid;
+  grid-template-columns: repeat(5, minmax(0, 1fr));
+  gap: 10px;
+}
+
+.reader-body .fe-part {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+  min-height: 100%;
+  padding: 12px 10px;
+  border: 1px solid var(--color-border);
+}
+
+.reader-body .fe-part-num {
+  color: var(--color-accent);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.reader-body .fe-part strong {
+  color: var(--color-txt-bright);
+  font-size: 0.95em;
+  line-height: 1.25;
+}
+
+.reader-body .fe-part span {
+  color: var(--color-txt-secondary);
+  font-size: 0.82em;
+  line-height: 1.35;
+}
+
+.reader-body .fe-flow-note {
+  margin: 14px 0 0;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
+.reader-body .fe-table-wrap {
+  overflow-x: auto;
+}
+
+.reader-body .fe-compare {
+  width: 100%;
+  min-width: 520px;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+.reader-body .fe-compare th,
+.reader-body .fe-compare td {
+  padding: 0.65em 0.75em;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reader-body .fe-compare th {
+  color: var(--color-txt-bright);
+  font-weight: 600;
+}
+
+.reader-body .fe-compare td:first-child {
+  color: var(--color-txt-bright);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.reader-body .fe-state-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px 6px;
+}
+
+.reader-body .fe-state-box {
+  flex: 1 1 110px;
+  padding: 12px 10px;
+  border: 1px solid var(--color-border);
+  color: var(--color-txt-bright);
+  font-size: 0.92em;
+  line-height: 1.3;
+  text-align: center;
+}
+
+.reader-body .fe-state-box span {
+  display: block;
+  margin-top: 4px;
+  color: var(--color-txt-secondary);
+  font-size: 0.8em;
+}
+
+.reader-body .fe-state-ui {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+  font-weight: 600;
+}
+
+.reader-body .fe-state-arrow {
+  color: var(--color-txt-muted);
+  font-size: 18px;
+}
+
+@media (max-width: 720px) {
+  .reader-body .fe-parts {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 420px) {
+  .reader-body .fe-parts {
+    grid-template-columns: 1fr;
+  }
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;

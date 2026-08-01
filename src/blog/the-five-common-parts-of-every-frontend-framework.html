@@ -1,0 +1,275 @@
+<p>
+  This article is about the five common parts inside every mainstream frontend
+  framework. React, Angular, and Vue look different on the surface. Underneath
+  they solve the same high-level problems: bind data to UI, manage state, and
+  respond to user events without turning the DOM into a manual chore.
+</p>
+
+<p>
+  You will get the five shared parts, a naming map across frameworks, a deeper
+  look at state and the helper libraries around it, and how this whole product
+  category matured over the last ten years.
+</p>
+
+<h2>What they all solve</h2>
+
+<p>
+  Before these tools, a lot of app code was glue: find a node, set its text,
+  attach a listener, remember to clean it up, hope nothing drifted. Frameworks
+  take that glue and make it declarative. You describe the UI from state. The
+  framework keeps the screen honest when state changes.
+</p>
+
+<p>
+  Three jobs show up everywhere:
+</p>
+
+<ul>
+  <li><strong>Bind content to UI</strong> — turn data into elements and keep them in sync</li>
+  <li><strong>Manage state</strong> — know what is true right now in the app</li>
+  <li><strong>Manage user events</strong> — clicks, typing, submits, and route changes that update that truth</li>
+</ul>
+
+<p>
+  Everything else is packaging around those jobs.
+</p>
+
+<figure class="fe-visual" aria-label="Five common frontend framework parts">
+  <figcaption>Five shared parts. Different names. Same machine.</figcaption>
+  <div class="fe-parts">
+    <div class="fe-part">
+      <span class="fe-part-num">1</span>
+      <strong>Components</strong>
+      <span>Reusable UI units</span>
+    </div>
+    <div class="fe-part">
+      <span class="fe-part-num">2</span>
+      <strong>Templates / render</strong>
+      <span>Data bound to UI</span>
+    </div>
+    <div class="fe-part">
+      <span class="fe-part-num">3</span>
+      <strong>State</strong>
+      <span>What is true now</span>
+    </div>
+    <div class="fe-part">
+      <span class="fe-part-num">4</span>
+      <strong>Events</strong>
+      <span>User input in</span>
+    </div>
+    <div class="fe-part">
+      <span class="fe-part-num">5</span>
+      <strong>Lifecycle / effects</strong>
+      <span>Side work over time</span>
+    </div>
+  </div>
+  <p class="fe-flow-note">Events update state → state re-binds UI → effects run when dependencies change.</p>
+</figure>
+
+<h2>1. Components</h2>
+
+<p>
+  Components are the unit of composition. A button, a form, a page section.
+  You assemble products from smaller pieces with inputs in and events out.
+</p>
+
+<p>
+  React calls them function components. Vue has SFCs and setup scripts.
+  Angular has components decorated with metadata. Same job: isolate a slice of
+  UI and reuse it.
+</p>
+
+<h2>2. Templates and binding</h2>
+
+<p>
+  This is how content reaches the screen. You declare what should appear for
+  the current state. The framework patches the DOM.
+</p>
+
+<p>
+  React returns JSX from render logic. Vue and Angular lean on HTML-like
+  templates with binding syntax. Lists, conditionals, and text interpolation
+  are the daily bread. When state changes, the bound UI updates without you
+  hand-editing nodes.
+</p>
+
+<h2>3. State</h2>
+
+<p>
+  State is the app’s memory: form fields, fetched records, selected tab,
+  auth session, cart lines. Local state lives next to one component. Shared
+  state is lifted or stored in a dedicated layer so distant screens stay aligned.
+</p>
+
+<h2>4. Events</h2>
+
+<p>
+  Users poke the machine. Clicks, keypresses, submits, drag gestures. Event
+  handlers translate those into state updates or commands. Frameworks normalize
+  how you attach handlers and how you pass data upward from child to parent.
+</p>
+
+<h2>5. Lifecycle and effects</h2>
+
+<p>
+  Real apps talk to servers, set timers, subscribe to sockets, and sync the
+  URL. That work is not rendering. Lifecycle hooks and effect APIs say when to
+  start, restart, and clean up side work as dependencies change.
+</p>
+
+<h2>Naming differences</h2>
+
+<p>
+  The vocabulary changes. The roles do not.
+</p>
+
+<div class="fe-table-wrap">
+  <table class="fe-compare">
+    <thead>
+      <tr>
+        <th>Idea</th>
+        <th>React</th>
+        <th>Vue</th>
+        <th>Angular</th>
+      </tr>
+    </thead>
+    <tbody>
+      <tr>
+        <td>UI unit</td>
+        <td>Component</td>
+        <td>Component / SFC</td>
+        <td>Component</td>
+      </tr>
+      <tr>
+        <td>Inputs from parent</td>
+        <td>props</td>
+        <td>props / defineProps</td>
+        <td>@Input()</td>
+      </tr>
+      <tr>
+        <td>Outputs to parent</td>
+        <td>callbacks / props</td>
+        <td>emit / defineEmits</td>
+        <td>@Output() EventEmitter</td>
+      </tr>
+      <tr>
+        <td>Local state</td>
+        <td>useState / useReducer</td>
+        <td>ref / reactive</td>
+        <td>fields + signals</td>
+      </tr>
+      <tr>
+        <td>Side effects</td>
+        <td>useEffect</td>
+        <td>watch / watchEffect</td>
+        <td>hooks / RxJS / effects</td>
+      </tr>
+      <tr>
+        <td>List binding</td>
+        <td>map in JSX</td>
+        <td>v-for</td>
+        <td>*ngFor / @for</td>
+      </tr>
+      <tr>
+        <td>Conditional UI</td>
+        <td>&amp;&amp; / ternary</td>
+        <td>v-if / v-show</td>
+        <td>*ngIf / @if</td>
+      </tr>
+      <tr>
+        <td>DOM event</td>
+        <td>onClick</td>
+        <td>@click</td>
+        <td>(click)</td>
+      </tr>
+    </tbody>
+  </table>
+</div>
+
+<p>
+  Learn one column deeply and the others become translation, not reinvention.
+</p>
+
+<h2>Deep dive: state, helpers, and design</h2>
+
+<p>
+  State design is where products get calm or chaotic. A useful split:
+</p>
+
+<ul>
+  <li><strong>Server state</strong> — data that lives in an API: users, orders, posts</li>
+  <li><strong>Client state</strong> — UI-only truth: modal open, wizard step, theme</li>
+  <li><strong>URL state</strong> — filters and ids that should survive refresh and share</li>
+</ul>
+
+<figure class="fe-visual" aria-label="State layers flowing into UI">
+  <figcaption>Keep each kind of state in the layer that owns it.</figcaption>
+  <div class="fe-state-flow">
+    <div class="fe-state-box">URL<br><span>filters, ids</span></div>
+    <span class="fe-state-arrow" aria-hidden="true">→</span>
+    <div class="fe-state-box">Server cache<br><span>queries, mutations</span></div>
+    <span class="fe-state-arrow" aria-hidden="true">→</span>
+    <div class="fe-state-box">Client UI<br><span>modals, drafts</span></div>
+    <span class="fe-state-arrow" aria-hidden="true">→</span>
+    <div class="fe-state-box fe-state-ui">Bound UI</div>
+  </div>
+</figure>
+
+<p>
+  Helper libraries grew up around that split. React Query, SWR, and Apollo treat
+  server data as a cache with loading and error semantics. Redux, Zustand,
+  Pinia, and NgRx handle shared client state and predictable updates. Form
+  libraries own field state so pages do not invent another half-broken form
+  model.
+</p>
+
+<p>
+  Design strategies that hold up:
+</p>
+
+<ul>
+  <li>Keep server state out of giant global stores when a query library already solves it</li>
+  <li>Lift state only as far as sharing requires</li>
+  <li>Prefer derived values over duplicated copies</li>
+  <li>Put shareable filters in the URL</li>
+  <li>Make writes explicit: one event, one state transition, one obvious place to debug</li>
+</ul>
+
+<p>
+  Signals and finer-grained reactivity are the recent convergence: update less
+  of the tree when one field changes. Different brands, same pressure toward
+  precise subscriptions.
+</p>
+
+<h2>Ten years of maturation</h2>
+
+<p>
+  A decade ago the fight was still “who owns the DOM” and “do we need a
+  framework.” Then it became build tooling wars, then state management wars,
+  then meta-framework wars. The dust settled into a clearer stack: components,
+  a compiler or bundler, a router, a server-state library, and optional
+  islands or SSR for first paint.
+</p>
+
+<p>
+  TypeScript moved from optional to default. Design systems became real
+  packages instead of copied CSS. Testing shifted toward components and user
+  flows. React, Angular, and Vue all grew official or semi-official answers for
+  routing, forms, and data fetching instead of leaving every team to invent a
+  house style from blog posts.
+</p>
+
+<p>
+  The biggest maturity signal is boredom in a good way. New apps start from
+  known parts. The interesting work moved up into product design, performance
+  budgets, and domain modeling — not into rewriting click handlers by hand.
+</p>
+
+<h2>Takeaway</h2>
+
+<p>
+  Every frontend framework is five parts in a trench coat: components,
+  binding, state, events, and effects. Learn the parts once. Translate the
+  names as needed. Put state where it belongs, and let the helper libraries do
+  the jobs they were built for.
+</p>

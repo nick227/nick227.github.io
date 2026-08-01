@@ -120,6 +120,10 @@ const primaryArticleMetadata = [
   {
     slug: 'the-secrets-of-lightning-fast-pages',
     title: 'The secrets of lightning-fast pages'
+  },
+  {
+    slug: 'the-five-common-parts-of-every-frontend-framework',
+    title: 'The five common parts of every frontend framework'
   }
 ];
 
