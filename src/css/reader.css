@@ -501,6 +501,38 @@ body.reader-active #scrim::after {
   line-height: 1.6;
 }
 
+.reader-body pre.two-page-diagram,
+.reader-body pre.two-page-flow {
+  font-size: 12.5px;
+  line-height: 1.45;
+  letter-spacing: 0.01em;
+}
+
+.reader-body table.two-page-map {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.reader-body table.two-page-map th,
+.reader-body table.two-page-map td {
+  padding: 0.7em 0.85em;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reader-body table.two-page-map th {
+  color: var(--color-txt-bright);
+  font-weight: 600;
+}
+
+.reader-body table.two-page-map td:first-child {
+  color: var(--color-txt-bright);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;

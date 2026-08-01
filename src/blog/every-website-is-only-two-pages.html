@@ -5,127 +5,210 @@
 </p>
 
 <p>
-  You will get how common surfaces map back to those two shapes, what that
-  means for list/detail APIs, and practical prescriptions for keeping products
-  from inventing a new layout for every noun.
+  You will get the two shapes drawn out, several product use cases mapped onto
+  them, and how that pattern should show up in the API.
 </p>
 
-<h2>The two shapes</h2>
+<pre class="two-page-diagram" aria-label="Index page versus item page"><code>INDEX                              ITEM
+┌─────────────────────┐            ┌─────────────────────┐
+│ search / filters    │            │ one subject         │
+│                     │   pick →   │ title · status · id │
+│ row                 │            │                     │
+│ row                 │            │ detail              │
+│ row                 │            │ actions             │
+│ row                 │            │ related index ↓     │
+│ …                   │            └─────────────────────┘
+└─────────────────────┘</code></pre>
 
 <p>
-  An index answers: what exists, and which one do I care about next? Feeds,
-  search results, dashboards, inboxes, galleries, tables, notification lists,
-  category pages. Different costumes. Same job. Scan, filter, pick.
+  An index answers: what exists, and which one do I care about next? An item
+  page answers: what is this, and what can I do with it? Different costumes.
+  Same jobs.
 </p>
+
+<table class="two-page-map">
+  <thead>
+    <tr>
+      <th>Looks like</th>
+      <th>Index</th>
+      <th>Item</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Store</td>
+      <td>product grid</td>
+      <td>product page</td>
+    </tr>
+    <tr>
+      <td>Social</td>
+      <td>feed</td>
+      <td>post</td>
+    </tr>
+    <tr>
+      <td>Support</td>
+      <td>ticket queue</td>
+      <td>ticket</td>
+    </tr>
+    <tr>
+      <td>Mail</td>
+      <td>inbox</td>
+      <td>message</td>
+    </tr>
+    <tr>
+      <td>Admin</td>
+      <td>records table</td>
+      <td>record</td>
+    </tr>
+    <tr>
+      <td>Settings</td>
+      <td>setting groups</td>
+      <td>one setting</td>
+    </tr>
+    <tr>
+      <td>Chat</td>
+      <td>message list</td>
+      <td>next message you write</td>
+    </tr>
+  </tbody>
+</table>
+
+<h2>Online store</h2>
 
 <p>
-  An item page answers: what is this, and what can I do with it? A post, a
-  product, a profile, an invoice, a ticket, a document. Detail, actions,
-  related context. Still one primary subject.
+  A hat store is the cleanest version of the idea. The catalog is an index.
+  The product page is the item. Everything else is decoration around that pair.
 </p>
+
+<pre class="two-page-flow" aria-label="Hat store flow"><code>/hats
+  [ beanie ] [ fedora ] [ cap ] [ cowboy ]
+         │
+         └─ click fedora → /hats/fedora
+                              price
+                              sizes
+                              add to cart
+                              reviews  ← nested index</code></pre>
 
 <p>
-  Settings is a list of setting groups, then a setting. Checkout is a cart
-  list, then a line item or an order. Admin is indexes all the way down until
-  you open a record. Even a chat thread is a list of messages with one
-  composer focused on the next item you are about to create.
+  Category pages, search results, and “similar hats” are still indexes. Cart is
+  an index of line items. Checkout opens one order item. You do not need a new
+  page archetype for each of those nouns.
 </p>
+
+<h2>Social feed</h2>
 
 <p>
-  Once you see it, you stop inventing a new page type for every noun.
+  A feed is an index of posts. Opening a post is the item page. Comments are a
+  nested index under that item. Profiles are item pages with their own nested
+  indexes: posts, followers, media.
 </p>
 
-<h2>Why this matters for the API</h2>
+<pre class="two-page-flow" aria-label="Social feed flow"><code>/feed                         /posts/1842
+┌──────────────────┐          ┌──────────────────────┐
+│ post A           │──open──▶ │ post A               │
+│ post B           │          │ body                 │
+│ post C           │          │ like · share         │
+└──────────────────┘          │ comments:            │
+                              │   c1                 │
+                              │   c2                 │
+                              └──────────────────────┘</code></pre>
+
+<p>
+  Notifications are another index. Each row points at an item that already
+  exists somewhere else. The product gets louder when teams invent a unique
+  layout for every social noun instead of strengthening these two.
+</p>
+
+<h2>Support tickets</h2>
+
+<p>
+  Agents live in a queue. That queue is the index: status, priority, assignee,
+  waiting time. The ticket page is the item: description, customer, timeline,
+  actions.
+</p>
+
+<pre class="two-page-flow" aria-label="Support ticket flow"><code>INDEX /tickets                 ITEM /tickets/90210
+#   status   wait   owner      subject: Billing failed twice
+902 open     4m     Ana        customer: acme-18
+911 pending  21m    —          timeline:
+918 open     1h     Jon          note · reply · event
+                               actions: assign · resolve</code></pre>
+
+<p>
+  Bulk assign and bulk close belong on the index. Reply, escalate, and resolve
+  belong on the item. If an action needs the full ticket body to make sense, it
+  wanted the item page.
+</p>
+
+<h2>Admin and CRM</h2>
+
+<p>
+  Admin software is indexes all the way down until you open a record. Customers,
+  invoices, employees, audit events. Same table pattern, different columns.
+</p>
+
+<pre class="two-page-flow" aria-label="CRM nested indexes"><code>/customers                     /customers/acme
+┌───────────────┐              ┌─────────────────────────┐
+│ Acme          │──open──────▶ │ Acme                    │
+│ Globex        │              │ contacts · billing      │
+│ Initech       │              │                         │
+└───────────────┘              │ orders     ← nested index
+                               │ invoices   ← nested index
+                               │ tickets    ← nested index
+                               └─────────────────────────┘</code></pre>
+
+<p>
+  Nested indexes stay under the item unless people truly need to start from
+  that list globally. “All invoices across all customers” is its own index.
+  “Invoices for Acme” is part of the Acme item.
+</p>
+
+<h2>Chat and create flows</h2>
+
+<p>
+  A thread is an index of messages. The composer is the item page for a message
+  that does not have an id yet. Create screens in general are item pages before
+  persistence: new post, new ticket, new product. Same form shape as edit when
+  you can manage it.
+</p>
+
+<pre class="two-page-flow" aria-label="Chat as index plus create item"><code>/threads/42
+┌─────────────────────────────┐
+│ msg 1                       │  ← index rows
+│ msg 2                       │
+│ msg 3                       │
+├─────────────────────────────┤
+│ [ write next message ]      │  ← item with no id yet
+└─────────────────────────────┘</code></pre>
+
+<h2>What the API should look like</h2>
 
 <p>
   If the product is only indexes and items, the API should feel that way too.
-  Most endpoints collapse into a short vocabulary:
 </p>
 
-<ul>
-  <li>list resources, with filters, sort, and cursor pagination</li>
-  <li>get one resource by id</li>
-  <li>create, update, delete that resource</li>
-  <li>list related resources hanging off the item</li>
-</ul>
+<pre class="two-page-flow" aria-label="API shape for index and item"><code>GET    /resources              index
+GET    /resources/:id          item
+POST   /resources              create item
+PATCH  /resources/:id          update item
+DELETE /resources/:id          remove item
+GET    /resources/:id/children nested index</code></pre>
 
 <p>
-  That is not every endpoint you will ever need. It is the shape you should
-  default to before inventing a special snowflake route. When a new screen
-  appears, ask which collection it is listing and which entity it is opening.
-  If you cannot answer, the screen is probably confused.
-</p>
-
-<p>
-  Spec-first designs benefit from this immediately. One list contract. One
-  detail contract. Shared pagination. Shared error shapes. The frontend stops
-  growing a new fetch style for every page.
-</p>
-
-<h2>Prescriptions</h2>
-
-<p>
-  Design the index before the chrome. Decide the primary entity, the fields
-  needed to choose among rows, and the filters that actually change a
-  decision. Then decorate. Navigation, sidebars, and marketing modules are
-  supporting cast.
+  Shared list contracts, shared detail contracts, shared pagination, shared
+  error shapes. When a new screen appears, ask which collection it lists and
+  which entity it opens. If you cannot answer, the screen is probably confused.
 </p>
 
 <p>
-  Make list and detail share a vocabulary. The same title, status, image, and
-  identity that appear in the index should appear on the item page without
-  translation. If the card says one thing and the detail says another, users
-  feel lost even when the data is correct.
+  Spec-first designs benefit immediately. The frontend stops growing a new
+  fetch style for every page, and the server stops inventing a snowflake route
+  for every noun.
 </p>
 
 <p>
-  Put actions where the object lives. Bulk actions belong on the index.
-  Object actions belong on the item. If an action needs five fields of
-  context, it probably wanted the detail view all along.
-</p>
-
-<p>
-  Prefer one universal list pattern. Cards or rows, cursor pagination or
-  load-more, search and filters in a stable place. Specialize the contents,
-  not the interaction model. Teams burn months inventing a new list widget
-  for each domain when one good one would have finished the product.
-</p>
-
-<p>
-  Let nested indexes ride under the item. Comments on a post. Versions on a
-  document. Orders for a customer. That is still the same two-page system,
-  recursively. Do not promote every nested list into its own top-level
-  product area unless people need to start there.
-</p>
-
-<p>
-  Treat creation as an item with no id yet. New post, new ticket, new
-  product. Same form shape as edit whenever you can. The create screen is not
-  a third page type. It is the item page before persistence.
-</p>
-
-<p>
-  Keep special pages rare and honest. Login, pricing, billing portal, legal.
-  Those can break the pattern. Just do not let every feature claim the same
-  exemption. If everything is special, nothing is designed.
-</p>
-
-<h2>The perspective check</h2>
-
-<p>
-  When a feature request arrives, run it through the two-page test. Is this
-  a new collection people need to browse? Is this richer detail on an entity
-  we already have? Or is someone asking for a unique layout because the
-  existing index and item pages were never made strong enough?
-</p>
-
-<p>
-  Most of the time the answer is not a new kind of page. It is better sorting
-  on the index, clearer hierarchy on the item, or a related list tucked under
-  the thing people already opened.
-</p>
-
-<p>
-  Every website is only two pages. Build those two until they are excellent.
-  Then notice how little else you needed.
+  Every website is only two pages. Make the index excellent at choosing. Make
+  the item excellent at acting. Nest related indexes under the item. Keep true
+  exceptions rare: login, pricing, legal. Then notice how little else you
+  needed.
 </p>
