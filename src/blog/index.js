@@ -95,6 +95,10 @@ const moreArticleMetadata = [
   {
     slug: 'a-generic-ai-prompt-to-make-all-code-a-little-bit-better',
     title: 'A generic AI prompt to make all code a little bit better'
+  },
+  {
+    slug: 'all-about-my-optimal-tech-stack',
+    title: 'All about my optimal tech stack'
   }
 ];
 

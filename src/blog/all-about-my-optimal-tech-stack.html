@@ -1,0 +1,146 @@
+<p>
+  This article is my usual tech stack: not a religion, not a one-size answer,
+  just the defaults I reach for when I want a system that stays coherent under
+  change.
+</p>
+
+<p>
+  You will get the contract spine I trust, how I pick servers and frameworks,
+  when I keep the UI on the same host, what I actually use on the frontend now,
+  and the quality tools that keep the whole thing from drifting.
+</p>
+
+<h2>It depends, then it does not</h2>
+
+<p>
+  Of course it depends on the project. Mobile-only, heavy SEO, GPU workloads,
+  regulated data, tiny prototypes. Different constraints win.
+</p>
+
+<p>
+  Still, I have a set of goodies I am accustomed to. When those are in place,
+  the system has a hard time getting too wild.
+</p>
+
+<h2>Prisma, OpenAPI, Zod</h2>
+
+<p>
+  Those three are the spine. Prisma owns the data model. OpenAPI owns the HTTP
+  contract. Zod owns runtime validation and the typed shapes that travel
+  through the app.
+</p>
+
+<p>
+  Together they answer the same questions in one place: what exists, what can
+  be sent, what is valid. Handwritten twins of those facts are where drift
+  starts. Keep the spine honest and a lot of architecture theater becomes
+  unnecessary.
+</p>
+
+<h2>Servers: Fastify and the boring companions</h2>
+
+<p>
+  For actual servers I have found Fastify, or something in that family, to be
+  the least friction. Fast enough. Clear plugin model. Easy to keep thin.
+</p>
+
+<p>
+  Around that I still reach for tools like Helmet and Passport when the job is
+  security headers and auth plumbing. Not because they are trendy. Because I
+  do not want to invent those layers from scratch on every product.
+</p>
+
+<h2>Next or not</h2>
+
+<p>
+  Whether to use Next is still an open question for me. It wins when the
+  product is mostly a web app that wants routing, rendering, and deployment
+  conventions in one box. It loses when I want a plain API server, a static
+  Vite app, or a generator-owned architecture that already decides those
+  seams.
+</p>
+
+<p>
+  I do not treat Next as mandatory modernity. I treat it as one possible
+  packaging of frontend and server concerns.
+</p>
+
+<h2>Generators versus opinionated frameworks</h2>
+
+<p>
+  If we are using my generator YAML-based architecture, the opinions live in
+  the pipeline: schema to contracts to routes to clients. That is the point.
+</p>
+
+<p>
+  If we are not, I would rather use an opinionated framework in the StrongLoop
+  tradition than a pile of unguided packages. Somebody has to decide the
+  shape. Either the generator does, or the framework does. “Flexible forever”
+  usually means every feature invents a slightly different server.
+</p>
+
+<h2>Serve the UI or detach it</h2>
+
+<p>
+  Next decision point: same-host serving versus a detached frontend. There are
+  positives for both. Separate deploys, separate scaling, cleaner mobile and
+  multi-platform clients. Detach can be the right call.
+</p>
+
+<p>
+  Unless you are developing for mobile or multi-platform, I think the benefits
+  of same-host serving outweigh the conveniences of detaching the frontend.
+  One origin. Simpler auth cookies. Fewer CORS stories. Fewer “which
+  environment is out of date” mornings. Detach when you need to. Do not detach
+  because a blog post said micro-frontends sound mature.
+</p>
+
+<h2>Frontend: is there still a debate?</h2>
+
+<p>
+  I feel like Angular is an antique, even though that is where all of my
+  professional experience lives. Respect to the years. That is not where I
+  build now.
+</p>
+
+<p>
+  All of my independent experience in the post-AI world is with React and
+  Vite. Fast feedback. Small surface. Agents and humans both move through it
+  without learning a cathedral. My next choices after that are vanilla or
+  React Native, depending on whether the UI is a simple site or a real native
+  client.
+</p>
+
+<p>
+  Since we already have Zod, we are in TypeScript land anyway. That part is
+  not a debate for me.
+</p>
+
+<h2>Keep it rock solid</h2>
+
+<p>
+  For static analysis, ESLint of course. I also like Fallow a lot: dead code,
+  duplication, complexity, the structural drift that lint rules miss. Combined
+  with e2e tests, your systems get pretty rock solid.
+</p>
+
+<p>
+  Lint catches local mistakes. Fallow catches architectural mess. E2E catches
+  the product still working when the pieces are wired together. That trio is
+  cheap insurance compared to rediscovering quality during an incident.
+</p>
+
+<h2>The default picture</h2>
+
+<p>
+  Prisma, OpenAPI, Zod. Fastify-shaped servers with Helmet and Passport when
+  needed. Generator pipeline when I have it, StrongLoop-style opinions when I
+  do not. Same-host UI unless mobile or multi-platform forces a split. React
+  and Vite for the web, vanilla or React Native when that fits better.
+  TypeScript throughout. ESLint, Fallow, and e2e on the way out the door.
+</p>
+
+<p>
+  That is not the only stack that works. It is the stack that keeps me from
+  rebuilding my judgment from scratch on every project.
+</p>
