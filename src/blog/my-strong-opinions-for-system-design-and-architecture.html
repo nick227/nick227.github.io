@@ -1,21 +1,18 @@
 <p>
-  I get uncomfortable when I open a frontend codebase and find a large folder
-  of handwritten API functions. Not because writing <code>fetch</code> is
-  difficult. It is because the server already knows everything required to
-  generate that code.
+  This article collects my strongest system-design opinions: if the schema or
+  API contract already knows something, people should not keep another handwritten
+  copy of it correct across server and client.
 </p>
 
 <p>
-  The same is true on the backend. If the schema describes a model and the API
-  contract describes how that model moves across the network, there is very
-  little reason to hand-write another CRUD route, controller, validator, DTO, or
-  client function.
+  You will get the derive-don't-duplicate rule, how I start from Prisma and
+  OpenAPI, and what I refuse to let teams retype on every feature.
 </p>
 
 <p>
-  This is one of my strongest opinions about system design: if code can be
-  derived from an existing source of truth, people should not be responsible
-  for keeping another copy of it correct.
+  A large folder of handwritten frontend API functions is an early warning. The
+  server already knows enough to generate that code. The same is true for CRUD
+  routes, validators, DTOs, and client helpers that only restate the contract.
 </p>
 
 <h2>If the schema knows it, do not type it again</h2>

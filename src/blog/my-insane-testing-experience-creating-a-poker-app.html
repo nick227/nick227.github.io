@@ -1,15 +1,14 @@
 <p>
-  Building a poker app is not hard because of the cards. It is hard because
-  the table has to keep moving when people disconnect, rejoin, go all-in,
-  leave mid-street, and expect their chips to still add up.
+  This article is about the testing stack behind
+  <a href="https://github.com/nick227/poker-champ" target="_blank" rel="noopener">Poker Champ</a>,
+  a real-time Texas Hold'em platform where correctness means money conservation,
+  seat churn survival, and hands that keep completing under reconnect chaos.
 </p>
 
 <p>
-  <a href="https://github.com/nick227/poker-champ" target="_blank" rel="noopener">Poker Champ</a>
-  is a real-time multiplayer Texas Hold'em platform: Colyseus rooms, a dealer
-  engine, Prisma-backed economy, Expo client, bots, tournaments, lessons,
-  hand history, the works. The feature list looks ambitious. The testing story
-  is where it got insane.
+  You will get why happy-path tests fail here, the layers I ended up needing
+  (invariants, soaks, headless churn, Playwright), and the timing bugs that made
+  the suite necessary.
 </p>
 
 <h2>Happy-path tests are not enough</h2>

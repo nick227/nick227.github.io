@@ -1,17 +1,13 @@
 <p>
-  I have been rebuilding versions of the same image-generation project since
-  2022. It started as a Node.js command-line tool for creating batches of art
-  for dropshipping products. The first goal was straightforward: give the tool
-  a direction, let it run, and organize the results so I could review them
-  later.
+  This article is about AutoImage, the image-batch system I have rebuilt since
+  2022: controlled prompt variation, fail-fast queues, provider switching, and
+  organized review so studio-quality harvests stay usable at volume.
 </p>
 
 <p>
-  The project quickly became less about calling an image API and more about
-  building a reliable process around it. I needed controlled prompt variation,
-  safe limits on paid requests, useful logs, organized storage, and a way to
-  change providers without rebuilding the application. Those supporting parts
-  of AutoImage have outlasted any individual model integration.
+  You will get the prompt-builder approach, how I protect tokens on bulk runs,
+  what changed across providers since DALL-E 2, and where the public tool stands
+  now.
 </p>
 
 <h2>The prompt builder is the best part</h2>

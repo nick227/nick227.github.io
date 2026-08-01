@@ -1,25 +1,12 @@
 <p>
-  I chose LangChain for an AI-agent-to-API platform because it seemed like the
-  stable, corporate answer. I was building a system that had to interpret a
-  request, choose the right API operation, validate the arguments, run it, and
-  return a useful result. LangChain already had models for chains, tools,
-  structured output, and agent state, so using the established framework felt
-  more responsible than inventing my own.
+  This article is why I think LangChain is overrated for focused agent work: it
+  looked like the safe corporate choice for an AI-agent-to-API platform, then
+  the abstraction cost outran the product progress.
 </p>
 
 <p>
-  Some of that decision paid off. I appreciated the hardened types and the way
-  the library pushed important concepts into clear contracts. The problem was
-  that the codebase became busy and abstract much faster than the application
-  became capable. Before long, I was spending more time fitting a simple process
-  into the framework than improving the process itself.
-</p>
-
-<p>
-  That experience changed how I think about AI frameworks. LangChain contains
-  many good ideas, but most applications do not need all of those ideas wrapped
-  in a general-purpose library. For a small team building a focused agent, I
-  would usually borrow the architecture and write the thinner system myself.
+  You will get what paid off, where the framework got in the way, and why I
+  would usually borrow the ideas and write a thinner system myself.
 </p>
 
 <h2>LangChain looks like the safe choice</h2>

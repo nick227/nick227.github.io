@@ -1,27 +1,14 @@
 <p>
-  I have been building online applications long enough to get very particular
-  about how systems should be designed. The key is a single source of truth
-  throughout.
+  This article is about
+  <code>nick-webapp-factory</code>, a Claude skill that scaffolds full-stack
+  MVPs with my architecture preferences baked in: spec-first APIs, generated
+  SDKs, copy-first templates, and phase gates so the agent does not rebuild
+  boilerplate from scratch every time.
 </p>
 
 <p>
-  I despise boilerplate. I was automating NgRx before AI was even a thing. I
-  aggressively enforce declarative, model-driven architectures. I do not trust
-  my own eyes and fingers when a computer can do the work for us. So I try to
-  write everything as generic, config-driven generators.
-</p>
-
-<p>
-  AI does not naturally take that posture. It builds like a mid-level
-  developer would: long brittle threads from data to UI. It will happily dump
-  thirty unevenly named scripts into a folder. And like a mid-level developer,
-  it is setting you up for pain later.
-</p>
-
-<p>
-  So there is still work for humans. Someone has to know for sure the AI is
-  doing the right thing. That is how I ended up writing a Claude skill instead
-  of repeating myself on every new project.
+  You will get why I packaged the playbook as a skill, how the OpenAPI spine
+  works, how the template registry saves tokens, and how I actually run a build.
 </p>
 
 <h2>What a Claude skill actually is</h2>
