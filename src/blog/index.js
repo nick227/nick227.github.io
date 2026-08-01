@@ -108,6 +108,10 @@ const primaryArticleMetadata = [
   {
     slug: 'trapping-rain-water',
     title: 'Trapping rain water'
+  },
+  {
+    slug: 'deep-dive-into-the-coin-change-problem',
+    title: 'Deep dive into the coin change problem'
   }
 ];
 

@@ -1,0 +1,127 @@
+<p>
+  This article is a deep dive into the coin change problem with an emphasis on
+  dynamic programming: what DP actually is, what subproblem coin change is
+  really solving, and how to spot that shape in other work.
+</p>
+
+<p>
+  You will get a plain definition of dynamic programming, a few ways to see the
+  same solution, and an optimal bottom-up function for the classic unbounded
+  coin change case.
+</p>
+
+<h2>What dynamic programming is</h2>
+
+<p>
+  Dynamic programming is identifying overlapping subproblems, solving each one
+  once, and reusing those answers instead of recomputing them. You define a
+  smaller question whose answer helps the larger question. Then you store the
+  smaller answer.
+</p>
+
+<p>
+  If a recursive solution keeps asking the same question with the same inputs,
+  that is the signal. Memoization or a table turns repeated work into a lookup.
+</p>
+
+<h2>Coin change and the real subproblem</h2>
+
+<p>
+  Classic setup: you have coin denominations and a target amount. You want the
+  fewest coins that sum to that amount, or a signal that it is impossible. You
+  may reuse a denomination as many times as you want.
+</p>
+
+<p>
+  The real subproblem is not “solve the whole amount from scratch every time.”
+  It is:
+</p>
+
+<pre><code>What is the fewest coins needed to make amount x?</code></pre>
+
+<p>
+  Once you know the best answer for every smaller amount, the answer for
+  <code>x</code> is:
+</p>
+
+<pre><code>best(x) = 1 + min(best(x - coin)) for each coin &lt;= x</code></pre>
+
+<p>
+  That is the relationship. Every larger amount is built from a smaller amount
+  plus one coin.
+</p>
+
+<h2>How to identify subproblems in any space</h2>
+
+<p>
+  Ask what smaller version of the same question appears inside the big one. Good
+  candidates usually share these traits:
+</p>
+
+<ul>
+  <li>the smaller answer has a clear meaning on its own</li>
+  <li>the same smaller answer is needed more than once</li>
+  <li>there is a rule that combines smaller answers into a larger one</li>
+  <li>you can order the work so dependencies are already finished</li>
+</ul>
+
+<p>
+  In coin change, amounts <code>0..target</code> are the ordered subproblems.
+  Amount <code>0</code> needs zero coins. Everything else depends on smaller
+  amounts.
+</p>
+
+<h2>Same solution, multiple views</h2>
+
+<p>
+  It helps to conceptualize the same idea more than one way so the relationship
+  sticks.
+</p>
+
+<p>
+  <strong>Recursive view:</strong> to make <code>amount</code>, try each coin,
+  then solve <code>amount - coin</code>. Cache those results so identical calls
+  return immediately.
+</p>
+
+<p>
+  <strong>Table view:</strong> build an array <code>minCoins[0..amount]</code>.
+  For each amount, try every coin and keep the minimum. You are filling the
+  answers in increasing order.
+</p>
+
+<p>
+  <strong>Graph view:</strong> each amount is a node. A coin is an edge that
+  moves you forward by that value at cost 1. Coin change is the shortest path
+  from 0 to the target on that graph.
+</p>
+
+<p>
+  Same subproblems. Same recurrence. Different pictures of why reuse wins.
+</p>
+
+<h2>Optimal bottom-up version</h2>
+
+<pre><code>function coinChange(coins, amount) {
+  const INF = amount + 1;
+  // minCoins[x] = fewest coins to make amount x
+  const minCoins = Array(amount + 1).fill(INF);
+  minCoins[0] = 0;
+
+  for (let x = 1; x &lt;= amount; x++) {
+    for (const coin of coins) {
+      if (coin &lt;= x) {
+        // make x by adding one coin onto a smaller solved amount
+        minCoins[x] = Math.min(minCoins[x], minCoins[x - coin] + 1);
+      }
+    }
+  }
+
+  return minCoins[amount] &gt;= INF ? -1 : minCoins[amount];
+}</code></pre>
+
+<p>
+  Each amount is solved once. Each coin is tried against that amount. The table
+  reuses every smaller answer. That is dynamic programming in one screen: name
+  the subproblem, order it, store it, combine it.
+</p>
