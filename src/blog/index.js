@@ -96,6 +96,10 @@ const primaryArticleMetadata = [
   {
     slug: 'all-about-my-optimal-tech-stack',
     title: 'All about my optimal tech stack'
+  },
+  {
+    slug: 'what-does-the-future-of-technology-look-like',
+    title: 'What does the future of technology look like?'
   }
 ];
 
