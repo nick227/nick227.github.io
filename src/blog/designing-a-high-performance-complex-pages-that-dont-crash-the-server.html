@@ -1,207 +1,230 @@
 <p>
-  This article covers how I design complex list and detail pages so they stay
-  fast under real data: put hard limits in the API contract, stop the frontend
-  from inventing unbounded work, and generate the repetitive server and client
-  layers from one model map instead of handwriting every endpoint.
+  This article is about building high-performance end-to-end pages when the
+  product is busy: posts, joins, status changes, media uploads, and a
+  chronological feed that has to stay fresh without melting the database.
 </p>
 
 <p>
-  You will get the failure pattern I see most often, the Prisma-to-generator
-  pipeline I use, and the concrete controls that keep a page from turning into
-  an accidental load test.
+  You will get why assembling a live river from dozens of source tables on every
+  request is madness, how writers plus a worker and outbox fix that, when a
+  simpler same-transaction projection is enough, and how to keep clients on a
+  single cheap read.
 </p>
 
-<h2>The server gets buried one reasonable request at a time</h2>
+<h2>The social feed problem</h2>
 
 <p>
-  Most slow pages do not begin with one obviously disastrous query. They grow
-  gradually. A table needs an owner name, so the frontend requests owners. Each
-  row needs a count, so another endpoint is added. Filters need metadata.
-  Permissions are checked in a different controller. Soon one page depends on a
-  collection of routes that were designed separately.
+  Picture a social product. People are posting. People are joining groups.
+  Statuses flip. Media finishes uploading. Mentions land. Reactions stack up.
+  The home page wants one thing: a chronological fresh feed.
 </p>
 
 <p>
-  The problems are familiar:
+  If you build that river fresh from the source tables on every request, you are
+  asking the database to reassemble history under load. A realistic version is a
+  massive union of multi-join queries across domains that were never meant to be
+  one page.
+</p>
+
+<pre><code>-- Conceptual madness (do not ship this as your feed)
+SELECT * FROM (
+  SELECT p.id, p.created_at, 'post' AS kind
+  FROM posts p
+  JOIN users u ON u.id = p.author_id
+  LEFT JOIN media m ON m.post_id = p.id
+  WHERE ...
+
+  UNION ALL
+
+  SELECT j.id, j.created_at, 'join' AS kind
+  FROM memberships j
+  JOIN users u ON u.id = j.user_id
+  JOIN groups g ON g.id = j.group_id
+  WHERE ...
+
+  UNION ALL
+
+  SELECT s.id, s.created_at, 'status' AS kind
+  FROM status_events s
+  JOIN users u ON u.id = s.user_id
+  WHERE ...
+
+  -- plus uploads, mentions, reactions, ...
+) river
+ORDER BY created_at DESC
+LIMIT 50;</code></pre>
+
+<p>
+  Every refresh locks attention across many tables, fills working memory with
+  expensive joins and sorts, and repeats that work constantly for every
+  scrolling client. It would be madness. The page is complex. The read path
+  should not be.
+</p>
+
+<figure class="river-visual" aria-label="Request-time assembly versus projected river">
+  <figcaption>Same page. Two very different costs.</figcaption>
+  <div class="river-compare">
+    <div class="river-card river-card-bad">
+      <strong>Request-time river</strong>
+      <span>Client waits</span>
+      <ol>
+        <li>Hit API</li>
+        <li>Union + joins across domains</li>
+        <li>Sort and page under lock pressure</li>
+        <li>Hope the DB survives peak</li>
+      </ol>
+    </div>
+    <div class="river-card river-card-good">
+      <strong>Projected river</strong>
+      <span>Client waits on a cheap read</span>
+      <ol>
+        <li>Writers record what happened</li>
+        <li>Worker builds RiverItems async</li>
+        <li>API reads one prepared table</li>
+        <li>Optional cache for last N</li>
+      </ol>
+    </div>
+  </div>
+</figure>
+
+<h2>Writers drop notes; workers build the page</h2>
+
+<p>
+  Writers are anything that changes or happens: create post, accept join,
+  finish upload, change status. On a major enterprise system, that write often
+  dumps a request into a RabbitMQ-style hopper. Kafka, service buses, CDC,
+  triggers, and job tables are variations of the same idea.
+</p>
+
+<p>
+  For an MVP, the hopper can be an outbox table in the same database. The write
+  transaction stores the domain change and a durable note that work remains.
+  Meanwhile a worker watches only that table. Anything it sees gets validated:
+  is this valid river content? If yes, the worker formats a RiverItem with all
+  the time in the world, because no browser is waiting on that request.
+</p>
+
+<p>
+  That worker can run on a different machine than the web server. It can do
+  aggregate calculations, hydrate display names, attach media URLs, and finally
+  write a pristine row into something like <code>RiverItem</code>. Clients
+  hitting the river API then get a simple single-read result: no joins, no
+  unions, no SQL puzzle on the hot path.
+</p>
+
+<pre><code>Domain write
+   ↓  (same transaction)
+Outbox / queue note
+   ↓
+Worker validates + projects
+   ↓
+RiverItem table  →  optional Redis / memory cache
+   ↓
+River API: SELECT … FROM RiverItem ORDER BY created_at DESC LIMIT n</code></pre>
+
+<h2>Transactional outbox versus same-transaction MVP</h2>
+
+<p>
+  A transactional outbox is relatively low cost and sets you up for separate
+  worker infrastructure later. It may be overkill for throwaway prototypes. For
+  a chronological MVP, the simpler path is:
+</p>
+
+<pre><code>Domain write → RiverItem update in the same transaction</code></pre>
+
+<p>
+  That skips hoppers and lag. It also couples request latency to projection
+  work and makes replay, multiple consumers, and failure isolation harder.
+</p>
+
+<p>
+  The fuller outbox approach adds:
 </p>
 
 <ul>
-  <li>The frontend requests fields it does not need.</li>
-  <li>Relations turn into repeated queries and N+1 behavior.</li>
-  <li>Lists load without firm pagination limits.</li>
-  <li>Different endpoints interpret filters and permissions differently.</li>
-  <li>Client types drift away from runtime validation.</li>
-  <li>Several components request the same data with different cache keys.</li>
+  <li>Outbox events</li>
+  <li>Per-consumer delivery records</li>
+  <li>Polling or stream consumption</li>
+  <li>Retry handling</li>
+  <li>Deduplication</li>
+  <li>Projection lag</li>
+  <li>Worker lifecycle and monitoring</li>
 </ul>
 
 <p>
-  Each decision looks manageable in isolation. Together, they make it difficult
-  to answer a basic question: how much work can this page ask the server to do?
-</p>
-
-<h2>I would rather compile the boring parts</h2>
-
-<p>
-  The pipeline begins with <code>schema.prisma</code>. Prisma already describes
-  the models, fields, types, nullability, and relations, and it gives me a clean
-  migration history. When Prisma runs a generator, it exposes that schema as
-  DMMF—structured metadata that another program can read.
-</p>
-
-<p>
-  I normalize the DMMF into one model map. That normalization step matters. I do
-  not want the DTO generator, route generator, and OpenAPI generator each
-  deciding for themselves what a nullable relation or read-only field means.
-  They all receive the same interpretation.
-</p>
-
-<pre><code>schema.prisma
-      ↓
-Prisma DMMF
-      ↓
-normalized model map
-      ↓
-DTOs · Zod · services · loaders · OpenAPI · SDK</code></pre>
-
-<p>
-  The templates are intentionally boring. They format decisions that have
-  already been made by the normalized model, policy map, projection map, and
-  operator table. Thin templates are easier to test and much less likely to
-  produce subtle differences across layers.
-</p>
-
-<h2>The page should ask for a known shape</h2>
-
-<p>
-  A complex page should not be able to invent an unlimited query. It should ask
-  for named projections and operations that the server already understands.
-</p>
-
-<p>
-  A projection defines the fields and relations available for a particular
-  response. A policy defines who may read or write them. An operator table
-  defines which filters and sorts are legal. Pagination rules put an upper bound
-  on collection work.
-</p>
-
-<p>
-  Imagine an admin page showing products, owners, inventory counts, and recent
-  activity. Instead of assembling that screen from unrelated requests, the page
-  uses generated SDK functions based on approved projections. The server knows
-  which fields to select, which relations to batch, which filters are indexed,
-  and how many rows may be returned.
-</p>
-
-<p>
-  The declarative part is still specific. It moves the expensive choices into
-  data where they can be reviewed before code is generated.
-</p>
-
-<h2>Put the performance limits in the contract</h2>
-
-<p>
-  Code generation does not make a database fast by itself. Its value is that the
-  same performance rules can be applied everywhere instead of depending on each
-  developer remembering them.
+  In exchange, it provides:
 </p>
 
 <ul>
-  <li>
-    <strong>Generated projections reduce over-fetching.</strong> Response shapes
-    select known fields instead of returning entire records by default.
-  </li>
-  <li>
-    <strong>Generated DataLoaders batch relation work.</strong> Repeated requests
-    for the same related model can be collected and deduplicated within a
-    request.
-  </li>
-  <li>
-    <strong>Generated pagination keeps lists bounded.</strong> Cursor helpers
-    and maximum page sizes prevent a table from requesting the full database.
-  </li>
-  <li>
-    <strong>Generated filters stay consistent.</strong> The SDK, runtime
-    validator, service, and OpenAPI documentation all use the same allowed
-    operators.
-  </li>
-  <li>
-    <strong>Generated hooks share stable cache keys.</strong> Components asking
-    for the same resource can reuse cached data instead of creating duplicate
-    network traffic.
-  </li>
+  <li>Reliable asynchronous projection</li>
+  <li>Replay and rebuilding</li>
+  <li>Isolation from request latency</li>
+  <li>Consistent processing across domains</li>
+  <li>Future consumers such as search and notifications</li>
+  <li>A record of failed delivery</li>
 </ul>
 
 <p>
-  These rules make load testing more useful too. If every list has a known
-  maximum and every page uses named projections, the test covers a known set of
-  operations. Without those boundaries, the client can create new query shapes
-  faster than the server team can measure them.
+  The main question is not traffic volume. It is whether you expect the River
+  to become an important cross-domain system. If yes, pay for the outbox early.
+  If the feed is a thin MVP feature, same-transaction projection can be honest
+  scaffolding.
 </p>
 
-<h2>TypeScript stops at the network</h2>
+<h2>What the hopper can look like</h2>
 
 <p>
-  TypeScript catches mistakes during development, but API input arrives at
-  runtime. The same model map therefore generates DTOs for compile-time types
-  and Zod schemas for runtime validation.
+  Teams name this layer differently. The pattern is the same: durable intent
+  that a worker will process.
 </p>
 
+<ul>
+  <li>Kafka infrastructure</li>
+  <li>Service-bus libraries</li>
+  <li>Database triggers</li>
+  <li>Change-data-capture systems</li>
+  <li>Framework event publishers</li>
+  <li>Queue-specific job tables</li>
+  <li>Vendor integration middleware</li>
+  <li>Application names such as Event, Job, Message, or PendingTask</li>
+</ul>
+
 <p>
-  Those contracts also feed the OpenAPI document. OpenAPI is an output of the
-  pipeline, not another document someone has to maintain by hand. The generated
-  specification then drives the SDK, documentation, mocks, contract tests, and
-  API-gateway checks.
+  In my MVP preference, the outbox table lives in the same database as the
+  write. That keeps “domain change + pending work” atomic without introducing a
+  broker on day one.
 </p>
 
-<p>
-  The frontend receives a generated SDK with typed endpoint functions, request
-  and response types, pagination helpers, error unions, and optional query
-  hooks. When a schema change affects the contract, the DTO, validator, OpenAPI
-  document, SDK, and tests change together.
-</p>
-
-<h2>Generated code should be easy to throw away</h2>
+<h2>After RiverItem, stop making clients think</h2>
 
 <p>
-  Generated files should be disposable. Everything under <code>/gen</code> can
-  be deleted and rebuilt, which means nobody fixes a generated controller by
-  hand and quietly loses the change during the next run.
-</p>
-
-<p>
-  Custom business behavior lives beside generated code in extension files such
-  as <code>*.ext.ts</code>. The generator owns standard transport, validation,
-  CRUD, policies, and telemetry. The application owns the behavior that is
-  actually specific to the product.
+  Once the projected table exists, the API is boring on purpose. Read
+  RiverItems in chronological order. Paginate. Return a display-ready shape.
 </p>
 
 <p>
-  After generation, a post-processing step sorts and formats the output,
-  validates the OpenAPI artifact, and writes a manifest hash. CI can regenerate
-  the stack and fail when committed artifacts drift from the schema. That turns
-  “remember to update the client” into a build rule rather than a team habit.
+  At that point you do not even need SQL on every hit. The worker, or a thin
+  cache warmer, can preload the last N results into server memory
+  (<code>node-cache</code>) or into Redis. Limit how often clients touch the
+  actual database. The expensive thinking already happened offline.
 </p>
 
-<h2>The payoff is consistency, not fewer files</h2>
+<pre><code>Writer domains          Worker box              Read path
+-----------             ----------              ---------
+posts / joins    →      validate event   →      RiverItem
+uploads/status   →      format item      →      Redis / memory
+mentions/...     →      write projection →      /river?cursor=</code></pre>
+
+<h2>High-performance pages are prepared pages</h2>
 
 <p>
-  This architecture still produces a lot of code: DTOs, validators, routes,
-  controllers, services, DataLoaders, auth guards, OpenAPI, SDK functions,
-  contract tests, and telemetry wrappers. The difference is that people are not
-  writing each copy of the same model contract independently.
+  Complex products create constant change. High-performance pages do not
+  recompute that universe on every scroll. They separate writers from readers,
+  project a chronological product ahead of time, and serve a single cheap
+  artifact.
 </p>
 
 <p>
-  A field's type, nullability, permissions, filter behavior, and response shape
-  are defined once and carried through the stack. A complex page can still be
-  complex, but its requests are typed, bounded, batchable, and visible before
-  the page starts sending traffic.
-</p>
-
-<p>
-  I do not expect a generator to rescue a bad query or replace normal
-  performance work. What it can do is control what the page is allowed to ask
-  for, keep the routine layers aligned, and leave custom logic in a clear place.
-  That gives me more time to optimize the parts that are actually specific to
-  the product instead of chasing contract drift and accidental query fan-out.
+  Build the river before the user asks for it. Then the page can feel fresh
+  without asking twenty tables to audition for every request.
 </p>

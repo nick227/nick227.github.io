@@ -860,6 +860,70 @@ body.reader-active #scrim::after {
   }
 }
 
+.reader-body .river-visual {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.reader-body .river-visual figcaption {
+  margin-bottom: 14px;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.reader-body .river-compare {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.reader-body .river-card {
+  padding: 14px 12px;
+  border: 1px solid var(--color-border);
+}
+
+.reader-body .river-card strong {
+  display: block;
+  color: var(--color-txt-bright);
+  font-size: 0.95em;
+}
+
+.reader-body .river-card > span {
+  display: block;
+  margin: 4px 0 10px;
+  color: var(--color-txt-secondary);
+  font-size: 0.82em;
+}
+
+.reader-body .river-card ol {
+  margin: 0;
+  padding-left: 1.1em;
+  color: var(--color-txt-dim);
+  font-size: 0.88em;
+  line-height: 1.45;
+}
+
+.reader-body .river-card li + li {
+  margin-top: 0.35em;
+}
+
+.reader-body .river-card-bad {
+  border-color: rgba(255, 120, 120, 0.35);
+}
+
+.reader-body .river-card-good {
+  border-color: rgba(218, 255, 0, 0.35);
+}
+
+@media (max-width: 640px) {
+  .reader-body .river-compare {
+    grid-template-columns: 1fr;
+  }
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;
