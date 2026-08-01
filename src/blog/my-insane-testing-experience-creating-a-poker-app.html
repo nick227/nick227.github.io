@@ -1,231 +1,247 @@
 <p>
-  This article is a practical guide to thoroughly testing a time- and
-  turn-based realtime app, grounded in
-  <a href="https://github.com/nick227/poker-champ" target="_blank" rel="noopener">Poker Champ</a>:
-  a Colyseus Texas Hold'em platform where seats, timers, pots, and reconnects
-  all have to keep working together.
+  This article is a guide for testing turn-based realtime apps, using
+  <a href="https://github.com/nick227/poker-champ" target="_blank" rel="noopener">Poker Champ</a>
+  as the concrete example. Poker Champ is a Colyseus Texas Hold'em server with an
+  Expo client. The hard problems are not the poker rules themselves — they are
+  timers, reconnects, concurrent tables, and making sure money never drifts.
 </p>
 
 <p>
-  You will get the test layers that matter for Colyseus projects, concrete poker
-  scenarios those layers catch, and a setup path you can copy for your own
-  realtime rooms.
+  You will get the six test layers we use, the FakeClient pattern for driving
+  rooms without a websocket server, the invariants that catch silent stalls,
+  and the exact scripts to run each layer.
 </p>
 
-<h2>What you are actually proving</h2>
+<h2>Why happy-path tests miss the real bugs</h2>
 
 <p>
-  In a turn-based realtime game, “the rule is correct” is not enough. You also
-  need continuous progress: someone eligible still owns the turn, streets still
-  advance, timers still fire or get replaced by auto-actions, and money still
-  conserves after every settlement. Players refresh, leave mid-turn, rejoin,
-  open two tabs, and expect the table to stay fair anyway.
+  A fold that passes in isolation does not prove the table works. Poker Champ
+  has concurrent seats, street timers, queued auto-actions for disconnected
+  players, and reconnect grace windows. The bugs that actually break games are
+  races between those systems:
 </p>
 
+<ul>
+  <li>
+    An auto-action queued for street N fires after the hand already moved to
+    street N+1, mutating the wrong state.
+    (<code>dealer.auto-action-queue-race.test.ts</code>)
+  </li>
+  <li>
+    A hand has no valid turn owner and no armed deadline, so it sits forever.
+    The soak catches this as <code>UNOWNED_ACTIVE_HAND</code>.
+  </li>
+  <li>
+    A human leaves mid-hand, bots keep the room alive, and the table never
+    advances. Stall monitors flag this as a ghost table.
+  </li>
+</ul>
+
 <p>
-  So the suite has to answer more than “can Alice fold once.” It has to answer:
-  can randomized legal play, seat churn, and long runs keep completing hands
-  without freezing or leaking chips?
+  The fix is layered testing with continuous invariants, not more happy-path
+  cases.
 </p>
 
 <figure class="test-visual" aria-label="Testing layers for a Colyseus turn-based app">
-  <figcaption>Build confidence from the engine outward. Each layer catches a different failure class.</figcaption>
+  <figcaption>Six layers. Each one catches failures the layer below cannot see.</figcaption>
   <div class="test-layers">
-    <div class="test-layer"><strong>6. Static / contract</strong><span>ESLint, types, knip, fallow, SDK shapes</span></div>
-    <div class="test-layer"><strong>5. Browser e2e</strong><span>Playwright: UI agrees with engine</span></div>
-    <div class="test-layer"><strong>4. Headless Colyseus</strong><span>Real server + WS, churn, repro artifacts</span></div>
-    <div class="test-layer"><strong>3. Soak / fuzz / churn</strong><span>Random legal play, reconnects, multi-table</span></div>
-    <div class="test-layer"><strong>2. Room integration</strong><span>In-process PokerRoom + FakeClients</span></div>
-    <div class="test-layer"><strong>1. Engine unit</strong><span>Dealer, pots, betting, money invariants</span></div>
+    <div class="test-layer"><strong>6. Static / contract</strong><span>ESLint, types, knip, fallow, OpenAPI/SDK shape checks</span></div>
+    <div class="test-layer"><strong>5. Browser e2e</strong><span>Playwright: UI stack matches engine across two clients</span></div>
+    <div class="test-layer"><strong>4. Headless Colyseus</strong><span>Real server + websocket clients, churn scenarios, repro artifacts</span></div>
+    <div class="test-layer"><strong>3. Soak / fuzz</strong><span>Random legal play, reconnect injection, chip conservation</span></div>
+    <div class="test-layer"><strong>2. Room integration</strong><span>In-process PokerRoom + FakeClient, no websocket server</span></div>
+    <div class="test-layer"><strong>1. Engine unit</strong><span>Dealer rules, pots, settlement — no networking</span></div>
   </div>
 </figure>
 
 <h2>1. Engine unit tests</h2>
 
 <p>
-  Keep game rules out of the networking layer. In Poker Champ the
-  <code>Dealer</code> owns deterministic engine behavior. Room code is glue.
-  Unit tests hit betting rules, side pots, split pots, showdown order, and
-  money conservation without sockets.
+  Keep game rules out of the networking layer. In Poker Champ, <code>Dealer</code>
+  is the authoritative engine and must not depend on <code>PokerRoom</code>.
+  Unit tests cover betting, side pots, showdown, and money without sockets.
 </p>
 
 <ul>
-  <li>Side-pot builders and uncalled-return paths</li>
-  <li>All-in matrices and “no further action” short stacks</li>
-  <li>Settlement and ledger money-safety</li>
-  <li>Street transitions and between-hands lifecycle</li>
-  <li>Invariant helpers: assert money conservation, betting state, churn contracts</li>
+  <li>
+    Side pots and uncalled returns —
+    <code>sidepots.integration.test.ts</code>,
+    <code>sidepot.uncalled-return.integration.test.ts</code>
+  </li>
+  <li>
+    All-in matrices —
+    <code>dealer.allin.matrix.6max.test.ts</code>
+  </li>
+  <li>
+    Settlement money safety —
+    <code>settlement-service.money-safety.test.ts</code>,
+    <code>money-invariants.test.ts</code>
+  </li>
+  <li>
+    Street transitions —
+    <code>dealer.between-hands-lifecycle.integration.test.ts</code>
+  </li>
 </ul>
 
 <p>
-  Tooling: Vitest on the server package. These tests should be fast and mean.
-  When they fail, you know the rules broke, not the transport.
+  Run them with <code>pnpm test:server:core</code>. When one fails, the bug is
+  in the rules, not in networking.
 </p>
 
-<h2>2. In-process Colyseus room tests</h2>
+<h2>2. Room integration with FakeClients</h2>
 
 <p>
-  Most room tests should not need a real WebSocket server. Instantiate the room,
-  stub metadata, call <code>onCreate</code>, join with FakeClients, emit
-  messages, and assert on snapshots the room would have sent.
+  Most room tests do not need a WebSocket server. Create a
+  <code>PokerRoom</code>, stub <code>setMetadata</code>, call
+  <code>onCreate</code>, join FakeClients, emit actions, and assert on the
+  <code>TABLE_SNAPSHOT</code> payloads the room sent.
 </p>
 
-<pre><code>// Pattern: drive PokerRoom in-process
-const room = new PokerRoom();
-room.setMetadata = async () =&gt; {};
+<pre><code>const room = new PokerRoom();
+room.setMetadata = async () => {};
 await room.onCreate({ tableConfig: { /* blinds, seats */ } });
 
-const sends = [];
-const client = {
-  sessionId: "c1",
-  send: (type, payload) =&gt; sends.push({ type, payload }),
-  leave: () =&gt; {},
-};
-
+const client = makeClient("c1"); // FakeClient: captures send() by type
 await room.onJoin(client, { buyInCents: 10_000 }, { userId: "u1", username: "alice" });
 room.onMessageEvents.emit("ACTION", client, { type: "FOLD", handId, actionId });
+await flushAsync();
 
-// Assert latest TABLE_SNAPSHOT: toActSeat, street, pot, stacks</code></pre>
+// Assert client.latestSnapshot: toActSeat, street, pot, stacks</code></pre>
 
 <p>
-  Useful controls while testing time:
+  Controls that keep these tests deterministic:
 </p>
 
 <ul>
-  <li>Fake timers for turn timeouts and between-hand delays</li>
-  <li>Disable or stub human turn schedulers when you want pure action-driven flow</li>
-  <li>Stub cashier / seat-session services so money IO stays deterministic</li>
-  <li><code>waitFor(() =&gt; condition)</code> helpers instead of fixed sleeps alone</li>
+  <li>
+    <code>vi.useFakeTimers()</code> for turn deadlines and between-hand delays
+  </li>
+  <li>
+    Stub <code>CashierService</code> and <code>TableSeatSessionService</code>
+    so money IO does not hit the database
+  </li>
+  <li>
+    <code>waitFor(condition, timeoutMs, label)</code> instead of fixed sleeps —
+    failures include the label so you know what stalled
+  </li>
 </ul>
 
 <p>
-  Poker scenarios that belong here: join guards, not-your-turn rejection, action
-  broadcast, disconnect auto-fold/check, rejoin within grace, mid-hand joiners
-  waiting for the next deal, ADD_BOT paths.
+  Room scenarios covered this way: join guards
+  (<code>table-join.guard.test.ts</code>), action broadcast and
+  <code>NOT_YOUR_TURN</code>
+  (<code>table-action-broadcast.test.ts</code>), reconnect timeouts
+  (<code>poker-room.reconnect-timeout.test.ts</code>), session policy
+  (<code>session-policy.test.ts</code>).
 </p>
 
-<h2>3. Soak, fuzz, and churn</h2>
+<h2>3. Soak and churn tests</h2>
 
 <p>
-  Unit tests prove known cases. Soak tests hunt the unknown ones. Drive legal
-  actions only, many hands, inject disconnect/reconnect, and check chip mass
-  after every settlement. Fail if hands stop completing or tables stall.
+  Unit and room tests cover known cases. Soaks find the ones you did not think
+  of. They run many hands with randomized legal actions, inject
+  disconnect/reconnect mid-hand, and assert chip conservation after every
+  settlement. If a hand stops progressing, the test fails with a trace of the
+  last state changes.
 </p>
 
 <ul>
-  <li>Dealer random-walk soaks</li>
-  <li>Fuzz invariants on CI with a tighter budget</li>
-  <li>Multiplayer churn matrices: fold storms, all-in ladders, join/leave thrash</li>
-  <li>Multi-table isolation soaks across concurrent rooms</li>
+  <li>
+    Single-table dealer soak —
+    <code>dealer.random-walk.soak.test.ts</code>.
+    Runs via <code>pnpm test:server:soak</code>
+    (<code>SOAK_HANDS=50</code> by default).
+  </li>
+  <li>
+    Multi-table room soak —
+    <code>poker-room.multitable.soak.test.ts</code>.
+    Concurrent rooms, one human + one bot each, asserts no table goes quiet.
+  </li>
+  <li>
+    Churn matrix —
+    <code>multiplayer.churn.matrix.test.ts</code>.
+    Runs via <code>pnpm test:server:churn:matrix</code>.
+  </li>
 </ul>
 
 <p>
-  This is where timing bugs show up: an auto-action queued on one street gets
-  discarded during an automatic street transition and never re-driven; the flop
-  sits forever with nobody to act. A tidy one-shot unit test never races that
-  queue. A soak does.
+  Example of a bug only soaks catch: an auto-action queued for street N fires
+  after the hand moved to street N+1, mutating the wrong state
+  (<code>dealer.auto-action-queue-race.test.ts</code>). A single-hand unit test
+  never hits this race.
 </p>
 
 <h2>4. Headless Colyseus harness</h2>
 
 <p>
-  Keep a thin runner that boots a real Colyseus <code>Server</code>, creates a
-  poker room through <code>matchMaker</code>, and thrash-tests with scripted
-  clients over websockets—still without a browser. Strict mode fails fast.
-  Collect mode keeps going and writes repro artifacts: event timelines,
-  diagnostics, the violation that ended the run.
+  FakeClient tests skip the websocket layer. The headless harness boots a real
+  Colyseus <code>Server</code>, creates rooms through <code>matchMaker</code>,
+  and drives scripted clients over actual connections.
+  Scripts: <code>pnpm harness:headless</code> (two-client) and
+  <code>pnpm harness:headless:churn</code> (multiplayer).
 </p>
 
 <p>
-  Use this layer when FakeClient tests pass but you still distrust transport
-  ordering, room disposal, or reconnect against the actual server stack.
+  Scenarios include <code>fold-storm</code>, <code>allin-ladder</code>,
+  <code>join-leave-thrash</code>, and <code>endurance</code>. On failure the
+  harness writes an event timeline and the violating invariant — enough to
+  reproduce without re-running the full soak.
 </p>
 
 <h2>5. Playwright e2e</h2>
 
 <p>
-  Finally prove the client story matches the engine. Two-browser stack
-  consistency, seat churn, rejoin and buy-in overrides, tournament bust-out,
-  lessons runtime. E2E is expensive. Aim it at cross-layer contracts, not every
-  side-pot branch you already cover in Vitest.
+  E2E checks that the client UI matches engine state across real browsers.
+  Specs cover two-client stack consistency
+  (<code>two-player-stack-consistency.spec.ts</code>), seat churn
+  (<code>churn-seat-dealin.spec.ts</code>), rejoin/buy-in
+  (<code>rejoin-buyin-override.spec.ts</code>), and tournament bust-out
+  (<code>tournament-bust.spec.ts</code>). Keep this layer thin — it is slow.
+  Do not retest side-pot math here.
 </p>
 
 <h2>6. Static analysis and contract gates</h2>
 
 <p>
-  Wire non-runtime gates into the same verify path:
+  Non-runtime checks catch structural problems before they reach a room:
 </p>
 
 <ul>
-  <li>Typecheck + ESLint</li>
-  <li>Dead code / structure: knip, fallow, madge, dependency-cruiser</li>
-  <li>OpenAPI / SDK shape checks so clients cannot invent fetch paths</li>
-  <li>Realtime contract typecheck for shared message schemas</li>
+  <li>
+    <code>pnpm knip</code> — unused exports and dead dependencies
+  </li>
+  <li>
+    <code>pnpm fallow</code> — unused code, duplication, complexity hotspots
+  </li>
+  <li>
+    <code>pnpm madge</code> — circular dependencies across server, client, and packages
+  </li>
+  <li>
+    <code>pnpm sdk:check</code> / <code>pnpm api:shapes:check</code> —
+    generated client stays aligned with OpenAPI
+  </li>
+  <li>
+    <code>pnpm realtime:check</code> — shared Colyseus message schemas typecheck
+  </li>
 </ul>
 
 <p>
-  In Poker Champ, <code>pnpm verify</code> chains the important gates before you
-  pretend the table is shippable: SDK checks, client tests, server core, soak,
-  headless harness, and static analysis.
+  <code>pnpm verify</code> runs all of these plus core server tests, soak, and
+  the headless harness in one command.
 </p>
 
-<h2>Setup recipe for a Colyseus turn-based project</h2>
+<pre><code># Core confidence gate
+pnpm verify
 
-<ol>
-  <li>
-    <strong>Split engine from room.</strong> Pure state machine + invariants in
-    testable modules. Room only adapts Colyseus clients and messages.
-  </li>
-  <li>
-    <strong>Vitest for engine + FakeClient room tests.</strong> Snapshot-driven
-    legal actions. Fake timers for timeouts.
-  </li>
-  <li>
-    <strong>Define invariants early.</strong> Turn ownership, progress, money
-    conservation, “hand must complete or explicitly abort.”
-  </li>
-  <li>
-    <strong>Add soak/churn next.</strong> Randomized legal play and reconnect
-    injection with completion-rate budgets.
-  </li>
-  <li>
-    <strong>Add one headless real-server harness</strong> that dumps repro
-    artifacts on failure.
-  </li>
-  <li>
-    <strong>Add Playwright sparingly</strong> for UI/stack agreement.
-  </li>
-  <li>
-    <strong>Put it behind one verify script</strong> and run the heavy soaks on
-    a schedule or release gate.
-  </li>
-</ol>
+# Targeted soaks during hardening
+pnpm test:server:soak
+pnpm harness:headless:churn
 
-<pre><code># Example gate shape (Poker Champ style)
-pnpm test:server:core      # engine + critical room paths
-pnpm test:server:soak      # random-walk / completion budgets
-pnpm harness:headless      # real Colyseus churn
-pnpm test:client:e2e:stack # Playwright stack consistency
-pnpm verify                # contracts + static + core confidence</code></pre>
-
-<h2>Poker scenarios to steal for your domain</h2>
+# Nightly: full suite + extended soak budgets
+pnpm test:all:nightly</code></pre>
 
 <p>
-  Map these to your own turn game:
-</p>
-
-<ul>
-  <li><strong>Illegal turn</strong> — reject actions from the wrong seat / stale handId</li>
-  <li><strong>Disconnect on turn</strong> — auto-action or timeout path still advances the machine</li>
-  <li><strong>Rejoin grace</strong> — seat and stack survive; late join waits for a clean boundary</li>
-  <li><strong>Multi-instance isolation</strong> — table A cannot poison table B</li>
-  <li><strong>Money or score conservation</strong> — totals match before and after settlement</li>
-  <li><strong>Long-run completion rate</strong> — N hands or matches must finish above a budget</li>
-</ul>
-
-<p>
-  Thorough testing for turn-based Colyseus apps is a ladder: rules, room glue,
-  chaos over time, real transport, UI agreement, then static gates. Start at the
-  bottom, automate the ladder, and keep one command that refuses to ship a quiet
-  stuck table.
+  The layer sections above already list the specific test files and the
+  scenarios each one covers. Run <code>pnpm verify</code> before every merge.
+  Run the nightly suite before releases. That is the full stack.
 </p>
