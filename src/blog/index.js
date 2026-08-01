@@ -84,10 +84,7 @@ const primaryArticleMetadata = [
   {
     slug: 'my-definition-of-the-perfect-ux-ui',
     title: 'My definition of perfect UX/UI'
-  }
-];
-
-const moreArticleMetadata = [
+  },
   {
     slug: 'my-adventures-trying-to-start-an-online-music-platform',
     title: 'My adventures trying to start an online music platform'
@@ -100,6 +97,9 @@ const moreArticleMetadata = [
     slug: 'all-about-my-optimal-tech-stack',
     title: 'All about my optimal tech stack'
   }
+];
+
+const moreArticleMetadata = [
 ];
 
 const articleMetadata = [...primaryArticleMetadata, ...moreArticleMetadata];
@@ -117,6 +117,7 @@ const blogListMore = moreArticleMetadata.map(toBlogEntry);
 
 export {
   articleMetadata,
+  moreArticleMetadata,
   blogList,
   blogListPrimary,
   blogListMore

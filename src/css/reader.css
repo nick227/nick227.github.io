@@ -88,6 +88,10 @@ body.reader-active #scrim::after {
   padding: 20px 0 8px;
 }
 
+.control-bar.hidden {
+  display: none;
+}
+
 .control-bar-button {
   border: 0;
   padding: 0;

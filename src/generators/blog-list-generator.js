@@ -1,4 +1,8 @@
-import { blogListPrimary, blogListMore } from '../blog/index.js';
+import {
+  blogListPrimary,
+  blogListMore,
+  moreArticleMetadata
+} from '../blog/index.js';
 import { ArticleReader } from '../article-reader.js';
 
 function createArticleRow(blog) {
@@ -28,8 +32,10 @@ function renderList(container, blogs) {
 }
 
 function wireShowMoreToggle(moreContainer, toggleButton) {
-  if (!moreContainer || !toggleButton || blogListMore.length === 0) {
-    toggleButton?.closest('.control-bar')?.classList.add('hidden');
+  const controlBar = toggleButton?.closest('.control-bar');
+
+  if (!moreContainer || !toggleButton || moreArticleMetadata.length === 0) {
+    controlBar?.classList.add('hidden');
     return;
   }
 
