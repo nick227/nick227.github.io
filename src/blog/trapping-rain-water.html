@@ -1,0 +1,110 @@
+<p>
+  This article is a short walkthrough of trapping rain water: given
+  non-negative heights for bars of width 1, how much water sits after it
+  rains.
+</p>
+
+<p>
+  You will get the naive idea in one line, why two pointers keep the tallest
+  known walls, a small iteration example, early escapes, and the O(n) /
+  O(1) version of the pattern.
+</p>
+
+<h2>What the question is asking</h2>
+
+<p>
+  Each index is a bar. Water can pool above a bar when there is a taller wall
+  somewhere on the left and somewhere on the right. The water depth at that
+  spot is limited by the shorter of those two walls, minus the bar height.
+</p>
+
+<p>
+  The naive solution recomputes, for every index, the tallest bar to the left
+  and the tallest bar to the right, then adds the trapped water.
+</p>
+
+<h2>Why two pointers help</h2>
+
+<p>
+  Two pointers let you keep the largest known wall on each side while you walk
+  inward. You only advance the side with the smaller wall, because that side
+  is the current bottleneck for water height. Each step updates a running max
+  for that side and adds water if the current bar is shorter than that max.
+</p>
+
+<p>
+  You are avoiding redundant checking: instead of rescanning left and right
+  for every index, each position is examined once.
+</p>
+
+<pre><code>height:  [0, 1, 0, 2, 1, 0, 1, 3, 2, 1, 2, 1]
+indexes:  0  1  2  3  4  5  6  7  8  9 10 11
+
+start: left=0, right=11
+move the shorter side, keep leftMax / rightMax, add water as you go
+answer: 6</code></pre>
+
+<p>
+  Early escapes matter. If there are fewer than three bars, nothing can hold
+  water:
+</p>
+
+<pre><code>if (height.length &lt; 3) return 0;</code></pre>
+
+<p>
+  And if the array is monotonically sorted up or down, the shape cannot hold
+  water either, so you can just return 0.
+</p>
+
+<h2>Optimal version</h2>
+
+<pre><code>function trap(height) {
+  // Need a valley: left wall, dip, right wall.
+  if (height.length &lt; 3) return 0;
+
+  let left = 0;
+  let right = height.length - 1;
+  let leftMax = 0;
+  let rightMax = 0;
+  let water = 0;
+
+  while (left &lt; right) {
+    // Advance the shorter side; that wall limits water here.
+    if (height[left] &lt;= height[right]) {
+      if (height[left] &gt;= leftMax) {
+        leftMax = height[left]; // new tallest left wall
+      } else {
+        water += leftMax - height[left]; // pool against leftMax
+      }
+      left += 1;
+    } else {
+      if (height[right] &gt;= rightMax) {
+        rightMax = height[right]; // new tallest right wall
+      } else {
+        water += rightMax - height[right]; // pool against rightMax
+      }
+      right -= 1;
+    }
+  }
+
+  return water;
+}</code></pre>
+
+<p>
+  Like the rain problem, each position is examined once:
+</p>
+
+<ul>
+  <li><strong>Time:</strong> O(n)</li>
+  <li><strong>Extra space:</strong> O(1)</li>
+</ul>
+
+<h2>Where this pattern shows up</h2>
+
+<p>
+  This two-pointer / single-pass shape appears in deduplication, filtering
+  arrays in place, compacting deleted records, removing invalid entries, and
+  processing buffers without allocating another full collection. Same idea:
+  keep useful bounds, move one index at a time, and skip work you already
+  paid for.
+</p>

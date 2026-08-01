@@ -104,6 +104,10 @@ const primaryArticleMetadata = [
   {
     slug: 'how-to-solve-the-two-sum-coding-challenge',
     title: 'How to solve the two-sum coding challenge'
+  },
+  {
+    slug: 'trapping-rain-water',
+    title: 'Trapping rain water'
   }
 ];
 
