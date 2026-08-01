@@ -51,7 +51,7 @@
   plus one coin.
 </p>
 
-<h2>How to identify subproblems in any space</h2>
+<h2>How to identify subproblems</h2>
 
 <p>
   Ask what smaller version of the same question appears inside the big one. Good
@@ -59,10 +59,23 @@
 </p>
 
 <ul>
-  <li>the smaller answer has a clear meaning on its own</li>
-  <li>the same smaller answer is needed more than once</li>
-  <li>there is a rule that combines smaller answers into a larger one</li>
-  <li>you can order the work so dependencies are already finished</li>
+  <li>
+    the smaller answer has a clear meaning on its own —
+    in climbing stairs, “ways to reach step 4” is a real question by itself
+  </li>
+  <li>
+    the same smaller answer is needed more than once —
+    in fibonacci, <code>fib(n-2)</code> shows up under many larger calls
+  </li>
+  <li>
+    there is a rule that combines smaller answers into a larger one —
+    in knapsack, best for capacity <code>c</code> comes from including or
+    skipping an item using a smaller capacity
+  </li>
+  <li>
+    you can order the work so dependencies are already finished —
+    in edit distance, fill shorter prefixes before longer ones
+  </li>
 </ul>
 
 <p>
@@ -103,20 +116,25 @@
 <h2>Optimal bottom-up version</h2>
 
 <pre><code>function coinChange(coins, amount) {
+  // Impossible sentinel: more coins than amount can ever need
   const INF = amount + 1;
-  // minCoins[x] = fewest coins to make amount x
-  const minCoins = Array(amount + 1).fill(INF);
-  minCoins[0] = 0;
 
+  // minCoins[x] = fewest coins to make exactly amount x
+  const minCoins = Array(amount + 1).fill(INF);
+  minCoins[0] = 0; // base case: zero coins make amount 0
+
+  // Solve every smaller amount before larger ones
   for (let x = 1; x &lt;= amount; x++) {
     for (const coin of coins) {
-      if (coin &lt;= x) {
-        // make x by adding one coin onto a smaller solved amount
-        minCoins[x] = Math.min(minCoins[x], minCoins[x - coin] + 1);
-      }
+      if (coin &gt; x) continue; // coin too big for this subproblem
+
+      // Reuse best(x - coin), then pay +1 for this coin
+      const usingThisCoin = minCoins[x - coin] + 1;
+      minCoins[x] = Math.min(minCoins[x], usingThisCoin);
     }
   }
 
+  // Still INF means no combination reached this amount
   return minCoins[amount] &gt;= INF ? -1 : minCoins[amount];
 }</code></pre>
 
