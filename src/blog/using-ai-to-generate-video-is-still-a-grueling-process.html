@@ -5,9 +5,9 @@
 </p>
 
 <p>
-  You will get why I treat models as shot generators rather than full
-  production systems, how pricing compares in real use, and what still makes
-  the process grueling.
+  You will get a one-minute budget framed as ten six-second clips across Hailuo,
+  LTX, Veo, Seedance, and Higgsfield, plus a Gemini starter-image estimate, and
+  what still makes the process grueling after generation.
 </p>
 
 <h2>The prices are not as comparable as they look</h2>
@@ -15,31 +15,74 @@
 <p>
   Video models charge by the clip or by the generated second. Resolution, audio,
   model tier, and output length all affect the total, so there is no perfect
-  one-line comparison. Using fal.ai as a common provider, this was the pricing I
-  found in July 2026:
+  one-line comparison. To keep the math honest, I normalize everything to
+  <strong>ten six-second clips</strong>, which is enough raw footage for
+  <strong>one minute</strong> if every take is usable on the first try. Real
+  projects need retries, so treat these as floor numbers.
+</p>
+
+<p>
+  Using fal.ai as a common provider where possible, this was the pricing I found
+  in July 2026:
 </p>
 
 <ul>
   <li>
     <strong><a href="https://fal.ai/pricing" target="_blank" rel="noopener">MiniMax Hailuo 2.3 Standard</a>:</strong>
-    about $0.28 for a six-second 768p generation. Hailuo Pro is listed around
-    $0.49 per generation.
+    about $0.28 per 6s at 768p → about <strong>$2.80</strong> for 1m.
+    Hailuo Pro is about $0.49 per 6s → about <strong>$4.90</strong> for 1m.
   </li>
   <li>
     <strong><a href="https://fal.ai/models/fal-ai/ltx-2.3/text-to-video" target="_blank" rel="noopener">LTX 2.3</a>:</strong>
-    roughly $0.06–$0.08 per second at 1080p, or about $0.36–$0.48 for six
-    seconds.
+    roughly $0.06–$0.08 per second at 1080p → about $0.36–$0.48 per 6s → about
+    <strong>$3.60–$4.80</strong> for 1m.
   </li>
   <li>
     <strong><a href="https://fal.ai/models/fal-ai/veo3.1" target="_blank" rel="noopener">Veo 3.1 Fast</a>:</strong>
-    $0.10 per second without audio and $0.15 with audio at 720p or 1080p. Six
-    seconds costs about $0.60 or $0.90.
+    $0.10/s without audio and $0.15/s with audio → $0.60 or $0.90 per 6s → about
+    <strong>$6.00</strong> or <strong>$9.00</strong> for 1m.
   </li>
   <li>
-    <strong>Veo 3.1 Standard:</strong> $0.20 per second without audio and $0.40
-    with audio at 720p or 1080p. Six seconds costs about $1.20 or $2.40.
+    <strong>Veo 3.1 Standard:</strong> $0.20/s without audio and $0.40/s with
+    audio → $1.20 or $2.40 per 6s → about <strong>$12.00</strong> or
+    <strong>$24.00</strong> for 1m.
+  </li>
+  <li>
+    <strong><a href="https://fal.ai/models/bytedance/seedance-2.0/text-to-video" target="_blank" rel="noopener">Seedance 2.0</a> (fal.ai):</strong>
+    Fast 720p is about $0.2419/s → about $1.45 per 6s → about
+    <strong>$14.50</strong> for 1m. Standard 720p is about $0.3034/s → about
+    $1.82 per 6s → about <strong>$18.20</strong> for 1m. Standard 1080p is about
+    $0.682/s → about $4.09 per 6s → about <strong>$40.90</strong> for 1m.
+  </li>
+  <li>
+    <strong>Seedance 2.0 (official Volcengine API):</strong> public reporting
+    puts pure generation around $0.14/s → about $0.84 per 6s → about
+    <strong>$8.40</strong> for 1m. Same model, different route, different bill.
+  </li>
+  <li>
+    <strong><a href="https://higgsfield.ai/pricing" target="_blank" rel="noopener">Higgsfield</a>:</strong>
+    credit subscription, not a clean per-second API bill. Seedance 2.0 on their
+    metered path is roughly 22 credits per 5s at 720p and 45 credits per 5s at
+    1080p. Scaled to 6s that is about 26 credits at 720p and 54 at 1080p. On the
+    Pro plan at about $29 for 600 credits, that works out near
+    <strong>$1.30</strong> per 6s 720p clip and <strong>$13</strong> for 1m, or
+    near <strong>$2.60</strong> per 6s 1080p clip and <strong>$26</strong> for
+    1m. Web-UI unlimited windows change the economics if you are generating by
+    hand.
   </li>
 </ul>
+
+<p>
+  Starter stills are cheap next to video. On Google’s Gemini image pricing, a
+  1K
+  <code>gemini-3.1-flash-image</code>
+  output is about $0.067 each. Ten starter frames for a one-minute, ten-shot
+  plan cost about <strong>$0.67</strong>. If each shot needs three image
+  attempts before image-to-video, call it about <strong>$2.00</strong>. The
+  Flash Lite image lane is closer to $0.034 per 1K image, or about
+  <strong>$0.34</strong> for ten keepers. Pro image output at 1K/2K is about
+  $0.134 each, or about <strong>$1.34</strong> for ten.
+</p>
 
 <p>
   These prices will change, and the outputs are not equivalent. A cheap clip
@@ -146,9 +189,12 @@
 <h2>I still need to try Higgsfield and Seedance</h2>
 
 <p>
-  I have not tested Higgsfield or Seedance enough to give either a fair review.
-  Seedance may end up being one of the strongest options based on the examples
-  and controls I have seen, but it has not passed through my own workflow yet.
+  I have not tested Higgsfield or Seedance enough to give either a fair quality
+  review. The pricing above is enough to put them on the budget sheet. Seedance
+  may end up being one of the strongest options based on the examples and
+  controls I have seen, but it has not passed through my own workflow yet.
+  Higgsfield is interesting as a multi-model surface with credit packs; the
+  useful comparison is still the implied cost of ten usable 6s clips.
 </p>
 
 <p>
