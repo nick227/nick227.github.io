@@ -4,7 +4,7 @@ const documents = import.meta.glob('./*.html', {
   import: 'default'
 });
 
-const articleMetadata = [
+const primaryArticleMetadata = [
   {
     slug: 'mass-image-harvesting-with-variety-and-studio-quality',
     title: 'Mass image harvesting with variety and studio quality'
@@ -87,9 +87,41 @@ const articleMetadata = [
   }
 ];
 
-const blogList = articleMetadata.map((article) => ({
-  ...article,
-  document: documents[`./${article.slug}.html`] || ''
-}));
+const moreArticleMetadata = [
+  {
+    slug: 'your-agent-needs-a-smaller-toolbox',
+    title: 'Your agent needs a smaller toolbox'
+  },
+  {
+    slug: 'what-i-look-for-in-a-pull-request',
+    title: 'What I look for in a pull request'
+  },
+  {
+    slug: 'write-the-contract-before-the-code',
+    title: 'Write the contract before the code'
+  },
+  {
+    slug: 'the-cost-of-a-clever-abstraction',
+    title: 'The cost of a clever abstraction'
+  }
+];
 
-export { articleMetadata, blogList };
+const articleMetadata = [...primaryArticleMetadata, ...moreArticleMetadata];
+
+function toBlogEntry(article) {
+  return {
+    ...article,
+    document: documents[`./${article.slug}.html`] || ''
+  };
+}
+
+const blogList = articleMetadata.map(toBlogEntry);
+const blogListPrimary = primaryArticleMetadata.map(toBlogEntry);
+const blogListMore = moreArticleMetadata.map(toBlogEntry);
+
+export {
+  articleMetadata,
+  blogList,
+  blogListPrimary,
+  blogListMore
+};

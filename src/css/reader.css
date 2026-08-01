@@ -70,11 +70,38 @@ body.reader-active #scrim::after {
   border-top: 1px solid var(--color-border);
 }
 
-.blog-list li {
+.blog-list li,
+.blog-list-more li {
   margin: 0;
   border-bottom: 1px solid var(--color-border);
   max-width: 100%;
-  
+}
+
+.control-bar {
+  display: flex;
+  justify-content: flex-start;
+  padding: 20px 0 8px;
+}
+
+.control-bar-button {
+  border: 0;
+  padding: 0;
+  background: transparent;
+  color: var(--color-accent);
+  font: inherit;
+  font-size: 14px;
+  font-weight: 600;
+  letter-spacing: 0.02em;
+  cursor: pointer;
+}
+
+.control-bar-button:hover {
+  color: var(--color-txt-bright);
+}
+
+.control-bar-button:focus-visible {
+  outline: 2px solid var(--color-accent);
+  outline-offset: 6px;
 }
 
 .article-link {

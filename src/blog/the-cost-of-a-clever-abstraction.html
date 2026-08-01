@@ -1,0 +1,95 @@
+<p>
+  This article is about clever abstractions: the ones that feel elegant in
+  the first week and expensive every week after, especially once AI tools can
+  generate the boring version in minutes.
+</p>
+
+<p>
+  You will get the failure mode I keep seeing, the questions I ask before
+  introducing a new layer, and when abstraction is still worth it.
+</p>
+
+<h2>Clever usually means compressed history</h2>
+
+<p>
+  An abstraction is a bet that several call sites will keep sharing the same
+  shape. Sometimes that bet pays. Often it is just history compressed into a
+  helper that nobody can unpack without the original author.
+</p>
+
+<p>
+  I have inherited base classes that knew too much, utility modules that
+  solved six problems poorly, and “generic” service layers that forced every
+  feature through the same awkward doorway. The code looked DRY. The team
+  looked stuck.
+</p>
+
+<p>
+  Duplication is visible. A bad abstraction hides the real rules inside
+  indirection, defaults, and special cases. Visibility matters more than
+  line count.
+</p>
+
+<h2>AI changed the cost of boring code</h2>
+
+<p>
+  Writing the third similar handler by hand used to feel wasteful. Now a
+  model can produce the boring version quickly, and a generator can produce
+  it from a schema even faster. The old justification for a clever shared
+  layer is weaker than it was.
+</p>
+
+<p>
+  What is still expensive is understanding. If the agent or the next engineer
+  cannot see the path from request to database without learning your private
+  framework, you did not save time. You moved the cost into every future
+  change.
+</p>
+
+<p>
+  I would rather review three plain functions that do one thing than one
+  polymorphic masterpiece with a configuration object and a footnote in Slack.
+</p>
+
+<h2>Questions before a new layer</h2>
+
+<p>
+  Before I extract a shared abstraction, I ask:
+</p>
+
+<pre><code>1. Do I already have three real call sites, not two imagined ones?
+2. Are the differences data, or control flow?
+3. Can a new teammate debug this without a guided tour?
+4. If the abstraction is wrong, how hard is it to unwind?</code></pre>
+
+<p>
+  If the differences are control flow, I am suspicious. Shared data shapes
+  and shared infrastructure are good candidates. Shared “do everything”
+  engines usually are not.
+</p>
+
+<p>
+  If unwinding would require a multi-week migration, the abstraction needs a
+  higher bar than “it felt clean.”
+</p>
+
+<h2>When abstraction earns its keep</h2>
+
+<p>
+  Auth, logging, validation, pagination, error envelopes, database access
+  patterns, and generated SDKs are worth centralizing. Those are system
+  seams. They stay stable while features churn.
+</p>
+
+<p>
+  Feature policy dressed up as framework code is the trap. Once your business
+  rules live in a base class, every exception becomes a boolean, then a hook,
+  then a plugin API for one team.
+</p>
+
+<p>
+  Prefer the boring version until the pattern is undeniable. Keep system
+  seams strong and feature code obvious. Cleverness is not free. You pay for
+  it in reviews, onboarding, and every incident where nobody can find the
+  real branch that ran.
+</p>

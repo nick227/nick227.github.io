@@ -1,0 +1,113 @@
+<p>
+  This article is about agent tool design: giving a model twenty capabilities
+  feels powerful, then the agent spends half its turns choosing the wrong one
+  and the other half recovering from that choice.
+</p>
+
+<p>
+  You will get why tool count is a reliability problem, how I shrink an agent
+  surface, and the rule I use before adding another function the model can
+  call.
+</p>
+
+<h2>More tools is not more capability</h2>
+
+<p>
+  Every tool you expose is another decision the model has to make under
+  uncertainty. The catalog is part of the prompt. A long catalog is a long
+  fork in the road. Models are good at sounding confident while taking the
+  scenic route through the wrong branch.
+</p>
+
+<p>
+  I have watched agents call search when they already had the answer, call
+  write when they needed read, and invent arguments that almost matched a
+  schema. That is not a model failure first. It is an interface failure. We
+  offered too many doors and called it autonomy.
+</p>
+
+<p>
+  Capability is not the count of tools. Capability is how often the agent
+  finishes the job without a human cleaning up after it.
+</p>
+
+<h2>Shrink until the path is obvious</h2>
+
+<p>
+  When an agent is unreliable, my first move is not a better system prompt.
+  It is deleting tools. Merge three near-duplicate helpers into one. Replace
+  open-ended shell access with a named operation that can only do the thing
+  the product actually needs. Make the remaining tools impossible to confuse
+  with each other.
+</p>
+
+<p>
+  A good agent toolbox looks boring:
+</p>
+
+<ul>
+  <li>
+    <strong>Few</strong> — if you cannot explain why each tool exists in one
+    sentence, cut it.
+  </li>
+  <li>
+    <strong>Sharp</strong> — names and schemas that point at one job, not a
+    family of jobs.
+  </li>
+  <li>
+    <strong>Safe</strong> — destructive actions gated, validated, and logged
+    like any other API write.
+  </li>
+  <li>
+    <strong>Observable</strong> — you can see which tool ran, with what args,
+    and whether the result was accepted.
+  </li>
+</ul>
+
+<p>
+  If the model still picks poorly after that, then improve the prompt. Not
+  before.
+</p>
+
+<h2>Prefer products over playgrounds</h2>
+
+<p>
+  A general-purpose agent with filesystem, browser, shell, database, email,
+  and calendar access is a demo. A product agent usually needs one vertical
+  slice: read this record, propose this change, call this API, ask for
+  confirmation, done.
+</p>
+
+<p>
+  That narrower surface is easier to test. You can write fixtures for the
+  tool results. You can assert the exact call sequence. You can refuse
+  hallucinated operations because they are not in the catalog. The agent
+  stops feeling magical and starts feeling like software.
+</p>
+
+<p>
+  I would rather ship an agent that does eight things well than one that can
+  attempt eighty things and apologize.
+</p>
+
+<h2>The rule before adding a tool</h2>
+
+<p>
+  Before I expose another function to a model, I ask:
+</p>
+
+<pre><code>1. Does an existing tool already cover this with one extra argument?
+2. Can a deterministic service do this without the model choosing it?
+3. What wrong call looks almost right, and how bad is that failure?
+4. Can I test the happy path and the near-miss path without drama?</code></pre>
+
+<p>
+  If the answer to the first two is yes, I do not add the tool. If the third
+  answer is scary, I narrow the schema or keep a human in the loop. If the
+  fourth is no, the tool is not ready for an agent.
+</p>
+
+<p>
+  Agents do not need a bigger toolbox. They need a smaller one with sharper
+  edges, clearer names, and fewer ways to be almost correct.
+</p>

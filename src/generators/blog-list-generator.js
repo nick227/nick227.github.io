@@ -1,35 +1,58 @@
-import { blogList } from '../blog/index.js';
+import { blogListPrimary, blogListMore } from '../blog/index.js';
 import { ArticleReader } from '../article-reader.js';
 
-const SHARE_ICON_SVG = `<svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" aria-hidden="true">
-  <path d="M4 12v8a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2v-8"/>
-  <polyline points="16 6 12 2 8 6"/>
-  <line x1="12" y1="2" x2="12" y2="15"/>
-</svg>`;
+function createArticleRow(blog) {
+  const listItem = document.createElement('li');
+  const button = document.createElement('button');
+
+  button.className = 'article-link';
+  button.type = 'button';
+  button.innerHTML = `
+    <span class="articles-title"></span>
+    <span class="article-link-arrow" aria-hidden="true">↗</span>
+  `;
+  button.querySelector('.articles-title').textContent = blog.title;
+  button.addEventListener('click', () => {
+    ArticleReader.navigate(blog.slug, { trigger: button });
+  });
+
+  listItem.appendChild(button);
+  return listItem;
+}
+
+function renderList(container, blogs) {
+  if (!container) return;
+  blogs.forEach((blog) => {
+    container.appendChild(createArticleRow(blog));
+  });
+}
+
+function wireShowMoreToggle(moreContainer, toggleButton) {
+  if (!moreContainer || !toggleButton || blogListMore.length === 0) {
+    toggleButton?.closest('.control-bar')?.classList.add('hidden');
+    return;
+  }
+
+  moreContainer.id = 'blog-list-more';
+  toggleButton.setAttribute('aria-controls', 'blog-list-more');
+  toggleButton.setAttribute('aria-expanded', 'false');
+
+  toggleButton.addEventListener('click', () => {
+    const isExpanded = !moreContainer.classList.contains('hidden');
+    moreContainer.classList.toggle('hidden', isExpanded);
+    toggleButton.setAttribute('aria-expanded', String(!isExpanded));
+    toggleButton.textContent = isExpanded ? 'Show more' : 'Show less';
+  });
+}
 
 function BlogListGenerator() {
   const blogListContainer = document.querySelector('.blog-list');
-  if (!blogListContainer) return;
+  const moreContainer = document.querySelector('.blog-list-more');
+  const toggleButton = document.querySelector('[data-control-bar-button]');
 
-  blogList.forEach((blog) => {
-    const listItem = document.createElement('li');
-    const button = document.createElement('button');
-    const shareBtn = document.createElement('button');
-
-    button.className = 'article-link';
-    button.type = 'button';
-    button.innerHTML = `
-      <span class="articles-title"></span>
-      <span class="article-link-arrow" aria-hidden="true">↗</span>
-    `;
-    button.querySelector('.articles-title').textContent = blog.title;
-    button.addEventListener('click', () => {
-      ArticleReader.navigate(blog.slug, { trigger: button });
-    });
-
-    listItem.appendChild(button);
-    blogListContainer.appendChild(listItem);
-  });
+  renderList(blogListContainer, blogListPrimary);
+  renderList(moreContainer, blogListMore);
+  wireShowMoreToggle(moreContainer, toggleButton);
 }
 
 export { BlogListGenerator };

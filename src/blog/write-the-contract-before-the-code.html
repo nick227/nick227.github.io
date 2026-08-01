@@ -1,0 +1,99 @@
+<p>
+  This article is my working rule for backend and product work: write the
+  contract before the code, then let the code obey it instead of inventing a
+  second truth.
+</p>
+
+<p>
+  You will get why I start with OpenAPI and schema, what belongs in that
+  contract, and how this changes the order of implementation for a team.
+</p>
+
+<h2>Code without a contract invents one anyway</h2>
+
+<p>
+  Every endpoint has a contract, whether you wrote it down or not. Status
+  codes, error shapes, pagination, auth headers, nullability, field names.
+  If those decisions live only in route handlers and frontend fetch calls,
+  the team is maintaining folklore.
+</p>
+
+<p>
+  Folklore drifts. One client treats a missing field as null. Another treats
+  it as an empty string. The server returns 400 in one place and 422 in
+  another for the same class of failure. Nobody is lying. They are all
+  reading a different imaginary document.
+</p>
+
+<p>
+  Writing the contract first is not bureaucracy. It is choosing one document
+  before the system grows copies of itself.
+</p>
+
+<h2>What I put in the contract</h2>
+
+<p>
+  Enough that two engineers can build in parallel without guessing:
+</p>
+
+<ul>
+  <li>routes, methods, and operation ids</li>
+  <li>request and response schemas</li>
+  <li>auth and permission expectations</li>
+  <li>error envelopes and important status codes</li>
+  <li>list contracts: filter, sort, cursor or page, totals</li>
+  <li>idempotency and side-effect notes when they matter</li>
+</ul>
+
+<p>
+  I do not need a novel. I need a spine. The Prisma model and the OpenAPI
+  document should agree on the nouns. Generated clients and validators should
+  come from that agreement, not from handwritten twins.
+</p>
+
+<pre><code>product nouns
+    ↓
+schema + OpenAPI
+    ↓
+server handlers that implement the ops
+    ↓
+generated client / hooks
+    ↓
+UI that consumes the SDK</code></pre>
+
+<h2>How the team order changes</h2>
+
+<p>
+  Clarify stops being a meeting about vibes and becomes a meeting about
+  shapes. Align happens on the contract. Implementers can stub the client
+  against the spec while the server catches up. Reviewers can ask whether the
+  diff matches the operation, not whether two people remembered the same
+  field name.
+</p>
+
+<p>
+  When requirements change, the contract changes first. Then the generated
+  pieces move. Then the hand-written logic. That order keeps the temporary
+  code from becoming the source of truth by accident.
+</p>
+
+<h2>What about speed?</h2>
+
+<p>
+  Spec-first looks slower for the first hour and faster for every hour after
+  that. Vibe-coded endpoints feel quick until the third consumer appears and
+  nobody can say what “success” returns.
+</p>
+
+<p>
+  For prototypes, a thin contract is still worth it. Even a short OpenAPI
+  file with three operations beats a chat history and a hope. For production
+  work, I treat an undocumented API as unfinished work, the same way I treat
+  a missing test on a money path.
+</p>
+
+<p>
+  Write the contract before the code. Make the code a loyal implementation.
+  Let everything else derive from that. That is how systems stay coherent
+  when more than one person is touching them.
+</p>
