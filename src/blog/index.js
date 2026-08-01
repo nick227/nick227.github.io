@@ -112,6 +112,10 @@ const primaryArticleMetadata = [
   {
     slug: 'deep-dive-into-the-coin-change-problem',
     title: 'Deep dive into the coin change problem'
+  },
+  {
+    slug: 'benefits-and-trade-offs-of-database-technologies',
+    title: 'Benefits and trade-offs of database technologies'
   }
 ];
 

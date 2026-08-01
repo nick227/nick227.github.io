@@ -1,0 +1,165 @@
+<p>
+  This article is a practical breakdown of database technologies: relational,
+  NoSQL, graph, vector, and live backends like Firebase. Each one has an ideal
+  role. The goal is to match the shape of your data and access patterns, not to
+  pick a winner.
+</p>
+
+<p>
+  You will get a best-use case for each family, with simple real-world examples
+  you can map onto products you already know.
+</p>
+
+<h2>Relational</h2>
+
+<p>
+  Best when your data has clear entities, relationships, and rules that must
+  stay consistent. Tables, foreign keys, transactions, and joins are the
+  point.
+</p>
+
+<ul>
+  <li>
+    <strong>Online store checkout</strong> — orders, line items, payments, and
+    inventory must agree. You do not want a paid order with no stock decrement.
+  </li>
+  <li>
+    <strong>Banking ledger</strong> — debits and credits need ACID behavior.
+    Partial writes are failures, not “eventual.”
+  </li>
+  <li>
+    <strong>HR / SaaS billing</strong> — users, seats, invoices, and plan
+    changes are structured and queried with filters, sorts, and reports.
+  </li>
+</ul>
+
+<p>
+  Trade-off: schema changes take planning, and some flexible document shapes
+  feel awkward in strict tables.
+</p>
+
+<h2>NoSQL (document / key-value)</h2>
+
+<p>
+  Best when records vary in shape, scale out matters more than heavy joins, and
+  you mostly fetch by id or simple keys. Documents and key-value stores shine
+  here.
+</p>
+
+<ul>
+  <li>
+    <strong>User profiles and settings</strong> — each account can carry
+    different optional fields without a migration for every new preference.
+  </li>
+  <li>
+    <strong>Product catalogs with messy attributes</strong> — shoes need sizes,
+    laptops need specs, furniture needs dimensions, all in one collection.
+  </li>
+  <li>
+    <strong>Session and cache-like data</strong> — store a blob by key, read it
+    fast, expire it later.
+  </li>
+</ul>
+
+<p>
+  Trade-off: cross-document consistency and complex relational queries get
+  harder. You often denormalize and accept some duplication.
+</p>
+
+<h2>Graph</h2>
+
+<p>
+  Best when the relationships are the product. You care about paths, neighbors,
+  and “who connects to whom,” not just rows.
+</p>
+
+<ul>
+  <li>
+    <strong>Social follows and friends-of-friends</strong> — “people you may
+    know” is a graph walk, not a giant join guess.
+  </li>
+  <li>
+    <strong>Fraud rings</strong> — shared devices, addresses, and accounts form
+    suspicious clusters.
+  </li>
+  <li>
+    <strong>Recommendations from taste networks</strong> — users linked to
+    artists linked to similar artists.
+  </li>
+</ul>
+
+<p>
+  Trade-off: not ideal as your only system of record for invoices and
+  inventory. Graph queries excel at connections; boring CRUD still wants
+  tables or documents nearby.
+</p>
+
+<h2>Vector</h2>
+
+<p>
+  Best when “similar meaning” matters more than exact match. You store
+  embeddings and search by nearest neighbor.
+</p>
+
+<ul>
+  <li>
+    <strong>Semantic search in docs or help centers</strong> — the user asks in
+    plain language; you retrieve passages that mean the same thing.
+  </li>
+  <li>
+    <strong>Image or audio likeness</strong> — find visually similar products or
+    tracks that “feel” close.
+  </li>
+  <li>
+    <strong>RAG for AI features</strong> — pull the most relevant chunks before
+    the model answers.
+  </li>
+</ul>
+
+<p>
+  Trade-off: vectors do not replace exact ids, permissions, or money math.
+  They are a retrieval layer beside a source of truth.
+</p>
+
+<h2>Live backends (Firebase-style)</h2>
+
+<p>
+  Best when clients need realtime sync, auth, and simple cloud storage with
+  minimal server work. Listeners push updates as data changes.
+</p>
+
+<ul>
+  <li>
+    <strong>Chat and presence</strong> — messages and online status appear for
+    everyone without you building the socket layer first.
+  </li>
+  <li>
+    <strong>Collaborative boards and drafts</strong> — multiple users see the
+    same document update live.
+  </li>
+  <li>
+    <strong>MVPs and internal tools</strong> — ship auth, data, and sync quickly
+    while the product shape is still moving.
+  </li>
+</ul>
+
+<p>
+  Trade-off: deep custom queries, complex server logic, and strict cost control
+  at huge scale can push you toward a more traditional API and database later.
+</p>
+
+<h2>Quick chooser</h2>
+
+<ul>
+  <li><strong>Money, rules, reports</strong> → relational</li>
+  <li><strong>Flexible records, simple key access, scale-out</strong> → NoSQL</li>
+  <li><strong>Connections and paths</strong> → graph</li>
+  <li><strong>Similarity and meaning</strong> → vector</li>
+  <li><strong>Realtime client sync with little backend</strong> → live / Firebase-style</li>
+</ul>
+
+<p>
+  Most serious products mix them. A store can use relational for orders, NoSQL
+  for catalog extras, vectors for “similar items,” and a live channel for
+  stock alerts. Pick the tool for the job you are actually doing this week.
+</p>
