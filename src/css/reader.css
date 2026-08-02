@@ -969,6 +969,56 @@ body.reader-active #scrim::after {
   border-color: rgba(218, 255, 0, 0.35);
 }
 
+.reader-body .sm-visual {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.reader-body .sm-visual figcaption {
+  margin-bottom: 14px;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.reader-body .sm-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 10px 8px;
+}
+
+.reader-body .sm-state {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-width: 72px;
+  padding: 10px 14px;
+  border: 1px solid var(--color-border);
+  color: var(--color-txt-bright);
+  font-size: 0.92em;
+}
+
+.reader-body .sm-state-active {
+  border-color: var(--color-accent);
+  color: var(--color-accent);
+}
+
+.reader-body .sm-arrow {
+  color: var(--color-txt-muted);
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace;
+  font-size: 12px;
+}
+
+.reader-body .sm-note {
+  margin: 14px 0 0;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;

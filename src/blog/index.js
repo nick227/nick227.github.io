@@ -124,6 +124,10 @@ const primaryArticleMetadata = [
   {
     slug: 'the-five-common-parts-of-every-frontend-framework',
     title: 'The five common parts of every frontend framework'
+  },
+  {
+    slug: 'what-is-a-state-machine',
+    title: 'What is a state machine?'
   }
 ];
 

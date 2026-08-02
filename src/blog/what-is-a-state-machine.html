@@ -1,0 +1,122 @@
+<p>
+  This article is a short introduction to state machines: what they are, why
+  they matter in software, and three real-world examples that make the shape
+  obvious.
+</p>
+
+<p>
+  You will get a plain definition, the core parts of a machine, and everyday
+  systems mapped into states and transitions.
+</p>
+
+<h2>What a state machine is</h2>
+
+<p>
+  A state machine is a model of behavior with a fixed set of states and a fixed
+  set of legal moves between them. At any moment, the system is in exactly one
+  state. An event arrives. If that event is allowed from the current state, the
+  machine moves to a new state. If it is not allowed, nothing happens — or you
+  reject the event.
+</p>
+
+<p>
+  The point is not the diagram. The point is the rules: invalid combinations of
+  “where we are” and “what just happened” are impossible to represent by
+  accident.
+</p>
+
+<ul>
+  <li><strong>States</strong> — mutually exclusive modes (paid, unpaid, cancelled)</li>
+  <li><strong>Events / transitions</strong> — the allowed moves between states</li>
+  <li><strong>Guards</strong> — extra conditions that must be true to allow a move</li>
+  <li><strong>Actions</strong> — optional work that runs on entry, exit, or transition</li>
+</ul>
+
+<figure class="sm-visual" aria-label="Basic state machine shape">
+  <figcaption>One current state. Events only move along allowed arrows.</figcaption>
+  <div class="sm-flow">
+    <span class="sm-state">State A</span>
+    <span class="sm-arrow">event →</span>
+    <span class="sm-state sm-state-active">State B</span>
+    <span class="sm-arrow">event →</span>
+    <span class="sm-state">State C</span>
+  </div>
+  <p class="sm-note">From B, an event that only belongs to A is illegal. The machine refuses it.</p>
+</figure>
+
+<h2>1. Traffic light</h2>
+
+<p>
+  A traffic light is usually in one of three states: green, yellow, or red. The
+  timer (or signal) is the event. From green you can go to yellow. From yellow
+  you can go to red. From red you can go to green. There is no legal jump from
+  green straight to red in a normal cycle.
+</p>
+
+<p>
+  That is a state machine without software language: few states, strict
+  transitions, one active color at a time.
+</p>
+
+<pre><code>green  --timer--&gt; yellow
+yellow --timer--&gt; red
+red    --timer--&gt; green</code></pre>
+
+<h2>2. Online order</h2>
+
+<p>
+  An e-commerce order is a better software example. Typical states:
+  <code>created</code>, <code>paid</code>, <code>shipped</code>,
+  <code>delivered</code>, <code>cancelled</code>, <code>refunded</code>.
+</p>
+
+<p>
+  Payment succeeds only from <code>created</code>. Shipping only from
+  <code>paid</code>. Cancellation may be legal early and illegal after delivery.
+  A refund usually requires a paid or delivered path first. The UI, emails, and
+  warehouse tools all read the same current state and refuse actions that do not
+  belong there.
+</p>
+
+<pre><code>created --pay--&gt; paid --ship--&gt; shipped --deliver--&gt; delivered
+   |               |
+ cancel          refund
+   v               v
+cancelled       refunded</code></pre>
+
+<p>
+  Boolean flags like <code>isPaid</code> + <code>isShipped</code> +
+  <code>isCancelled</code> can invent nonsense combinations: cancelled and
+  shipped at once. A state machine makes those combinations unreachable.
+</p>
+
+<h2>3. Media player</h2>
+
+<p>
+  A player has states people already talk about: stopped, playing, paused,
+  buffering. Press play from stopped → playing. Press pause from playing →
+  paused. Press play from paused → playing. Seeking while buffering has its own
+  rules.
+</p>
+
+<pre><code>stopped --play--&gt; playing
+playing --pause--&gt; paused
+paused  --play--&gt; playing
+playing --buffer--&gt; buffering --ready--&gt; playing
+any     --stop--&gt; stopped</code></pre>
+
+<p>
+  The interface stays coherent because buttons map to events that are legal only
+  in some states. Pause is disabled when stopped. Play means resume when paused.
+  Same button label, different transition depending on current state.
+</p>
+
+<h2>Why this helps in code</h2>
+
+<p>
+  State machines turn messy “if flags and history” into an explicit contract:
+  these are the only modes, these are the only moves, reject everything else.
+  Traffic lights, orders, and media players are everyday versions of the same
+  idea. Once you see that shape, you start finding it in auth sessions, tickets,
+  game turns, and checkout wizards too.
+</p>
