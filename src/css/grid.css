@@ -1,7 +1,6 @@
 /* Single-Viewport Page Layout */
 
 .page {
-  min-height: 100svh;
   width: var(--width-content);
   margin: 0 auto;
   max-width: 100%;

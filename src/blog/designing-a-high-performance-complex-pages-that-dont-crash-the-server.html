@@ -87,7 +87,7 @@ LIMIT 50;</code></pre>
   </div>
 </figure>
 
-<h2>Writers drop notes; workers build the page</h2>
+<h2>Writers make notes workers make items</h2>
 
 <p>
   Writers are anything that changes or happens: create post, accept join,
@@ -195,7 +195,7 @@ River API: SELECT … FROM RiverItem ORDER BY created_at DESC LIMIT n</code></pr
   broker on day one.
 </p>
 
-<h2>After RiverItem, stop making clients think</h2>
+<h2>Simplify, simplify, simplify!</h2>
 
 <p>
   Once the projected table exists, the API is boring on purpose. Read
@@ -215,16 +215,11 @@ posts / joins    →      validate event   →      RiverItem
 uploads/status   →      format item      →      Redis / memory
 mentions/...     →      write projection →      /river?cursor=</code></pre>
 
-<h2>High-performance pages are prepared pages</h2>
+<h2>Conclusion</h2>
 
 <p>
   Complex products create constant change. High-performance pages do not
   recompute that universe on every scroll. They separate writers from readers,
   project a chronological product ahead of time, and serve a single cheap
   artifact.
-</p>
-
-<p>
-  Build the river before the user asks for it. Then the page can feel fresh
-  without asking twenty tables to audition for every request.
 </p>
