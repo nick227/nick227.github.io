@@ -1019,6 +1019,71 @@ body.reader-active #scrim::after {
   line-height: 1.45;
 }
 
+.reader-body .shop-roles {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.92em;
+}
+
+.reader-body .shop-roles th,
+.reader-body .shop-roles td {
+  padding: 0.7em 0.85em;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reader-body .shop-roles th {
+  color: var(--color-txt-bright);
+  font-weight: 600;
+}
+
+.reader-body .shop-roles td:first-child {
+  color: var(--color-txt-bright);
+  font-weight: 600;
+  white-space: nowrap;
+}
+
+.reader-body .shop-visual {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.reader-body .shop-visual figcaption {
+  margin-bottom: 14px;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.reader-body .shop-layers {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.reader-body .shop-layer {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 8px 16px;
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+}
+
+.reader-body .shop-layer strong {
+  color: var(--color-txt-bright);
+  font-size: 0.92em;
+}
+
+.reader-body .shop-layer span {
+  color: var(--color-txt-secondary);
+  font-size: 0.84em;
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;

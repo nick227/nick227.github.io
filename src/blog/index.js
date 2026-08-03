@@ -128,6 +128,10 @@ const primaryArticleMetadata = [
   {
     slug: 'what-is-a-state-machine',
     title: 'What is a state machine?'
+  },
+  {
+    slug: 'building-shop-shop-a-type-safe-delivery-marketplace',
+    title: 'Building Shop-Shop: a type-safe delivery marketplace'
   }
 ];
 

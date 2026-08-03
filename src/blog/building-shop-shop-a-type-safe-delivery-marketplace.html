@@ -1,0 +1,294 @@
+<p>
+  This article is about building
+  <strong>Shop-Shop</strong>, a DoorDash-style local kitchen and restaurant
+  delivery marketplace: customers discover food through a social-style River
+  feed, vendors run stores and teams, affiliates earn commissions, riders
+  fulfill in-house jobs, and admins keep the rails honest.
+</p>
+
+<p>
+  You will get the product shape, the pnpm monorepo layout, how contract-driven
+  CRUD and custom marketplace code share one system, and the architecture
+  choices that keep multi-role delivery from turning into glue code.
+</p>
+
+<h2>Food delivery is not a restaurant grid</h2>
+
+<p>
+  From a lock-screen widget, delivery looks simple. Under the hood it is a
+  collision of marketplace discovery, order state machines, payouts, geo
+  constraints, and realtime coordination between people who want very different
+  things from the same database.
+</p>
+
+<p>
+  Shop-Shop is role-first. One deploy serves several products that share
+  inventory and money:
+</p>
+
+<table class="shop-roles">
+  <thead>
+    <tr>
+      <th>Role</th>
+      <th>What they do</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Customer</td>
+      <td>Browse River, search nearby, cart → checkout, track orders, favorite stores/items</td>
+    </tr>
+    <tr>
+      <td>Vendor</td>
+      <td>Onboard stores, manage catalog and bundles, fulfill orders, team access, Stripe Connect, store River</td>
+    </tr>
+    <tr>
+      <td>Affiliate</td>
+      <td>Referral links, commission dashboard, Connect payouts</td>
+    </tr>
+    <tr>
+      <td>Rider</td>
+      <td>In-house delivery assignments and status</td>
+    </tr>
+    <tr>
+      <td>Admin / staff</td>
+      <td>Users, vendors, catalog, finance, affiliates, delivery ops, River tooling, audit logs</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  The home route is not a directory of restaurants. It redirects to
+  <strong>River</strong> — a scored, diversified discovery feed of store and
+  item posts. Closer to a content product than a yellow-pages list. Store types
+  skew food (<code>HOME_KITCHEN</code>, <code>MEAL_PREP</code>,
+  <code>RESTAURANT</code>, <code>BAKERY</code>, <code>COFFEE</code>, and more).
+  Seeds include a full role matrix plus an Austin kitchen catalog so demos feel
+  real without a live staging city.
+</p>
+
+<h2>Monorepo shape</h2>
+
+<p>
+  Everything lives in one pnpm workspace. Apps own I/O. Packages own truth.
+</p>
+
+<pre><code>shop-shop/
+├── apps/
+│   ├── server/          # Fastify API + WebSocket
+│   └── web/             # React + Vite SPA
+├── packages/
+│   ├── db/              # Prisma, services, adapters, seed/CLI
+│   ├── domain/          # Policies, domain services, event bus
+│   ├── schemas/         # Zod DTOs, defineResource, OpenAPI emit
+│   ├── openapi/         # Generated openapi.json
+│   ├── sdk/             # typescript-fetch client + frontend helpers
+│   ├── realtime/        # Shared WS protocol + client
+│   └── shared/          # Pricing/tax/fee constants
+├── docs/api/            # Hand-maintained OpenAPI yaml (contract checks)
+├── scripts/             # Drift / contract / usage checkers
+└── infra/railway/       # API, web, river-ingest deploy configs</code></pre>
+
+<p>
+  Rule of thumb: if it is business rules or persistence, it is a package. If it
+  is HTTP, sockets, or pixels, it is an app. That boundary is what lets us
+  regenerate clients without rewriting store listing geography.
+</p>
+
+<h2>Stack</h2>
+
+<p>
+  Frontend is React 18 + TypeScript on Vite 5, React Router 6 with role layouts
+  and lazy pages, TanStack Query for server state, Zustand for client state,
+  Zod + React Hook Form for forms, Tailwind + Radix, Leaflet maps, Stripe
+  Elements for card checkout. Vitest + Testing Library and Playwright for E2E.
+</p>
+
+<p>
+  A local DX detail that punches above its weight: leave
+  <code>VITE_API_URL</code> empty. Vite proxies <code>/api</code>, River,
+  uploads, and geocode to the Fastify port from the monorepo root
+  <code>.env</code>. Same-origin in the browser. No CORS tax during
+  <code>pnpm dev</code>.
+</p>
+
+<p>
+  Backend is Fastify 4 with a Zod type provider so request and response schemas
+  are types. JWT + bcrypt, role-aware middleware, Stripe PaymentIntents +
+  Connect, ioredis for checkout idempotency, Pino logging, local uploads or
+  S3-compatible storage. Data is MySQL via Prisma 5. Contracts flow Zod →
+  OpenAPI → typescript-fetch SDK, with a parallel hand-maintained OpenAPI yaml
+  path for drift checks. Realtime sits on <code>/realtime</code> with JWT, ACL’d
+  topics by role for order lifecycle and delivery location/ETA.
+</p>
+
+<figure class="shop-visual" aria-label="Layered request path through Shop-Shop">
+  <figcaption>Pages talk to typed clients. Marketplace weirdness lives below CRUD.</figcaption>
+  <div class="shop-layers">
+    <div class="shop-layer"><strong>Web</strong><span>pages / features</span></div>
+    <div class="shop-layer"><strong>SDK / fetch</strong><span>generated + helpers</span></div>
+    <div class="shop-layer"><strong>Fastify</strong><span>resource CRUD + custom routes</span></div>
+    <div class="shop-layer"><strong>Domain</strong><span>policies / services / events</span></div>
+    <div class="shop-layer"><strong>Adapters</strong><span>Prisma, Stripe, storage, delivery</span></div>
+  </div>
+</figure>
+
+<h2>Declarative resources, custom where it hurts</h2>
+
+<p>
+  Catalog-shaped surfaces — stores, items, carts, bundles, addresses,
+  promotions — are declared once with <code>defineResource</code>: Zod
+  schemas, role access, ownership rules, and hooks like
+  <code>beforeCreate</code>, <code>beforeList</code>, and
+  <code>authorizeAccess</code> for geo browse and activation checks.
+  <code>registerAllResources</code> wires CRUD onto Fastify. The same registry
+  feeds OpenAPI generation. The SDK becomes typed <code>StoresApi</code>,
+  <code>CartsApi</code>, and friends.
+</p>
+
+<p>
+  That is the boring half done automatically.
+</p>
+
+<p>
+  River, checkout, delivery dispatch, Stripe webhooks, affiliates, and admin ops
+  are hand-registered Fastify routes with purpose-built services. Honesty
+  matters here: not every endpoint is in the generated OpenAPI/SDK. Resource
+  CRUD is codegen-first. Marketplace economics and logistics are product code,
+  with contract checks where we need them — especially checkout, via yaml and
+  drift scripts.
+</p>
+
+<h2>Orders as a state machine</h2>
+
+<p>
+  Order status is not a free-form string. An explicit state machine owns legal
+  transitions:
+</p>
+
+<pre><code>PENDING_PAYMENT → PLACED → ACCEPTED → PREPARING → READY
+  → OUT_FOR_DELIVERY → DELIVERED
+(+ cancel paths)</code></pre>
+
+<p>
+  Checkout pricing constants — tax, delivery fee, platform fee — live in
+  <code>@packages/shared</code> so the UI and server do not invent their own
+  percentages.
+</p>
+
+<h2>Pluggable logistics</h2>
+
+<p>
+  Stripe, storage, geocoding caches, and delivery providers sit behind adapters.
+  Delivery is especially intentional:
+</p>
+
+<pre><code>DeliveryProvider = IN_HOUSE | DOORDASH_DRIVE | UBER_DIRECT</code></pre>
+
+<p>
+  Shared adapter interface: quote → dispatch → track → cancel. In-house is
+  first-class. DoorDash Drive has a real HTTP client and webhook auth modes
+  (<code>none</code> / <code>basic</code> / <code>hmac</code>; production refuses
+  open webhooks). Uber Direct is stubbed in the registry for a future wire-up —
+  we do not pretend it is live.
+</p>
+
+<h2>Feature domains that carry the product</h2>
+
+<p>
+  <strong>River</strong> — discovery as a feed. Posts, likes, saves, comments,
+  seen-state, cursor pagination, ranking with freshness and diversity. Sources
+  can be manual, auto-store, or auto-product. Ingest CLIs and an admin composer
+  exist so the feed can grow without every vendor becoming a content creator.
+</p>
+
+<p>
+  <strong>Checkout and money</strong> — session-style checkout with same-store
+  cart validation, address checks, and delivery mode selection. Card via Stripe
+  PaymentIntents (Connect destination charges + application fee). COD behind
+  feature flags, with commission logic that refuses to accrue on unpaid cash
+  orders. Redis idempotency keys plus Stripe idempotency keys keep double
+  submit from becoming double charge. Vendors and affiliates onboard with Stripe
+  Connect Express. Tips are first-class. Vendor payouts, adjustments, and
+  accounting export give ops a path out of spreadsheets.
+</p>
+
+<p>
+  <strong>Delivery and geo</strong> — polygon delivery zones in GeoJSON with
+  fees and minima. Geocoding cache reduces third-party spend. Marketplace search
+  supports radius. Tracking points power Leaflet UIs. Driver and vendor delivery
+  views close the loop for in-house jobs.
+</p>
+
+<p>
+  <strong>Affiliates</strong> — not a coupon bolted on. Rate resolution from
+  payout group / per-user override / platform default; attribution via store
+  link, customer referral, or checkout code; caps and audit logs; vendor-side
+  affiliate sales views. Commissions know about payment rails.
+</p>
+
+<p>
+  Around that: vendor teams and invitations, KYC/KYB-style verification,
+  promotions, store readiness and hours, multipart media upload with
+  client-side compression, favorites, and a rate-limited search surface so
+  marketplace query traffic does not share fate with CRUD.
+</p>
+
+<h2>The codegen loop</h2>
+
+<pre><code>pnpm gen:all
+# prisma generate
+# → DTO generation from Prisma into schemas
+# → OpenAPI JSON from resource registry
+# → OpenAPI Generator → packages/sdk
+
+pnpm fresh          # reset DB, migrate, gen:all
+pnpm start:local    # setup + both apps
+pnpm check:api      # drift / contract / usage
+pnpm db:seed        # roles, Austin stores, geo caches
+pnpm river:initial  # bootstrap feed content</code></pre>
+
+<p>
+  Swagger UI at <code>/docs</code> is the live handshake for resource APIs.
+  Railway configs split API, web, and a river-ingest worker so content jobs do
+  not share process fate with request handlers.
+</p>
+
+<h2>Why this shape</h2>
+
+<p>
+  A delivery marketplace fails in two ways: product sprawl (every role gets a
+  bespoke backend) or framework fantasy (everything is a generic CRUD resource
+  until money and trucks show up).
+</p>
+
+<p>
+  Shop-Shop splits the difference:
+</p>
+
+<ol>
+  <li>
+    <strong>Resources + Zod</strong> for the stable catalog surface — typed
+    end-to-end, cheap to evolve.
+  </li>
+  <li>
+    <strong>Explicit services</strong> for River ranking, checkout idempotency,
+    Connect fees, delivery providers, and affiliate rates.
+  </li>
+  <li>
+    <strong>Shared packages</strong> so the SPA, API, and workers argue about
+    one schema and one order machine.
+  </li>
+  <li>
+    <strong>Realtime topics with ACLs</strong> so live tracking is not an
+    unbounded broadcast.
+  </li>
+</ol>
+
+<p>
+  The result still feels like one system: change a store list hook, regenerate
+  the SDK, keep Vite same-origin, and ship another role without inventing
+  another stack. If you are building multi-sided logistics with a social
+  discovery surface, the interesting part is not picking React or Fastify. It is
+  deciding which boundaries you refuse to blur.
+</p>
