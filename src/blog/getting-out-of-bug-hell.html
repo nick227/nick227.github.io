@@ -1,0 +1,234 @@
+<p>
+  This article is about getting out of bug hell: the place where a backlog of
+  one hundred-plus defects keeps growing, every QA pass finds more damage than
+  it clears, and the team starts mistaking patch volume for progress.
+</p>
+
+<p>
+  You will get why that spiral is usually a systems and process failure, the
+  two real exits once you are already there, how leadership should navigate the
+  triage without turning debugging into blame, and how to stay out in the first
+  place.
+</p>
+
+<h2>I joined a product that could not catch up</h2>
+
+<p>
+  I joined an organization that already had more than a hundred open bugs, and
+  the count was not shrinking. Every time they sent a build through QA, new
+  issues appeared. Fixes landed. The queue still grew. People worked hard. The
+  software did not become reliable.
+</p>
+
+<p>
+  The best solution, of course, is not going there in the first place. Once you
+  are there, the interesting question is how the organization got trapped —
+  because the trap looks virtuous from the inside.
+</p>
+
+<p>
+  They were using QA like an iteration partner. Features arrived non-functional
+  or half-coherent, QA poked them until something moved, tickets flooded back,
+  developers patched symptoms, and everyone hoped the next pass would feel like
+  “almost production ready.” That hope kept resetting. QA cannot qa your way
+  from broken software into production-ready software. When you ask testing to
+  invent product truth after the fact, you set the whole company up for
+  disappointment again and again.
+</p>
+
+<h2>When every fix creates two new bugs</h2>
+
+<p>
+  Bug hell is rarely a pile of independent coding mistakes. It is usually a
+  tightly coupled system in a regression spiral. Change one module and three
+  invisible contracts twitch. Patch a race and the next merge reintroduces it
+  under a different name. “Individual bug” work assumes independence. In a
+  coupled mess, independence is the fantasy.
+</p>
+
+<p>
+  On paper the team still looks productive. Burn-down charts move. Tickets close.
+  Standups sound busy. Then ask the only questions that matter: where is the
+  working software? More importantly — where is the pipeline for cranking out
+  future software without inventing a new crisis each time?
+</p>
+
+<p>
+  If those answers are weak, you are not debugging. You are managing a
+  liability that compounds interest.
+</p>
+
+<h2>Option one: amputate</h2>
+
+<p>
+  Sunk cost fallacy is a slow death. I would far prefer <em>does not exist</em>
+  to <em>does not work</em>.
+</p>
+
+<p>
+  Option one is surgical honesty. Delete the feature that never stabilized.
+  Collapse the microservice that never earned its network hop. Throw away the
+  hand-rolled framework nobody wants to own. Stop pretending a non-functional
+  surface area is “almost done” because months were spent on it.
+</p>
+
+<p>
+  Amputation hurts. It also stops the daily bleed into every other area of the
+  product. Dead code that ships tickets forever is more expensive than deleted
+  code that teaches one blunt lesson.
+</p>
+
+<h2>Option two: rip out the root, not the bruise</h2>
+
+<p>
+  Option two is the same instinct with better targeting. You are still not
+  fishing the backlog ticket by ticket. You triage for major refactors that pull
+  out root causes: ownership boundaries, state that should have been a machine,
+  duplication that diverged, modules that know everybody’s secrets, layers that
+  were “flexible” enough to mean anything.
+</p>
+
+<p>
+  Going after individual bugs in that environment often creates more bugs or
+  kicks the can down the road. The visible patch lands. The invisible coupling
+  stays. Next week the same category returns with a different stack trace.
+</p>
+
+<p>
+  Stabilize before another feature. If the system cannot absorb one more change
+  without inventing three regressions, new scope is vanity. Fix the load-bearing
+  seams until changes become boring again.
+</p>
+
+<h2>Bug hell is usually a systems problem</h2>
+
+<p>
+  Coding skill matters. So do reviewers. Still: recurring hell is almost always
+  systemic.
+</p>
+
+<ul>
+  <li>
+    Unclear ownership — when everyone can touch a module and nobody is
+    accountable for its behavior
+  </li>
+  <li>
+    Weak boundaries — features laced through shared globals, god objects, and
+    “utilities” that hide business rules
+  </li>
+  <li>
+    Missing observability — failures discoverable only when a human notices
+    wrong output after the fact
+  </li>
+  <li>
+    Rushed requirements — build first, define behavior later, let QA invent the
+    acceptance criteria
+  </li>
+</ul>
+
+<p>
+  Define behavior before implementation. Done means observable outcomes, not
+  “branch merged.” If you cannot state the expected state transitions, error
+  contracts, and ownership of the data, you have not clarified enough to earn
+  implementation budget.
+</p>
+
+<p>
+  The usual fuel under all of that is fundamental over-engineering and
+  opinionated hand-crafted code — clever architectures that no second engineer
+  can hold in their head, custom abstractions that skip the boring standard
+  library everyone already understands, premature platforms for a product that
+  still cannot do Tuesday’s basic flows. Time to rip it out.
+</p>
+
+<h2>Navigating the team out</h2>
+
+<p>
+  Leadership in bug hell is not motivational speech. It is triage discipline and
+  psychological safety.
+</p>
+
+<p>
+  The most important decision is refusing to turn debugging into blame. If a bug
+  survived code review, testing, deployment, and monitoring, the shallow question
+  is “Who missed it?” The better question is “Which part of our system allowed
+  this to remain invisible?” That answer may point to a missing test, an unclear
+  requirement, a broken handoff, poor tooling, or an ownership gap.
+</p>
+
+<p>
+  Practically:
+</p>
+
+<ul>
+  <li>
+    Freeze vanity feature work until the highest-severity instability classes
+    have an exit plan — delete or refactor, not endless patch chains.
+  </li>
+  <li>
+    Separate “customer-hot” stop-the-bleeding fixes from root removals. Do both
+    with intent, not as one fuzzy queue.
+  </li>
+  <li>
+    Make a short list of categories, not a long list of tickets. Categories are
+    where the amputations and refactors live.
+  </li>
+  <li>
+    Pair ownership with seams. Someone owns the contract; everyone else calls
+    it.
+  </li>
+  <li>
+    Put detection closer to change: tests for the failure class, monitors for
+    the invariant, alerts before users become QA.
+  </li>
+  <li>
+    Protect course-correction time on the calendar. Escape velocity does not
+    appear in leftover hours between “urgent” patches.
+  </li>
+</ul>
+
+<p>
+  A team stays out of bug hell when debugging becomes a coordinated engineering
+  practice rather than a series of emergencies. The goal is not zero bugs. The
+  goal is a team that can detect them early, understand them quickly, repair the
+  underlying cause, and improve the system so the same category of failure
+  becomes less likely.
+</p>
+
+<h2>How you stay out</h2>
+
+<p>
+  Prevention is the same muscle as recovery, used earlier and cheaper.
+</p>
+
+<ul>
+  <li>
+    Course correct while the wound is small. A messy module at week two is a
+    refactor. At month twelve it is a product narrative rewrite.
+  </li>
+  <li>
+    Prefer boring, bounded code over personal frameworks. Opinionated craft is
+    welcome when it reduces ambiguity — not when it invents a dialect.
+  </li>
+  <li>
+    Do not let QA become the design loop. Behavior contracts and demos should
+    already be green before “testing finds the product.”
+  </li>
+  <li>
+    Keep coupling intentional. If two things must change together, say so and
+    give them one owner. If they should not, make the boundary hard.
+  </li>
+  <li>
+    Ship thin slices that work. Existence that works beats ambition that half
+    works.
+  </li>
+</ul>
+
+<p>
+  Bug hell feels like a coding crisis. Treated that way, it never ends — just
+  relocates to next week’s tickets. Treat it as a systems, ownership, and
+  honesty problem: amputate what refuses to stabilize, rip out roots instead of
+  bruises, and build a pipeline that invents fewer categories of failure. Then
+  the backlog becomes something a healthy team can manage again, instead of a
+  scoreboard for how long the company has been stuck.
+</p>

@@ -144,6 +144,10 @@ const primaryArticleMetadata = [
   {
     slug: 'ltx-local-video-generation',
     title: 'LTX local video generation'
+  },
+  {
+    slug: 'getting-out-of-bug-hell',
+    title: 'Getting out of bug hell'
   }
 ];
 
