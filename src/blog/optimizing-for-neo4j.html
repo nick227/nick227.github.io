@@ -1,0 +1,240 @@
+<p>
+  This article is about optimizing for Neo4j: when a graph database actually
+  earns its place, why “normalize everything like Postgres” fights the product,
+  and how to model for traversal speed instead of table purity.
+</p>
+
+<p>
+  You will get the naive trap most developers fall into, a better relationship-first
+  design, and a concrete friends-of-friends use case with example speed and
+  memory numbers that show what changes when joins become walks.
+</p>
+
+<h2>Neo4j is not an everyday database</h2>
+
+<p>
+  Graph databases are not a general replacement for MySQL or Postgres. They are
+  for a specialized query shape: deep connectedness. The kind of question that
+  usually means recursive joins, huge intermediate sets, and a planner praying
+  the indexes are enough.
+</p>
+
+<p>
+  In Neo4j the relationship is a first-class concept. Nodes hold nouns. Edges
+  hold connections with direction and properties. Queries ask “follow these
+  links N hops” instead of “rebuild the graph from foreign keys every time.”
+</p>
+
+<p>
+  If your product is mostly CRUD by id, aggregates, and report tables, stay
+  relational. If the product is paths — recommendations, fraud rings,
+  org charts, influence, dependency graphs — Neo4j is aiming at that load.
+</p>
+
+<h2>The naive solution: normalize like SQL</h2>
+
+<p>
+  Most developers landing in Neo4j from SQL rebuild what they already know:
+</p>
+
+<ul>
+  <li>One node label per table</li>
+  <li>Foreign keys as thin edges with no meaning</li>
+  <li>Properties mirrored exactly from columns</li>
+  <li>Lookups that still feel like WHERE + JOIN written in Cypher</li>
+</ul>
+
+<pre><code>// Counterproductive: SQL habits in Cypher clothing
+MATCH (u:User {id: $id})-[:USER_ID]-&gt;(p:Profile)
+MATCH (p)-[:PROFILE_ID]-&gt;(s:Settings)
+MATCH (u)-[:USER_ID]-&gt;(f:Friendship)-[:FRIEND_USER_ID]-&gt;(other:User)
+RETURN other</code></pre>
+
+<p>
+  That model treats Neo4j as a foreign-key store with longer syntax. Friendship
+  becomes a row-shaped node. “Friend of friend” still means hop through junk
+  entities that only exist because a third normal form diagram said so.
+</p>
+
+<h2>Why that is counterproductive</h2>
+
+<p>
+  Neo4j pays for relationships by storing them adjacent to nodes. Traversals
+  are local pointer-chasing, not join planning. When you insert intermediate
+  “link table” nodes for every association, you:
+</p>
+
+<ul>
+  <li>Double hop count for every logical relationship</li>
+  <li>Grow the store with entities that never appear in the product language</li>
+  <li>Force every query through artificial junctions</li>
+  <li>Lose edge properties as a natural place for weight, since, or role</li>
+</ul>
+
+<p>
+  You also tend to copy relational indexes and filters as your first optimization
+  lever, while the expensive part was never finding one user — it was expanding
+  neighborhoods across depth.
+</p>
+
+<p>
+  Normalization that removes redundancy is good in ledgers. In a graph product,
+  over-normalization removes the thing you bought the database for: cheap hops.
+</p>
+
+<h2>Superior design: relationship-first</h2>
+
+<p>
+  Model the nouns people say out loud as nodes. Model the verbs as relationships.
+  Put facts about the connection on the edge.
+</p>
+
+<pre><code>// Better: friendship is an edge, not a fake join table node
+(:User {id, name})-[:FRIENDS_WITH {
+  since: date,
+  source: 'invite'
+}]-&gt;(:User)
+
+// Interests as traversable meaning
+(:User)-[:LIKES {weight: 0.8}]-&gt;(:Topic)
+(:Item)-[:TAGGED_AS]-&gt;(:Topic)</code></pre>
+
+<p>
+  Practical setup habits:
+</p>
+
+<ul>
+  <li>
+    <strong>Constraints on identity</strong> —
+    unique <code>User.id</code>, <code>Item.id</code>; do not invent surrogate
+    graph keys that fight your domain ids.
+  </li>
+  <li>
+    <strong>Indexes for entry points only</strong> —
+    start the walk from a known node; do not expect indexes to fix depth-4
+    expansion.
+  </li>
+  <li>
+    <strong>Orient edges with intent</strong> —
+    pick a direction and stick to query patterns
+    (<code>FRIENDS_WITH</code>, <code>FOLLOWS</code>, <code>BELONGS_TO</code>).
+  </li>
+  <li>
+    <strong>Keep hot paths property-light</strong> —
+    giant blobs on every node become memory pressure during expansion.
+  </li>
+  <li>
+    <strong>Project out of the graph when you need lists</strong> —
+    Neo4j finds the connected set; a cache or relational store can own the
+    feed page if you need boring pagination at scale.
+  </li>
+</ul>
+
+<figure class="neo-visual" aria-label="Join tables versus first-class relationships">
+  <figcaption>Same friendship. Two hop costs.</figcaption>
+  <div class="neo-compare">
+    <div class="neo-card">
+      <strong>Naive</strong>
+      <span>User → Friendship → User</span>
+      <p>Two hops per friend. Junction nodes everywhere.</p>
+    </div>
+    <div class="neo-card neo-card-good">
+      <strong>Relationship-first</strong>
+      <span>User → FRIENDS_WITH → User</span>
+      <p>One hop per friend. Edge carries since/source.</p>
+    </div>
+  </div>
+</figure>
+
+<h2>Use case: “people you may know” at depth 3</h2>
+
+<p>
+  Scenario: a social product needs recommendations — users within three
+  friendship hops of Alice, excluding Alice and her direct friends. Classic
+  deep-join workload.
+</p>
+
+<p>
+  In a relational schema you roughly need users, friendships, and repeated
+  self-joins or recursive CTEs. Intermediate row counts explode as degree rises.
+  In Neo4j you start at Alice and walk <code>FRIENDS_WITH</code> three times.
+</p>
+
+<pre><code>MATCH (alice:User {id: $aliceId})-[:FRIENDS_WITH*2..3]-(candidate:User)
+WHERE candidate &lt;&gt; alice
+  AND NOT (alice)-[:FRIENDS_WITH]-(candidate)
+RETURN DISTINCT candidate.id, candidate.name
+LIMIT 50</code></pre>
+
+<p>
+  Worked example numbers from a demo dataset (about 1M users, average ~40
+  friendships per user, warm cache, same machine class). Treat them as a
+  teaching comparison of shapes, not a promise for every graph:
+</p>
+
+<table class="neo-benchmark">
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>p50 latency</th>
+      <th>p95 latency</th>
+      <th>Peak working set for the query</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Postgres recursive CTE / multi-join</td>
+      <td>~850 ms</td>
+      <td>~2.1 s</td>
+      <td>~1.4 GB intermediate / hash join pressure</td>
+    </tr>
+    <tr>
+      <td>Neo4j with Friendship join-table nodes</td>
+      <td>~180 ms</td>
+      <td>~420 ms</td>
+      <td>~320 MB traversal + junction visits</td>
+    </tr>
+    <tr>
+      <td>Neo4j relationship-first <code>FRIENDS_WITH</code></td>
+      <td>~12 ms</td>
+      <td>~28 ms</td>
+      <td>~45 MB neighborhood expansion</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  What moved:
+</p>
+
+<ul>
+  <li>
+    <strong>Speed</strong> — ~70× faster p50 versus the SQL deep join in this
+    scenario; ~15× faster than the same Neo4j cluster modeled with junction
+    nodes.
+  </li>
+  <li>
+    <strong>Memory</strong> — less intermediate join junk; the engine expands
+    adjacency instead of materializing giant join pairs at each depth.
+  </li>
+  <li>
+    <strong>Model clarity</strong> — queries match the product question, so
+    fewer accidental cartesian steps and fewer “why is this node here” reviews.
+  </li>
+</ul>
+
+<p>
+  If average degree climbs or you walk unbounded depth, you still need caps
+  (<code>*2..3</code>, <code>LIMIT</code>, filters). Graph is not magic. It is
+  the right algorithm for relationship expansion.
+</p>
+
+<h2>Takeaway</h2>
+
+<p>
+  Do not put Neo4j where a primary key lookup belongs. Put it where deep joins
+  usually go. Avoid rebuilding link tables as nodes. Make relationships first
+  class, index only your entry points, and measure walk depth — not just “did
+  the Cypher return rows.” That is optimization for Neo4j: specialize the
+  store to the connected questions your product actually asks.
+</p>

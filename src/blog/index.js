@@ -132,6 +132,10 @@ const primaryArticleMetadata = [
   {
     slug: 'building-shop-shop-a-type-safe-delivery-marketplace',
     title: 'Building Shop-Shop: a type-safe delivery marketplace'
+  },
+  {
+    slug: 'optimizing-for-neo4j',
+    title: 'Optimizing for Neo4j'
   }
 ];
 
