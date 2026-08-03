@@ -1,0 +1,359 @@
+<p>
+  This article is a practical NgRx refresher for Angular developers, then a
+  honest look at how NgRx compares to signals, NGXS, Zustand-style stores, and
+  plain Angular services — and how an automated NgRx builder I built removed
+  most of the real pain.
+</p>
+
+<p>
+  You will get the core elements and how they wire together, when the boilerplate
+  is worth it, how SignalStore and modern Angular shift the conversation, and
+  why generating the store surface consistently beats hand-writing every slice.
+</p>
+
+<h2>Developer refresher: the NgRx pieces</h2>
+
+<p>
+  NgRx is Redux for Angular: one central store, immutable updates, and a
+  predictable loop. Once you know the parts, reading a feature becomes pattern
+  matching instead of archaeology.
+</p>
+
+<pre><code>Component / effect
+    → dispatch(Action)
+    → Reducer (pure state update)
+    → Store holds new state
+    → Selectors derive views
+    → Components / effects react</code></pre>
+
+<h3>Actions</h3>
+
+<p>
+  Actions are events with a type string and optional payload. Prefer
+  <code>createAction</code> / <code>createActionGroup</code> so typings stay
+  honest.
+</p>
+
+<pre><code>import { createActionGroup, emptyProps, props } from '@ngrx/store';
+
+export const UsersActions = createActionGroup({
+  source: 'Users',
+  events: {
+    'Load': emptyProps(),
+    'Load Success': props&lt;{ users: User[] }&gt;(),
+    'Load Failure': props&lt;{ error: string }&gt;(),
+  },
+});</code></pre>
+
+<h3>State + reducers</h3>
+
+<p>
+  Reducers are pure functions. Same action + same state always yields the same
+  next state. No HTTP. No router. No side effects.
+</p>
+
+<pre><code>import { createReducer, on } from '@ngrx/store';
+import { UsersActions } from './users.actions';
+
+export interface UsersState {
+  entities: User[];
+  loading: boolean;
+  error: string | null;
+}
+
+export const initialState: UsersState = {
+  entities: [],
+  loading: false,
+  error: null,
+};
+
+export const usersReducer = createReducer(
+  initialState,
+  on(UsersActions.load, (state) =&gt; ({
+    ...state,
+    loading: true,
+    error: null,
+  })),
+  on(UsersActions.loadSuccess, (state, { users }) =&gt; ({
+    ...state,
+    entities: users,
+    loading: false,
+  })),
+  on(UsersActions.loadFailure, (state, { error }) =&gt; ({
+    ...state,
+    loading: false,
+    error,
+  })),
+);</code></pre>
+
+<p>
+  Register the feature when you boot the store (standalone or NgModule):
+</p>
+
+<pre><code>provideStore(),
+provideState('users', usersReducer),
+provideEffects([UsersEffects]),</code></pre>
+
+<h3>Selectors</h3>
+
+<p>
+  Selectors are how consumers read. Memoize derived views so templates and
+  effects do not recompute junk.
+</p>
+
+<pre><code>import { createFeatureSelector, createSelector } from '@ngrx/store';
+
+export const selectUsersState = createFeatureSelector&lt;UsersState&gt;('users');
+
+export const selectUsers = createSelector(
+  selectUsersState,
+  (s) =&gt; s.entities,
+);
+
+export const selectUsersLoading = createSelector(
+  selectUsersState,
+  (s) =&gt; s.loading,
+);</code></pre>
+
+<h3>Effects</h3>
+
+<p>
+  Effects own side effects: HTTP, navigation, toasts. Listen to actions, do the
+  impure work, dispatch success/failure actions. Keep reducers boring.
+</p>
+
+<pre><code>import { inject, Injectable } from '@angular/core';
+import { Actions, createEffect, ofType } from '@ngrx/effects';
+import { catchError, map, of, switchMap } from 'rxjs';
+import { UsersActions } from './users.actions';
+import { UsersApi } from './users.api';
+
+@Injectable()
+export class UsersEffects {
+  private readonly actions$ = inject(Actions);
+  private readonly api = inject(UsersApi);
+
+  load$ = createEffect(() =&gt;
+    this.actions$.pipe(
+      ofType(UsersActions.load),
+      switchMap(() =&gt;
+        this.api.list().pipe(
+          map((users) =&gt; UsersActions.loadSuccess({ users })),
+          catchError((err) =&gt;
+            of(UsersActions.loadFailure({ error: String(err) })),
+          ),
+        ),
+      ),
+    ),
+  );
+}</code></pre>
+
+<h3>Consuming in a component</h3>
+
+<pre><code>readonly users = this.store.selectSignal(selectUsers);
+readonly loading = this.store.selectSignal(selectUsersLoading);
+
+ngOnInit() {
+  this.store.dispatch(UsersActions.load());
+}</code></pre>
+
+<p>
+  That last line matters: modern NgRx already meets Angular signals at the
+  consumption edge via <code>selectSignal</code>.
+</p>
+
+<h2>How this relates to Angular signals</h2>
+
+<p>
+  Signals are Angular’s built-in reactive primitives for local and
+  component-tree state. They shine for UI state, derived view models, and
+  fine-grained updates without RxJS ceremony.
+</p>
+
+<p>
+  NgRx still earns its keep for shared, audited, multi-feature application
+  state: who changed what, when, and through which action. Effects, DevTools
+  time travel, and a single event log are still the strong arguments.
+</p>
+
+<p>
+  The current Angular picture is usually mixed:
+</p>
+
+<ul>
+  <li>
+    Local form / dialog / tab state → signals (or signal-based inputs/outputs)
+  </li>
+  <li>
+    Cross-feature domain state with clear event history → NgRx Store or
+    <a href="https://ngrx.io/guide/signals/signal-store" target="_blank" rel="noopener">NgRx SignalStore</a>
+  </li>
+  <li>
+    Bridge store → template with <code>selectSignal</code> so templates stay in
+    signal-land
+  </li>
+</ul>
+
+<p>
+  SignalStore is NgRx’s answer to “less wiring, still disciplined.” It sits
+  closer to a typed service-with-rules than classic actions/reducers/effects
+  files. Classic Store remains the scale pattern many enterprise apps already
+  standardized on. Neither erases the other overnight.
+</p>
+
+<h2>Boilerplate: NgRx vs everything else</h2>
+
+<p>
+  People do not hate NgRx because reducers are hard. They hate the file tax.
+</p>
+
+<table class="state-compare">
+  <thead>
+    <tr>
+      <th>Approach</th>
+      <th>Ceremony</th>
+      <th>Strength</th>
+      <th>Weakness</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Angular service + BehaviorSubject / signals</td>
+      <td>Low</td>
+      <td>Fast to start; natural DI</td>
+      <td>Ad-hoc patterns; hard to audit at scale</td>
+    </tr>
+    <tr>
+      <td>Zustand (React mental model)</td>
+      <td>Very low</td>
+      <td>Tiny store, fewer files</td>
+      <td>Not Angular-native; different ecosystem instincts</td>
+    </tr>
+    <tr>
+      <td>NGXS</td>
+      <td>Medium</td>
+      <td>Class actions / fewer explicit pieces</td>
+      <td>Less Redux purity; smaller ecosystem than NgRx</td>
+    </tr>
+    <tr>
+      <td>NgRx classic Store</td>
+      <td>High</td>
+      <td>Explicit events, DevTools, effects isolation</td>
+      <td>Actions + reducer + selectors + effects + models every feature</td>
+    </tr>
+    <tr>
+      <td>NgRx SignalStore</td>
+      <td>Medium-low</td>
+      <td>Typed store without Redux file scatter</td>
+      <td>Teams still need conventions around side effects</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  A Zustand slice can be one file. An Angular service with a few signals can be
+  one injectable. Classic NgRx often means four to six files and naming
+  discipline before you have drawn a single pixel. That cost buys predictability
+  when many teams touch shared domain state — and it buys agony when every feature
+  reinvents naming, folder layout, and load/success/failure shape by hand.
+</p>
+
+<p>
+  Relative to NGXS, NgRx is more verbose and more explicit. Relative to services,
+  NgRx moves side effects out of “whatever the injectable felt like doing.”
+  Relative to Zustand’s vibe, NgRx looks heavy because it is heavy on purpose:
+  event sourcing for UI decisions.
+</p>
+
+<p>
+  So the question becomes: if the architecture is good, can we stop paying the
+  typing tax every sprint?
+</p>
+
+<h2>The NgRx builder: remove the pain, keep the pattern</h2>
+
+<p>
+  That is why I built an automated NgRx builder. The goal was not to invent a
+  new state library. It was to make classic NgRx feel less like a tax and more
+  like a machine:
+</p>
+
+<ul>
+  <li>
+    Describe a feature once — entity name, fields, async operations, list vs
+    detail shapes
+  </li>
+  <li>
+    Generate the matching actions, reducer cases, selectors, effects stubs, and
+    registration hooks
+  </li>
+  <li>
+    Enforce one naming convention, one load/success/failure shape, one folder
+    layout
+  </li>
+  <li>
+    Leave humans to write the real API calls, business rules, and UI —
+    not rename <code>loadUsersSuccess</code> for the fiftieth time
+  </li>
+</ul>
+
+<p>
+  In practice that is what simplified developer work. Onboarding stopped being
+  “copy the users feature and pray.” Reviews stopped arguing about file layout.
+  Quality became consistent because the boring surface was identical every time.
+  Speed went up because the main pain of NgRx is not architecture — it is
+  repeating architecture correctly.
+</p>
+
+<p>
+  The builder also encoded the lesson every senior Angular team learns too late:
+  store codegen only works if the output is opinionated. Soft templates that let
+  every team invent a dialect recreate bug hell inside the Redux folder. Hard
+  conventions — same action groups, same error channel, same selector names —
+  are the product.
+</p>
+
+<p>
+  Once generators own the scaffolding, NgRx’s remaining cost is decision cost:
+  What belongs in the global store versus a local signal? Which effects need
+  cancellation (<code>switchMap</code>) versus parallel fan-out? Those are good
+  engineering problems. Generating five nearly identical files is not.
+</p>
+
+<h2>When I still reach for NgRx</h2>
+
+<p>
+  I reach for NgRx (classic or SignalStore) when:
+</p>
+
+<ul>
+  <li>Multiple features share the same domain state</li>
+  <li>We need a clear event history for debugging</li>
+  <li>Side effects need a standard home outside components</li>
+  <li>The team is large enough that conventions matter more than personal taste</li>
+</ul>
+
+<p>
+  I reach for signals / services when:
+</p>
+
+<ul>
+  <li>State dies with the component</li>
+  <li>There is no cross-feature replay story</li>
+  <li>A thin facade over HTTP is enough</li>
+</ul>
+
+<p>
+  And I treat generators as mandatory once the team standardizes on classic
+  NgRx. Without them, the library tax leaks into every estimate. With them, you
+  keep the discipline and ship store surfaces that look like they came from the
+  same factory — because they did.
+</p>
+
+<p>
+  NgRx is not outdated because signals exist. Signals shrunk the surface area
+  where a global store is necessary. For the surface area that remains, either
+  accept the boilerplate, switch to a lighter store style, or automate the Redux
+  files until humans only write the interesting parts. That last option is how
+  I made NgRx livable on real teams.
+</p>

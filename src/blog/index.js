@@ -148,6 +148,10 @@ const primaryArticleMetadata = [
   {
     slug: 'getting-out-of-bug-hell',
     title: 'Getting out of bug hell'
+  },
+  {
+    slug: 'ngrx-angular-state-and-the-builder-that-made-it-livable',
+    title: 'NgRx Angular state and the builder that made it livable'
   }
 ];
 
