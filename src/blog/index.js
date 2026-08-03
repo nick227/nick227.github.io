@@ -136,6 +136,10 @@ const primaryArticleMetadata = [
   {
     slug: 'optimizing-for-neo4j',
     title: 'Optimizing for Neo4j'
+  },
+  {
+    slug: 'elasticsearch-full-text-search-without-locking-your-database',
+    title: 'Elasticsearch: full text search without locking your database'
   }
 ];
 

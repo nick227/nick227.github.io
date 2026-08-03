@@ -1159,6 +1159,50 @@ body.reader-active #scrim::after {
   }
 }
 
+.reader-body .es-visual {
+  margin: 0;
+  padding: 16px 18px;
+  border: 1px solid var(--color-border);
+  background: rgba(0, 0, 0, 0.28);
+}
+
+.reader-body .es-visual figcaption {
+  margin-bottom: 14px;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.4;
+}
+
+.reader-body .es-flow {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 8px;
+}
+
+.reader-body .es-box {
+  padding: 10px 12px;
+  border: 1px solid var(--color-border);
+  color: var(--color-txt-bright);
+  font-size: 0.88em;
+}
+
+.reader-body .es-box-accent {
+  border-color: rgba(218, 255, 0, 0.35);
+  color: var(--color-accent);
+}
+
+.reader-body .es-arrow {
+  color: var(--color-txt-muted);
+}
+
+.reader-body .es-note {
+  margin: 14px 0 0;
+  color: var(--color-txt-secondary);
+  font-size: 0.9em;
+  line-height: 1.45;
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;
