@@ -1,0 +1,391 @@
+<p>
+  This article is a practical guide to running LTX local video generation: how
+  to generate short clips from text or a reference image on your own GPU, and
+  how to keep the model loaded as an HTTP service your apps can call.
+</p>
+
+<p>
+  You will get hardware expectations with a card comparison table, a CLI-first
+  setup based on my
+  <code>ltx-env</code> project, the FastAPI persistent server pattern, common
+  LTX model checkpoints on Hugging Face, and the failure modes that waste an
+  evening if nobody warns you.
+</p>
+
+<h2>What you are installing</h2>
+
+<p>
+  <a href="https://huggingface.co/Lightricks/LTX-Video" target="_blank" rel="noopener">LTX-Video</a>
+  (Lightricks) is an open diffusion / DiT-style video model. Through Hugging
+  Face
+  <a href="https://huggingface.co/docs/diffusers/en/api/pipelines/ltx_video" target="_blank" rel="noopener">Diffusers</a>
+  you get two pipelines:
+</p>
+
+<ul>
+  <li><code>LTXPipeline</code> — text-to-video</li>
+  <li><code>LTXImageToVideoPipeline</code> — animate a still with a motion prompt</li>
+</ul>
+
+<p>
+  My project wraps those pipelines two ways:
+</p>
+
+<ul>
+  <li>
+    <code>generate_ltx.py</code> — one-shot CLI (loads weights every run)
+  </li>
+  <li>
+    <code>server.py</code> — FastAPI service that loads once, shares weights
+    between text and image pipelines, and serves MP4s over HTTP
+  </li>
+</ul>
+
+<pre><code>prompt or image
+    → LTX pipeline (diffusers)
+    → frames
+    → export MP4 (ffmpeg / imageio-ffmpeg)
+    → file path or /media URL</code></pre>
+
+<p>
+  Expect first-run model downloads (multi-GB), CUDA GPU time measured in tens of
+  seconds to a few minutes per clip depending on card and settings, and quality
+  that improves with better prompts, valid frame counts, and distilled or newer
+  checkpoints when you harden the stack.
+</p>
+
+<h2>Hardware: what “local” actually costs</h2>
+
+<p>
+  Local LTX is a GPU product. CPU-only PyTorch can technically crawl through
+  diffusion steps; for video it is not a serious workflow. NVIDIA CUDA cards
+  with recent drivers are the default path. My server path uses
+  <code>enable_model_cpu_offload()</code>, VAE-friendly settings, and bf16/fp16
+  weights to reduce VRAM pressure — you still want a capable CUDA device.
+</p>
+
+<p>
+  Approximate wall-clock for one teaching workload —
+  <strong>640×480, 49 frames (~2s at 24fps), ~25 steps, LTX-class 2B/distilled
+  style settings</strong> — on a quiet machine. Treat these as order-of-magnitude
+  planning numbers, not a lab bench certificate. Resolution, steps, 13B vs 2B,
+  and distillation change everything.
+</p>
+
+<table class="ltx-benchmark">
+  <thead>
+    <tr>
+      <th>Hardware</th>
+      <th>Memory</th>
+      <th>Approx. time / clip</th>
+      <th>Notes</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>CPU only (modern desktop)</td>
+      <td>system RAM</td>
+      <td>1–4+ hours</td>
+      <td>Not practical for iteration</td>
+    </tr>
+    <tr>
+      <td>RTX 3060 / 4060-class</td>
+      <td>8–12 GB</td>
+      <td>~3–8 min</td>
+      <td>Use offload, smaller res/frames; expect swaps</td>
+    </tr>
+    <tr>
+      <td>RTX 4070 / 4080</td>
+      <td>12–16 GB</td>
+      <td>~90 s–4 min</td>
+      <td>Solid local iteration for short clips</td>
+    </tr>
+    <tr>
+      <td>RTX 4090</td>
+      <td>24 GB</td>
+      <td>~20–90 s</td>
+      <td>Community sweet spot; often near-real-time on distilled LTX settings</td>
+    </tr>
+    <tr>
+      <td>RTX 5090-class</td>
+      <td>~32 GB</td>
+      <td>~15–60 s</td>
+      <td>Higher bandwidth/compute when drivers/stack are ready</td>
+    </tr>
+    <tr>
+      <td>A100 40/80 GB</td>
+      <td>40–80 GB</td>
+      <td>~25–120 s</td>
+      <td>Datacenter throughput + headroom for larger jobs</td>
+    </tr>
+    <tr>
+      <td>H100 80 GB</td>
+      <td>80 GB</td>
+      <td>~15–90 s</td>
+      <td>Strong tensor performance; infra cost is the tax</td>
+    </tr>
+    <tr>
+      <td>NVIDIA DGX Spark (GB10 Grace Blackwell)</td>
+      <td>128 GB unified</td>
+      <td>~30 s–3 min</td>
+      <td>
+        <a href="https://www.nvidia.com/en-us/products/workstations/dgx-spark/" target="_blank" rel="noopener">DGX Spark</a>
+        trades peak bandwidth vs a 4090 for huge coherent memory — better when
+        larger checkpoints / concurrent tools must stay resident
+      </td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Rule of thumb: buy bandwidth and VRAM for iteration speed; buy unified memory
+  (Spark-class) when the checkpoint or multi-model workflow does not fit a
+  consumer card. For day-to-day LTX clip loops, a 4090-class GPU is still hard to
+  beat on dollars-per-minute.
+</p>
+
+<h2>Prerequisites</h2>
+
+<pre><code>nvidia-smi          # CUDA GPU visible
+python3 --version   # 3.10+
+ffmpeg -version     # export / downscale
+git --version</code></pre>
+
+<p>
+  Also budget disk for Hugging Face caches and output MP4s. Some checkpoints
+  need a Hugging Face login:
+  <a href="https://huggingface.co/settings/tokens" target="_blank" rel="noopener">token settings</a>
+  and <code>huggingface-cli login</code>.
+</p>
+
+<h2>Install and first CLI video</h2>
+
+<pre><code>git clone &lt;your-ltx-env-repo&gt;
+cd ltx-env
+python3 -m venv .venv
+source .venv/bin/activate
+python -m pip install --upgrade pip
+
+# Install the CUDA build of torch that matches your drivers, then:
+pip install diffusers transformers accelerate \
+  fastapi uvicorn pydantic pillow numpy requests imageio-ffmpeg</code></pre>
+
+<p>
+  PyTorch install lines change by CUDA version — follow the current matrix on
+  <a href="https://pytorch.org/get-started/locally/" target="_blank" rel="noopener">pytorch.org</a>.
+</p>
+
+<p>
+  Generate with Diffusers’ LTX pipelines (this is the path my
+  <code>generate_ltx.py</code> uses against
+  <code>Lightricks/LTX-Video</code>):
+</p>
+
+<pre><code>python generate_ltx.py \
+  --prompt "A paper boat sailing across a rain-covered city street" \
+  --width 640 \
+  --height 480 \
+  --frames 49 \
+  --steps 30 \
+  --seed 42 \
+  --output media/paper-boat.mp4</code></pre>
+
+<p>
+  Hard constraints from the model / server validation:
+</p>
+
+<ul>
+  <li>Width and height should be multiples of 32</li>
+  <li>
+    Frame count should satisfy <code>(frames - 1) % 8 == 0</code>
+    (examples: 9, 17, 33, 49, 65, 97) — prefer these over casual numbers like 30
+  </li>
+  <li>Seed for repeatable experiments</li>
+</ul>
+
+<p>
+  Image-to-video is the same entrypoint with <code>--image</code>. Prompt for
+  motion (“looks up and waves”) more than re-describing the still. Match aspect
+  ratio when you can; wild crops encourage morphing.
+</p>
+
+<pre><code>python generate_ltx.py \
+  --prompt "The character looks up, smiles, and waves gently" \
+  --image media/reference.jpg \
+  --width 640 \
+  --height 480 \
+  --frames 49 \
+  --output media/animated-reference.mp4</code></pre>
+
+<h2>Persistent FastAPI service</h2>
+
+<p>
+  The CLI reloads multi-GB weights every process. The server loads once, keeps
+  text-to-video and image-to-video pipelines sharing components, and returns
+  telemetry (runtime, peak VRAM, motion metrics) with the file.
+</p>
+
+<pre><code>export LTX_BASE_DIR="$PWD"
+export MEDIA_DIR="$PWD/media"
+export API_TOKEN="replace-with-a-long-random-token"
+export HOST="127.0.0.1"
+export PORT="8000"
+
+source .venv/bin/activate
+python server.py</code></pre>
+
+<p>
+  First boot downloads and loads the checkpoint — plan for that delay. Then:
+</p>
+
+<pre><code>curl http://127.0.0.1:8000/health
+curl http://127.0.0.1:8000/ready
+# {"status":"ready"} when weights are loaded</code></pre>
+
+<pre><code>curl -X POST http://127.0.0.1:8000/generate \
+  -H "Authorization: Bearer replace-with-a-long-random-token" \
+  -H "Content-Type: application/json" \
+  -d '{
+    "req_id": "my-first-video",
+    "prompt": "A red fox running through fresh snow at sunrise",
+    "preset": "fast",
+    "frames": 49,
+    "seed": 42
+  }'</code></pre>
+
+<p>
+  <code>/generate</code> stays open until export finishes. Poll
+  <code>/progress/&lt;req_id&gt;</code> for
+  <code>loading</code> → <code>generating</code> → <code>saving</code> →
+  <code>completed</code> / <code>failed</code>. My service accepts one active
+  generation at a time; others get <code>409 BUSY</code> — retry later or put a
+  queue in front for production.
+</p>
+
+<p>
+  Image inputs: omit for text-to-video; pass a path under
+  <code>LTX_BASE_DIR</code>; or a <code>data:image/...;base64,...</code> value.
+  Paths are the server’s filesystem, not your laptop’s, when the client is remote.
+</p>
+
+<table class="ltx-presets">
+  <thead>
+    <tr>
+      <th>Preset</th>
+      <th>Generation size</th>
+      <th>Steps</th>
+      <th>Delivery</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td><code>fast</code></td>
+      <td>640×480</td>
+      <td>25</td>
+      <td>Direct export</td>
+    </tr>
+    <tr>
+      <td><code>balanced</code></td>
+      <td>768×576</td>
+      <td>35</td>
+      <td>Downscaled to 640×480</td>
+    </tr>
+    <tr>
+      <td><code>quality</code></td>
+      <td>768×576</td>
+      <td>40</td>
+      <td>Downscaled to 640×480</td>
+    </tr>
+  </tbody>
+</table>
+
+<p>
+  Also tune <code>motion_intensity</code> (<code>subtle</code> /
+  <code>medium</code> / <code>high</code>), <code>guidance_scale</code>,
+  <code>negative_prompt</code>, <code>frame_rate</code>, and <code>seed</code>.
+</p>
+
+<pre><code>const response = await fetch("http://127.0.0.1:8000/generate", {
+  method: "POST",
+  headers: {
+    Authorization: `Bearer ${process.env.LTX_API_TOKEN}`,
+    "Content-Type": "application/json",
+  },
+  body: JSON.stringify({
+    req_id: crypto.randomUUID(),
+    prompt: "A small robot planting flowers on a rooftop",
+    preset: "balanced",
+    frames: 49,
+    motion_intensity: "medium",
+  }),
+});
+const result = await response.json();
+if (!response.ok) throw new Error(result.error?.message ?? "generate failed");
+console.log(result.url ?? result.output_path);</code></pre>
+
+<p>
+  Give HTTP clients a long timeout. Handle 409. Poll progress from the UI if the
+  request stays open too long for your gateway.
+</p>
+
+<h2>Common models and resources</h2>
+
+<ul>
+  <li>
+    <a href="https://huggingface.co/Lightricks/LTX-Video" target="_blank" rel="noopener">Lightricks/LTX-Video</a>
+    — main model card and checkpoints (including 2B / 13B and distilled / fp8 variants)
+  </li>
+  <li>
+    <a href="https://github.com/Lightricks/LTX-Video" target="_blank" rel="noopener">github.com/Lightricks/LTX-Video</a>
+    — upstream training / inference codebase
+  </li>
+  <li>
+    <a href="https://huggingface.co/docs/diffusers/en/api/pipelines/ltx_video" target="_blank" rel="noopener">Diffusers LTX docs</a>
+    — <code>LTXPipeline</code> / <code>LTXImageToVideoPipeline</code>
+  </li>
+  <li>
+    Distilled and fp8 siblings on the same org (e.g. 13B distilled for faster
+    loops, 2B distilled for lighter VRAM) — pick from the model card table rather
+    than guessing filenames
+  </li>
+  <li>
+    Newer LTX lineage (LTX-2 / LTX-2.3) exists for production-oriented stacks;
+    this guide focuses on the open Diffusers LTX-Video path my local service uses
+  </li>
+</ul>
+
+<p>
+  For validation, my repo includes <code>test_baseline.py</code>,
+  <code>test_phase1.py</code>, and <code>run_tests.sh</code> — they perform real
+  inference, so they need GPU, weights, and ffmpeg.
+</p>
+
+<h2>Troubleshooting</h2>
+
+<ul>
+  <li><strong>CUDA unavailable</strong> — drivers, <code>nvidia-smi</code>, CUDA-matched torch wheel</li>
+  <li><strong>OOM</strong> — lower width/height, frames, steps; close other GPU apps; keep CPU offload</li>
+  <li><strong>Model download fails</strong> — disk, network, HF auth</li>
+  <li><strong>400 on dimensions / frames</strong> — multiples of 32; <code>(frames - 1) % 8 == 0</code></li>
+  <li><strong>401</strong> — bearer token must match <code>API_TOKEN</code></li>
+  <li><strong>409</strong> — another job is running</li>
+  <li><strong>Export / downscale fails</strong> — install system ffmpeg on PATH</li>
+</ul>
+
+<p>
+  Check <code>server.log</code> for load and request errors. Before exposing the
+  service: strong token, HTTPS reverse proxy, bind to localhost unless remote is
+  intentional, a durable queue instead of one in-memory lock, rate limits,
+  retention rules, and no absolute server paths in public responses.
+</p>
+
+<h2>What “done” looks like</h2>
+
+<p>
+  You have a CUDA machine, a venv with Diffusers LTX, a first MP4 from the CLI,
+  a persistent server that answers <code>/ready</code>, authenticated
+  <code>/generate</code> calls that write into <code>MEDIA_DIR</code>, and an
+  app that can tolerate long requests and 409s. After that, upgrade checkpoints,
+  add a job queue, and decide whether your next dollar buys a faster consumer
+  GPU or a high-memory Spark-class box for bigger resident models.
+</p>

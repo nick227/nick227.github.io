@@ -1203,6 +1203,29 @@ body.reader-active #scrim::after {
   line-height: 1.45;
 }
 
+.reader-body .ltx-benchmark,
+.reader-body .ltx-presets {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.88em;
+}
+
+.reader-body .ltx-benchmark th,
+.reader-body .ltx-benchmark td,
+.reader-body .ltx-presets th,
+.reader-body .ltx-presets td {
+  padding: 0.65em 0.75em;
+  border-bottom: 1px solid var(--color-border);
+  text-align: left;
+  vertical-align: top;
+}
+
+.reader-body .ltx-benchmark th,
+.reader-body .ltx-presets th {
+  color: var(--color-txt-bright);
+  font-weight: 600;
+}
+
 .reader-body img {
   max-width: 100%;
   height: auto;

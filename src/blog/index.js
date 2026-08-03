@@ -140,6 +140,10 @@ const primaryArticleMetadata = [
   {
     slug: 'elasticsearch-full-text-search-without-locking-your-database',
     title: 'Elasticsearch: full text search without locking your database'
+  },
+  {
+    slug: 'ltx-local-video-generation',
+    title: 'LTX local video generation'
   }
 ];
 
