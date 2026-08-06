@@ -20,9 +20,9 @@ const projectMetadata = [
   },
   {
     slug: 'set-forms-builder',
-    title: 'Set Forms Builder',
-    description: 'Low-code drag-and-drop form builder with conditional logic, multi-step flows, and JSON schema export.',
-    logoInitials: 'SF',
+    title: 'Forms Builder',
+    description: 'Collaborative builder and renderer for next-gen forms — widget library, themable layouts, and an early AI setup assistant.',
+    logoInitials: 'FB',
     logoColor: 'proj-color-violet',
   },
   {
@@ -89,10 +89,10 @@ const projectMetadata = [
     logoColor: 'proj-color-amber',
   },
   {
-    slug: 'social-auto',
-    title: 'Social Auto',
-    description: 'Automated social media content engine — AI-generated posts, scheduling, multi-platform publishing, and analytics.',
-    logoInitials: 'SA',
+    slug: 'auto-dealer-sales-portal',
+    title: 'Auto Dealer Sales Portal',
+    description: 'Operator platform that onboards auto dealers onto 18 ad and marketplace platforms — feed generation, readiness validation, and proof export.',
+    logoInitials: 'AD',
     logoColor: 'proj-color-rose',
   },
   {
@@ -112,7 +112,7 @@ const projectMetadata = [
   {
     slug: 'prompt-stacker',
     title: 'Prompt Stacker',
-    description: 'LLM prompt chaining and orchestration tool — build, test, and share multi-step prompt pipelines visually.',
+    description: 'Desktop automation tool that times clicks and clipboard pastes against any app\'s window — built to drive prompt stacks into an AI IDE.',
     logoInitials: 'PS',
     logoColor: 'proj-color-purple',
   },
