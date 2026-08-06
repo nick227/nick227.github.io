@@ -1,0 +1,39 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>The site uses scroll-driven hero sequences and a real-time vehicle color configurator, built in vanilla JavaScript without a framework. Scroll animations are tied to <code>IntersectionObserver</code> rather than timers, and the configurator swaps CSS custom properties on a high-resolution render without touching the DOM. Mobile LCP stayed under two seconds, using AVIF images with a WebP fallback and no layout shift on the configurator swap.</p>
+    <p>I led frontend architecture for the marketing site, covering performance, the animation system, and the configurator. The site launched alongside an auto show reveal, so load time and visual stability under traffic were fixed constraints from the start.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>Vanilla JS</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>CSS Custom Props</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>WebP / AVIF</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>Intersection Observer</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Static build</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>CDN edge delivery</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">&lt;2s</span>
+    <span class="proj-stat-label">LCP on mobile at launch</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">0</span>
+    <span class="proj-stat-label">framework dependencies — pure vanilla JS</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">0ms</span>
+    <span class="proj-stat-label">layout shift on the color configurator</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">1</span>
+    <span class="proj-stat-label">auto show reveal. no performance failures.</span>
+  </div>
+</div>

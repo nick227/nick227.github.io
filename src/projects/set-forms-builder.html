@@ -1,0 +1,40 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>Builder state is a normalized tree of field descriptors, with an undo/redo command stack that tracks every change as a reversible object, similar to how design tools handle history. Rendering is a separate concern — the renderer takes JSON Schema and produces accessible, validated HTML without any knowledge of the builder that generated it. Any standard validator, like Ajv or Zod, can consume that schema output directly.</p>
+    <p>The problem came from watching engineering time go into repetitive form implementations. I designed the UX, built the command-stack state model, and wrote the builder and renderer from scratch, then confirmed the output schema worked with the backend services that would consume it.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>Vanilla JS</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>Web Components</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>JSON Schema</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>REST API</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>Ajv Validation</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>CSS Grid</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">Days → hrs</span>
+    <span class="proj-stat-label">form build time for product teams</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">∞</span>
+    <span class="proj-stat-label">undo steps via command-stack architecture</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">1</span>
+    <span class="proj-stat-label">JSON Schema output — zero vendor lock-in</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">0</span>
+    <span class="proj-stat-label">lines of code required from product managers</span>
+  </div>
+</div>

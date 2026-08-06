@@ -1,0 +1,41 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>The system is built on a source-adapter pattern — each data provider (APM, log aggregator, infra metrics, business KPIs) implements a normalizer that maps its payloads to a canonical event schema. A Node.js aggregation service fans events out over WebSocket to a React dashboard that can render any combination of panel types without knowing what's behind each adapter. Adding a new data source means writing one adapter, nothing else.</p>
+    <p>I designed the adapter interface, built the aggregation service, and implemented the widget rendering engine on the frontend. The ops team shaped the widget library through ongoing feedback, and I turned those requirements directly into production code.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ws"></span>WebSocket</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>PostgreSQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>REST Adapters</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Redis</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>D3.js</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Docker</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">8+</span>
+    <span class="proj-stat-label">data source adapters integrated</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">1</span>
+    <span class="proj-stat-label">unified dashboard replacing a dozen tabs</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">&lt;80ms</span>
+    <span class="proj-stat-label">event propagation from source to screen</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">0</span>
+    <span class="proj-stat-label">context switches required during an incident</span>
+  </div>
+</div>

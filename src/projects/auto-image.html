@@ -1,0 +1,41 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>A seed prompt is decomposed into variable dimensions — subject, environment, lighting, color grading, style, mood — and each generation job samples from that parameter space instead of repeating the same settings. A quality scoring pipeline ranks outputs on aesthetic and technical metrics, so only the strongest results are left for a person to review.</p>
+    <p>I designed the parameter mutation model, built the GPU queue manager, wrote the quality scoring heuristics, and built the review interface. The project came out of a real need — generating hundreds of distinct images for content assets, not near-duplicates of the same one.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>Stable Diffusion</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>ComfyUI</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Python</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>FastAPI</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>GPU queue</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React review UI</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>Quality scorer</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>SQLite</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">100s</span>
+    <span class="proj-stat-label">images per batch run — all stylistically distinct</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">6+</span>
+    <span class="proj-stat-label">variation dimensions per generation job</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">Auto</span>
+    <span class="proj-stat-label">quality ranking surfaces best outputs first</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">Local</span>
+    <span class="proj-stat-label">GPU — zero cloud image API costs</span>
+  </div>
+</div>

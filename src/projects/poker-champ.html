@@ -1,0 +1,40 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>The game server is the single source of truth — clients render only what the server confirms, with no optimistic updates that could put players out of sync. Decks are Fisher-Yates shuffled with a cryptographic random seed, and the 7-card hand evaluator uses lookup tables for sub-microsecond showdown resolution. Tournament brackets rebalance automatically as tables empty.</p>
+    <p>I designed and built the full application — game server, hand evaluator, tournament engine, and the React client. A single hand of Hold'em has hundreds of valid state paths once you account for non-deterministic deals, concurrent player actions, and reconnects, which made testing the largest part of the work.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ws"></span>Socket.io</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>PostgreSQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-sec"></span>Crypto shuffle</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>Hand evaluator</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Redis sessions</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">100s</span>
+    <span class="proj-stat-label">valid state paths in a single hand of Hold'em</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">Crypto</span>
+    <span class="proj-stat-label">random seed for every deck shuffle</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">&lt;1μs</span>
+    <span class="proj-stat-label">7-card hand evaluation via lookup tables</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">0</span>
+    <span class="proj-stat-label">optimistic client updates — server state is law</span>
+  </div>
+</div>

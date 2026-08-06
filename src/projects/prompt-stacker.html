@@ -1,0 +1,40 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>Prompt Stacker is a visual builder for chaining LLM prompts into a pipeline, so the output of one step becomes the input to the next instead of prompts running in isolation. The builder presents a vertical stack of nodes, each with its own input, system prompt, and a transformation function applied to the output before it passes downstream. Stacks execute as a DAG, so nodes can branch and merge rather than running strictly in sequence, and each node can target a different provider — GPT-4, Claude, or a local model — within the same pipeline.</p>
+    <p>I designed and built the tool end to end — the node-based builder, a step-by-step debugger for inspecting raw API responses at each stage, and a JSON export format that lets a finished stack be shared and re-imported by anyone with the tool. Most complex LLM tasks break down into a planning step, an execution step, a review step, and a formatting step; Prompt Stacker made that structure visible and testable instead of managed in someone's head or a scattered doc.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>LLM (Claude / GPT-4 / local)</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>DAG execution engine</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>JSON export</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>Step-by-step debugger</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>Transform functions</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">DAG</span>
+    <span class="proj-stat-label">execution model — nodes branch and merge instead of running in strict sequence</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">3</span>
+    <span class="proj-stat-label">LLM providers supported in a single pipeline — GPT-4, Claude, local models</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">JSON</span>
+    <span class="proj-stat-label">stack format — export and re-import any finished pipeline</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">Step-by-step</span>
+    <span class="proj-stat-label">debugger replays raw API responses at each node</span>
+  </div>
+</div>

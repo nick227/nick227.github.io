@@ -10,6 +10,7 @@
   padding: var(--space-page-y) var(--space-inline);
   position: relative;
   z-index: 2;
+  margin: 60px auto;
 }
 
 .hero {

@@ -1,7 +1,9 @@
 import { Nature } from './nature/index.js';
 import { BlogListGenerator } from './generators/blog-list-generator.js';
-import { ArticleReader } from './article-reader.js';
+import { ProjectListGenerator } from './generators/project-list-generator.js';
+import { ArticleReader, ProjectReader } from './article-reader.js';
 import { blogList } from './blog/index.js';
+import { projectList } from './projects/index.js';
 
 function setupContactForm() {
   const contactForm = document.getElementById('contact-form');
@@ -28,4 +30,6 @@ document.addEventListener('DOMContentLoaded', () => {
   setupContactForm();
   ArticleReader.mount(blogList);
   BlogListGenerator();
+  ProjectReader.mount(projectList);
+  ProjectListGenerator();
 });

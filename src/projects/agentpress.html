@@ -1,0 +1,40 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>Agentpress runs the agent workflow in the browser instead of on a server. Each user supplies their own API key, so LLM calls and the cost of running them stay on the client. The authoring canvas builds a DAG of agent steps that serializes to JSON, and a published workflow gets a shareable URL that anyone can run with their own inputs and credentials, watching each step execute in real time.</p>
+    <p>I designed the publishing model, built the node-graph authoring canvas, and implemented the client-side agent runtime along with a versioned workflow registry. Making the execution model work entirely in the browser, without a server holding state, was the main technical problem to solve.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>LLM (Claude / GPT-4)</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>PostgreSQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>Tool calling API</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Serverless fns</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>Node graph canvas</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">$0</span>
+    <span class="proj-stat-label">platform cost — users supply their own API keys</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">DAG</span>
+    <span class="proj-stat-label">execution model — branch, merge, parallel steps</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">1 URL</span>
+    <span class="proj-stat-label">to share a fully runnable agent workflow</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">0</span>
+    <span class="proj-stat-label">local setup required to run a published workflow</span>
+  </div>
+</div>

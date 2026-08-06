@@ -1,0 +1,41 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>The pipeline starts with a brand brief, and the AI generates batches of platform-appropriate posts from it. A person reviews each batch in a swipe-style approval queue before anything ships. Approved posts go into a scheduling engine that spaces them out based on each platform's engagement data, then publishes to all four platforms through their native APIs.</p>
+    <p>I built the system end to end — brief ingestion, generation, the approval queue, scheduling, and publishing — and treated human review as a fixed requirement rather than an option to remove later. The posting-schedule model was built from historical engagement data, and each platform integration meant managing its own OAuth flow separately.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>LLM (Claude / GPT-4)</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>Instagram API</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>X / Twitter API</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>LinkedIn API</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>PostgreSQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Cron scheduling</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">4</span>
+    <span class="proj-stat-label">social platforms published simultaneously</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">Hours → mins</span>
+    <span class="proj-stat-label">daily social media time cost for managed accounts</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">100%</span>
+    <span class="proj-stat-label">of posts reviewed by a human before publishing</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">≈ parity</span>
+    <span class="proj-stat-label">AI post engagement vs. manually written content</span>
+  </div>
+</div>

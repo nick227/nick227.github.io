@@ -18,7 +18,7 @@
   --font-sans: 'Outfit', sans-serif;
 
   /* Layout Rhythm */
-  --space-page-y: clamp(20px, 4vh, 56px);
+  --space-page-y: clamp(10px, 2vh, 28px);
   --space-inline: clamp(24px, 6vw, 72px);
   --width-content: 740px;
 }

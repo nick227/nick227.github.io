@@ -1,0 +1,41 @@
+<!-- Stack & Role -->
+<div class="proj-section proj-7030">
+  <div class="proj-text">
+    <p>The OpenAPI schema is the source of truth — frontend and backend types are generated from it instead of written by hand, so a breaking API change fails at compile time instead of shipping silently. Zod validates every runtime boundary, and Stripe handles payment capture with an automatic split between the platform and shoppers.</p>
+    <p>I designed the schema-first API architecture, built the OpenAPI spec, wired up the type generation pipeline, and implemented the customer app, courier app, pricing engine, and Stripe integration. Committing to the type system early meant more upfront setup, but it shaped every layer of the project afterward.</p>
+  </div>
+  <div class="proj-visual">
+    <div class="proj-visual-label">Tech Stack</div>
+    <div class="proj-tech-grid">
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>TypeScript</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js + TS</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>PostgreSQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>OpenAPI spec</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ws"></span>WebSocket</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>Stripe</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-sec"></span>Zod validation</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Railway</span>
+    </div>
+  </div>
+</div>
+
+<!-- The Numbers -->
+<div class="proj-stats">
+  <div class="proj-stats-label">The Numbers</div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">100%</span>
+    <span class="proj-stat-label">type coverage — no <code>any</code>, no escape hatches</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">0</span>
+    <span class="proj-stat-label">hand-written API types — all auto-generated from spec</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">Dozens</span>
+    <span class="proj-stat-label">production bugs prevented by compile-time type errors</span>
+  </div>
+  <div class="proj-stat">
+    <span class="proj-stat-value">3-way</span>
+    <span class="proj-stat-label">payment split: customer · shopper · platform</span>
+  </div>
+</div>

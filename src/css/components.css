@@ -111,7 +111,7 @@
 
 .hero-bio {
   max-width: 680px;
-  margin-top: clamp(16px, 2.5vh, 28px);
+  margin-top: clamp(16px, 2vh, 22px);
   color: var(--color-txt-dim);
   font-size: clamp(16px, 1.7vw, 21px);
   font-weight: 300;
