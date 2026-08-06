@@ -56,14 +56,14 @@ const projectMetadata = [
   {
     slug: 'screenplay-to-video',
     title: 'Screenplay to Video',
-    description: 'AI pipeline that transforms screenplay documents into scene-by-scene video sequences using local LTX generation.',
+    description: 'Turns a raw story into a synced storyboard — five-stage AI pipeline for narration, visual prompts, keyframe images, video, and cloned-voice narration.',
     logoInitials: 'SV',
     logoColor: 'proj-color-pink',
   },
   {
     slug: 'poker-champ',
     title: 'Poker Champ',
-    description: 'Full-featured online Texas Hold\'em poker app with real-time multiplayer, hand history, and bankroll tracking.',
+    description: 'Real-time multiplayer Texas Hold\'em on Colyseus and Expo, with named AI bot opponents and a persistent, reconnect-safe game state.',
     logoInitials: 'PC',
     logoColor: 'proj-color-gold',
   },
@@ -77,7 +77,7 @@ const projectMetadata = [
   {
     slug: 'auto-image',
     title: 'Auto Image',
-    description: 'Mass image generation pipeline with style diversity controls, batch queuing, and studio-quality output curation.',
+    description: 'AI image generation SaaS with a $term placeholder system for prompt variation, multi-provider batch generation, and Stripe credit billing.',
     logoInitials: 'AI',
     logoColor: 'proj-color-lime',
   },

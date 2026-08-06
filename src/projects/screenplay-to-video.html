@@ -1,20 +1,19 @@
 <!-- Stack & Role -->
 <div class="proj-section proj-7030">
   <div class="proj-text">
-    <p>The pipeline runs five stages: screenplay parsing, where an LLM extracts a scene graph; shot planning, where an agent converts action lines into generation prompts; a Redis-managed GPU queue running LTX locally; continuity resolution across adjacent shots; and assembly, where ffmpeg stitches clips with transitions and audio. Video generation runs on local GPU hardware, so the only ongoing cost is the LLM calls for parsing and planning.</p>
-    <p>Most AI video tools at the time handled single clips well but struggled with multi-scene narratives. I built the coordination layer — the agent that breaks a screenplay into a consistent shot sequence, the queue that manages parallel GPU jobs, and the assembly step that turns the clips into a finished video.</p>
+    <p>Paste in a raw story, pick an art style, and a five-stage chain turns it into a synced storyboard: the script splits into scene fragments, each fragment becomes narration/dialogue prose, that collapses into a caveman-simple present-tense action beat (5–24 words), the beat expands into a camera-agnostic visual prompt that folds in continuity from neighboring shots plus up to 14 character/world reference images, and that prompt renders a keyframe image and an animated clip. Text and images default to Gemini's flash models, with OpenAI, Dezgo, and a local Fooocus/SDXL fallback available per generation. Voice runs through Piper for free neural TTS, ElevenLabs for cloud voices, or a zero-shot Spark-TTS cloning daemon that reuses a cloned voice across storyboards.</p>
+    <p>The system is a monorepo split across five independently deployed services — the Express web app plus four Python/FastAPI microservices on Modal for voice cloning, free-tier TTS, SDXL image generation, and WhisperX alignment — each with separate dev/prod environments so a routine push to main never touches what's serving live traffic. I built the storage boundary underneath it: committed media goes through a BlobStore abstraction (local disk today, optional dual-write to R2) while a separate AssetMaterializer handles the ephemeral file paths providers need, so generation code never touches raw disk paths directly. Autosave uses monotonic revision locks to catch conflicting edits, and Stripe Checkout drives a credit-based billing model with an admin pricing panel.</p>
   </div>
   <div class="proj-visual">
     <div class="proj-visual-label">Tech Stack</div>
     <div class="proj-tech-grid">
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>LTX Video (local)</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>LLM orchestration</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Python</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>FastAPI</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>GPU queue</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React dashboard</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>Claude / GPT-4</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>Redis queue</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>Gemini flash / flash-image</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js / Express monorepo</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>Python / FastAPI on Modal</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>Prisma / PostgreSQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>Spark-TTS voice cloning</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>BlobStore (local / R2)</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>Stripe credit billing</span>
     </div>
   </div>
 </div>
@@ -23,19 +22,19 @@
 <div class="proj-stats">
   <div class="proj-stats-label">The Numbers</div>
   <div class="proj-stat">
-    <span class="proj-stat-value">5</span>
-    <span class="proj-stat-label">pipeline stages from script to assembled video</span>
+    <span class="proj-stat-value">5 stages</span>
+    <span class="proj-stat-label">fragment → narration → beat → visual prompt → image → video</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">Local</span>
-    <span class="proj-stat-label">GPU — no cloud video API costs</span>
+    <span class="proj-stat-value">5 styles</span>
+    <span class="proj-stat-label">Basic Cartoon, Cinematic Reality, Dark Gothic, Indie Youtuber, Vox</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">N scenes</span>
-    <span class="proj-stat-label">queued in parallel across available GPU memory</span>
+    <span class="proj-stat-value">14 refs</span>
+    <span class="proj-stat-label">character/world reference images injected per generated image</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">0</span>
-    <span class="proj-stat-label">manual prompt iterations per scene in production mode</span>
+    <span class="proj-stat-value">5 services</span>
+    <span class="proj-stat-label">web app plus 4 independently deployed Modal microservices</span>
   </div>
 </div>

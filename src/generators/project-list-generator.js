@@ -15,8 +15,7 @@ function createProjectCard(project) {
 
   // Logo badge (20% col)
   const badge = document.createElement('span');
-  badge.className = `proj-logo-badge ${project.logoColor}`;
-  badge.textContent = project.logoInitials;
+  badge.className = `proj-logo-badge`;
   badge.setAttribute('aria-hidden', 'true');
 
   // Content col (80%)
@@ -30,13 +29,7 @@ function createProjectCard(project) {
   title.className = 'project-card-title';
   title.textContent = project.title;
 
-  const arrow = document.createElement('span');
-  arrow.className = 'project-card-arrow';
-  arrow.setAttribute('aria-hidden', 'true');
-  arrow.textContent = '↗';
-
   header.appendChild(title);
-  header.appendChild(arrow);
 
   const desc = document.createElement('span');
   desc.className = 'project-card-desc';

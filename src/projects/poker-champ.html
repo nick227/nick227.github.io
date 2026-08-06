@@ -1,19 +1,19 @@
 <!-- Stack & Role -->
 <div class="proj-section proj-7030">
   <div class="proj-text">
-    <p>The game server is the single source of truth — clients render only what the server confirms, with no optimistic updates that could put players out of sync. Decks are Fisher-Yates shuffled with a cryptographic random seed, and the 7-card hand evaluator uses lookup tables for sub-microsecond showdown resolution. Tournament brackets rebalance automatically as tables empty.</p>
-    <p>I designed and built the full application — game server, hand evaluator, tournament engine, and the React client. A single hand of Hold'em has hundreds of valid state paths once you account for non-deterministic deals, concurrent player actions, and reconnects, which made testing the largest part of the work.</p>
+    <p>Poker Champ is a real-time multiplayer Texas Hold'em platform: Colyseus rooms run the authoritative game state — the Dealer engine, betting rules, side-pot math, and hand evaluation — while a shared Zod-schema contract keeps the server and an Expo client (iOS, Android, and Web from one codebase) speaking the same protocol. Persistent seats let a player disconnect and rejoin within a 60-second grace period without losing their stack, and a state machine drives automatic street transitions and auto-actions for disconnected players so a hand never stalls waiting on someone who dropped.</p>
+    <p>Tables can be filled out with AI opponents rather than left short-handed — the bot catalog defines named personas with distinct playstyles rather than one generic "AI": Chaos Carl and Loose Lucy play unpredictably, Nash Nate is tight-aggressive, Fiona Foldsworth folds tight and passive, Trent Tiltley plays loose-aggressive, and Callie Doyle rounds out loose-passive. An <code>ai_v1</code> brain type is wired in for a fully model-driven bot alongside the rule-based ones. I built the full system — engine, room logic, bots, the economy/cashier layer with atomic buy-in and cash-out, and hand history logging for every action and payout.</p>
   </div>
   <div class="proj-visual">
     <div class="proj-visual-label">Tech Stack</div>
     <div class="proj-tech-grid">
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ws"></span>Socket.io</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>PostgreSQL</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-sec"></span>Crypto shuffle</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>Hand evaluator</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Redis sessions</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ws"></span>Colyseus real-time rooms</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-mob"></span>Expo (iOS / Android / Web)</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>Prisma / PostgreSQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>Zod realtime contract</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>NativeWind / Zustand</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>Named AI bot personas</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Vitest</span>
     </div>
   </div>
 </div>
@@ -22,19 +22,19 @@
 <div class="proj-stats">
   <div class="proj-stats-label">The Numbers</div>
   <div class="proj-stat">
-    <span class="proj-stat-value">100s</span>
-    <span class="proj-stat-label">valid state paths in a single hand of Hold'em</span>
+    <span class="proj-stat-value">6 bots</span>
+    <span class="proj-stat-label">named AI opponents across 5 distinct playstyles</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">Crypto</span>
-    <span class="proj-stat-label">random seed for every deck shuffle</span>
+    <span class="proj-stat-value">60s</span>
+    <span class="proj-stat-label">reconnect grace period that preserves a seat and stack</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">&lt;1μs</span>
-    <span class="proj-stat-label">7-card hand evaluation via lookup tables</span>
+    <span class="proj-stat-value">3 platforms</span>
+    <span class="proj-stat-label">iOS, Android, and Web from one Expo codebase</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">0</span>
-    <span class="proj-stat-label">optimistic client updates — server state is law</span>
+    <span class="proj-stat-value">20+ docs</span>
+    <span class="proj-stat-label">RCAs, investigations, and proposals tracing the build process with AI agents</span>
   </div>
 </div>

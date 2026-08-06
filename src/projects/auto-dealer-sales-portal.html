@@ -1,20 +1,19 @@
 <!-- Stack & Role -->
 <div class="proj-section proj-7030">
   <div class="proj-text">
-    <p>The pipeline starts with a brand brief, and the AI generates batches of platform-appropriate posts from it. A person reviews each batch in a swipe-style approval queue before anything ships. Approved posts go into a scheduling engine that spaces them out based on each platform's engagement data, then publishes to all four platforms through their native APIs.</p>
-    <p>I built the system end to end — brief ingestion, generation, the approval queue, scheduling, and publishing — and treated human review as a fixed requirement rather than an option to remove later. The posting-schedule model was built from historical engagement data, and each platform integration meant managing its own OAuth flow separately.</p>
+    <p>The portal onboards a dealer's inventory onto 18 ad and marketplace platforms — from owned storefronts and feedable channels like Google Vehicle Ads and Meta, to assisted listings on Cars.com and CarGurus. A sync engine validates platform readiness, generates feed artifacts with checksums, and runs authoritative snapshots as safe dry-runs before anything goes live. Vehicles that disappear from a feed get reviewed and explicitly marked removed rather than silently dropped, so lifecycle history always records its source.</p>
+    <p>I built the three-part system end to end: the sync engine as source of truth, an operator console for managing dealers and reviewing readiness, and an internal multi-dealer marketplace that doubles as the platform's own test harness. On top of that sits Performance Intelligence — cached movement benchmarks that show operators whether a vehicle is moving faster or slower than comparable stock, and which platforms are driving observed activity.</p>
   </div>
   <div class="proj-visual">
     <div class="proj-visual-label">Tech Stack</div>
     <div class="proj-tech-grid">
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-ai"></span>LLM (Claude / GPT-4)</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node.js</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>Instagram API</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>X / Twitter API</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>LinkedIn API</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>PostgreSQL</span>
-      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>Cron scheduling</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Node 22 / TypeScript (ESM)</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-be"></span>Fastify</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-db"></span>Prisma 6 / MySQL</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-fe"></span>React operator console</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>OpenAPI SDK</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-api"></span>18 platform feed integrations</span>
+      <span class="proj-tech-badge"><span class="proj-tech-dot dot-inf"></span>node:test</span>
     </div>
   </div>
 </div>
@@ -23,19 +22,19 @@
 <div class="proj-stats">
   <div class="proj-stats-label">The Numbers</div>
   <div class="proj-stat">
-    <span class="proj-stat-value">4</span>
-    <span class="proj-stat-label">social platforms published simultaneously</span>
+    <span class="proj-stat-value">18</span>
+    <span class="proj-stat-label">ad and marketplace platforms onboarded per dealer</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">Hours → mins</span>
-    <span class="proj-stat-label">daily social media time cost for managed accounts</span>
+    <span class="proj-stat-value">3</span>
+    <span class="proj-stat-label">systems: sync engine, operator console, consumer marketplace</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">100%</span>
-    <span class="proj-stat-label">of posts reviewed by a human before publishing</span>
+    <span class="proj-stat-value">Dry-run</span>
+    <span class="proj-stat-label">snapshots verify every sync before it goes live</span>
   </div>
   <div class="proj-stat">
-    <span class="proj-stat-value">≈ parity</span>
-    <span class="proj-stat-label">AI post engagement vs. manually written content</span>
+    <span class="proj-stat-value">Proof export</span>
+    <span class="proj-stat-label">checksummed feed artifacts and manifests via CLI</span>
   </div>
 </div>
