@@ -28,14 +28,14 @@ const projectMetadata = [
   {
     slug: 'drakomotors',
     title: 'drakomotors.com',
-    description: 'Marketing and product website for a next-generation electric vehicle startup.',
+    description: 'Image-rich marketing site for EV hypercar manufacturer Drako Motors — full-bleed automotive photography, cinematic video, and fullpage.js scroll transitions built on Webflow.',
     logoInitials: 'DM',
     logoColor: 'proj-color-red',
   },
   {
     slug: 'playlisted',
     title: 'playlisted.com',
-    description: 'Social music platform where users curate, share, and discover playlists across streaming services.',
+    description: 'Contract-first music discovery and creator platform — Studio uploads, canonical playlist URLs, and a persistent player.',
     logoInitials: 'PL',
     logoColor: 'proj-color-green',
   },
