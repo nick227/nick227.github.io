@@ -42,14 +42,14 @@ const projectMetadata = [
   {
     slug: 'crunkbox',
     title: 'crunkbox.com',
-    description: 'Hip-hop and electronic music community hub with streaming, event listings, and artist profiles.',
+    description: 'Solo-built hip-hop and electronic music community on PHP/Jamroom — signed 80 quality artists and promoted them online and at Austin venues.',
     logoInitials: 'CB',
     logoColor: 'proj-color-orange',
   },
   {
     slug: 'southshoresoldiers',
     title: 'southshoresoldiers.com',
-    description: 'Sports community site for a competitive team — rosters, schedules, stats, and multimedia coverage.',
+    description: 'Freelance website for a Lake Tahoe snowboard camp — camp identity, programs, and seasonal signup pages.',
     logoInitials: 'SS',
     logoColor: 'proj-color-teal',
   },
@@ -69,8 +69,8 @@ const projectMetadata = [
   },
   {
     slug: 'agentpress',
-    title: 'Agentpress',
-    description: 'Publishing platform for AI agent workflows — author, test, and deploy autonomous agents as shareable pages.',
+    title: 'AgentPress',
+    description: 'Account-based AI pipeline builder that turns research feeds — YouTube, Reddit, RSS — into generated content and publishes to WordPress.',
     logoInitials: 'AP',
     logoColor: 'proj-color-indigo',
   },
