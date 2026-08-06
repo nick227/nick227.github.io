@@ -84,7 +84,7 @@ const projectMetadata = [
   {
     slug: 'shop-shop',
     title: 'Shop-Shop',
-    description: 'Type-safe same-day delivery marketplace connecting local shoppers with couriers — built with strict TypeScript.',
+    description: 'Contract-first local delivery marketplace — River discovery, multi-role ops, realtime tracking, and Stripe Connect.',
     logoInitials: 'SH',
     logoColor: 'proj-color-amber',
   },
