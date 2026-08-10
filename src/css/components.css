@@ -1,5 +1,74 @@
 /* Hero */
 
+.video-embed {
+  position: relative;
+  width: min(600px, 100%);
+  aspect-ratio: 600 / 460;
+  overflow: hidden;
+  background: rgba(2, 4, 10, 0.72);
+  border: 1px solid var(--color-border);
+}
+
+.video-embed iframe {
+  display: block;
+  width: 100%;
+  height: 100%;
+  border: 0;
+  opacity: 0;
+  transition: opacity 240ms ease;
+}
+
+.video-loader {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 14px;
+  color: var(--color-txt-dim);
+  font-size: 13px;
+  font-weight: 500;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  transition: opacity 180ms ease, visibility 180ms ease;
+}
+
+.video-loader-spinner {
+  width: 28px;
+  height: 28px;
+  border: 2px solid rgba(255, 255, 255, 0.16);
+  border-top-color: var(--color-accent);
+  border-radius: 50%;
+  animation: video-loader-spin 800ms linear infinite;
+}
+
+.video-embed-ready iframe {
+  opacity: 1;
+}
+
+.video-embed-ready .video-loader {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+@keyframes video-loader-spin {
+  to { transform: rotate(360deg); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .video-loader-spinner {
+    animation: none;
+  }
+
+  .video-embed iframe,
+  .video-loader {
+    transition: none;
+  }
+}
+
 .hero {
   flex: 1 1 auto;
   display: flex;
@@ -90,15 +159,15 @@
 .hero-name {
   /* Bounded by both viewport width and height so the name can go as
      large as possible while the whole page still fits one screen. */
-  font-size: clamp(56px, min(26vw, 22vh), 460px);
+  font-size: 90px;
   font-weight: 900;
   line-height: 0.84;
   letter-spacing: -0.03em;
   color: var(--color-txt-bright);
   text-transform: uppercase;
-  text-shadow: 0 4px 40px rgba(0, 0, 0, 0.5);
   padding: 0;
   margin-left: -10px;
+  white-space: nowrap;
 }
 
 .hero-title {
@@ -111,7 +180,7 @@
 
 .hero-bio {
   max-width: 680px;
-  margin-top: clamp(16px, 2vh, 22px);
+  margin-top: 10px;
   color: var(--color-txt-dim);
   font-size: clamp(16px, 1.7vw, 21px);
   font-weight: 300;
@@ -122,7 +191,7 @@
   display: flex;
   flex-wrap: wrap;
   gap: 12px 28px;
-  margin-top: clamp(18px, 2.5vh, 28px);
+  margin-top: 10px;
 }
 
 .hero-links a {
@@ -153,9 +222,8 @@
 
 .company-strip {
   width: 100%;
-  margin-top: clamp(24px, 4vh, 48px);
-  padding-top: clamp(14px, 2vh, 22px);
-  border-top: 1px solid rgba(255, 255, 255, 0.16);
+  margin-top: clamp(24px, 4vh, 22px);
+  padding-top: clamp(24px, 4vh, 22px);
 }
 
 .company-strip > p {
@@ -185,7 +253,7 @@
   min-height: 25px;
   align-items: center;
   justify-self: start;
-  color: rgba(255, 255, 255, 0.68);
+  color: var(--color-txt-muted);
   line-height: 1;
   white-space: nowrap;
 }

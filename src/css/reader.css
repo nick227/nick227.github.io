@@ -42,12 +42,7 @@ body.reader-active {
   content: "";
   position: absolute;
   inset: 0;
-  background: linear-gradient(
-    180deg,
-    rgba(2, 4, 10, 0.08) 0%,
-    rgba(2, 4, 10, 0.07) 45%,
-    rgba(2, 4, 10, 0.15) 100%
-  );
+  background: transparent;
   opacity: 0;
   transition: opacity 320ms ease;
 }
@@ -460,7 +455,7 @@ body.reader-active #scrim::after {
 
 .reader-body {
   width: min(100%, 700px);
-  color: rgba(243, 244, 246, 0.9);
+  color: var(--color-txt-bright);
   font-size: clamp(17px, 2vw, 20px);
   font-weight: 300;
   line-height: 1.78;
@@ -1249,7 +1244,7 @@ body.reader-active #scrim::after {
   text-decoration: none;
   color: var(--color-txt-bright);
   transition: color 180ms ease;
-  width: min(100%, 700px);
+  width: 100%;
 }
 
 .next-article-eyebrow {
@@ -1274,7 +1269,7 @@ body.reader-active #scrim::after {
 
 .reader-footer {
   margin-top: 20px;
-  width: min(100%, 700px);
+  width: 100%;
   padding-top: 24px;
   border-top: 1px solid var(--color-border);
   display: flex;

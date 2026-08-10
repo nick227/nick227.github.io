@@ -1,5 +1,7 @@
 // Post-processing visual filters (Bloom, Film Grain, Vignette)
 
+import { canvasPalette } from '../models/palette.js';
+
 export class PostProcessor {
   constructor() {
     this.grainCanvas = null;
@@ -47,8 +49,8 @@ export class PostProcessor {
       width / 2, height / 2, Math.min(width, height) * 0.40,
       width / 2, height / 2, Math.max(width, height) * 0.85
     );
-    grad.addColorStop(0, 'rgba(0, 0, 0, 0)');
-    grad.addColorStop(1, `rgba(4, 6, 15, ${intensity})`); // Multiplies with a deep slate hue
+    grad.addColorStop(0, canvasPalette.postprocess.vignetteCenter);
+    grad.addColorStop(1, `rgba(${canvasPalette.postprocess.vignetteRgb}, ${intensity})`); // Multiplies with a deep slate hue
     
     ctx.fillStyle = grad;
     ctx.globalCompositeOperation = 'multiply';

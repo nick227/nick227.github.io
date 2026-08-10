@@ -151,19 +151,15 @@
   display: grid;
   grid-template-columns: 1fr 1fr;
   gap: clamp(28px, 4vw, 56px);
-  align-items: center;
+  align-items: flex-start;
   padding: clamp(40px, 6vh, 64px) 0;
   border-bottom: 1px solid var(--color-border);
   margin-top: 0 !important;
+  grid-template-columns: 9fr 3fr;
 }
 
 .proj-section:last-of-type {
   border-bottom: none;
-}
-
-/* Text-first 70/30 split: combined stack + role section */
-.proj-section.proj-7030 {
-  grid-template-columns: 7fr 3fr;
 }
 
 /* Section text column */
@@ -186,7 +182,6 @@
   background: rgba(255, 255, 255, 0.025);
   border: 1px solid rgba(255, 255, 255, 0.1);
   border-radius: 16px;
-  padding: clamp(20px, 3vw, 32px);
   display: flex;
   flex-direction: column;
   gap: 10px;
@@ -199,6 +194,7 @@
   text-transform: uppercase;
   color: var(--color-txt-muted);
   margin-bottom: 4px;
+  display: none;
 }
 
 /* Tech badge cluster */
@@ -296,8 +292,7 @@
     width: 100%;
   }
 
-  .proj-section,
-  .proj-section.proj-7030 {
+  .proj-section {
     grid-template-columns: 1fr;
     gap: 22px;
     padding: clamp(28px, 5vh, 44px) 0;

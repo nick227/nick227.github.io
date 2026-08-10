@@ -49,12 +49,6 @@ ul {
   height: 100%;
   z-index: 1;
   pointer-events: none;
-  background: linear-gradient(
-    180deg,
-    rgba(2, 4, 10, 0.55) 0%,
-    rgba(2, 4, 10, 0.4) 55%,
-    rgba(2, 4, 10, 0.6) 100%
-  );
 }
 
 .mb-60 { margin-bottom: 60px; }

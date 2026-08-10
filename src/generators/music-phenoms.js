@@ -2,13 +2,11 @@
 // Keeps the continuous phenom logic out of the already-large emitter file.
 
 import { randomRange, randomChoice } from '../utils/math.js';
+import { canvasPalette } from '../models/palette.js';
 
-const METEOR_COLORS = [
-  '#ff4d6d', '#ff9f1c', '#ffe66d', '#7bf1a8', '#4cc9f0', '#c77dff', '#ff006e', '#ffffff'
-];
-
-const UFO_COLORS = ['#b8f2e6', '#a0e7e5', '#daf0ee', '#c9f0ff'];
-const MONSTER_COLORS = ['#0a0804', '#140c06', '#1a0510', '#05140a'];
+const METEOR_COLORS = canvasPalette.phenomena.meteors;
+const UFO_COLORS = canvasPalette.phenomena.ufos;
+const MONSTER_COLORS = canvasPalette.phenomena.monsters;
 
 export function countOfType(particles, activeCount, type) {
   let n = 0;
@@ -64,7 +62,7 @@ function spawnExtraClouds(emitter, cloudBoost) {
         size: randomRange(cloudConfig.sizeMin * 1.2, cloudConfig.sizeMax * 1.5, emitter.prng),
         opacity: randomRange(0.45, 0.9, emitter.prng) * (0.7 + cloudBoost * 0.3),
         speed: randomRange(cloudConfig.speedMin * 1.3, cloudConfig.speedMax * 1.8, emitter.prng),
-        color: randomChoice(['#c4a8d8', '#b898c8', '#e0b8b8', '#d0c0e0', '#ffffff'], emitter.prng)
+        color: randomChoice(canvasPalette.phenomena.stormClouds, emitter.prng)
       }
     );
   }

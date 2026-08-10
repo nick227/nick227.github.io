@@ -2,18 +2,19 @@ import { CanvasPrimitive } from '../runtime/primitive.js';
 import { registerPrimitive } from '../runtime/registry.js';
 import { drawBackdrop } from '../graphics/draw.js';
 import { lerpHex } from '../utils/color.js';
+import { canvasPalette } from '../models/palette.js';
 
 // Ominous music-sky palette — lerped over the time-of-day sky so play
 // always paints an unmistakable color shift, not just a brightness bump.
-const APOCALYPSE_SKY = ['#12002a', '#3b0650', '#8b0a2a', '#ff5a1f'];
+const APOCALYPSE_SKY = canvasPalette.sky.apocalypse;
 
 export class BackdropPrimitive extends CanvasPrimitive {
   constructor(config) {
     super(config);
     this.gradients = config.gradients || [];
     this.celestial = config.celestial || {
-      sunSize: 30, sunGlow: 70, sunColor: '#fff',
-      moonSize: 20, moonGlow: 30, moonColor: '#eee'
+      sunSize: 30, sunGlow: 70, sunColor: canvasPalette.celestial.sun,
+      moonSize: 20, moonGlow: 30, moonColor: canvasPalette.celestial.moon
     };
     this.currentColors = [];
   }
@@ -25,8 +26,8 @@ export class BackdropPrimitive extends CanvasPrimitive {
   getSkyColors(hour) {
     if (this.gradients.length === 0) {
       this.currentColors.length = 2;
-      this.currentColors[0] = '#000000';
-      this.currentColors[1] = '#000000';
+      this.currentColors[0] = canvasPalette.sky.fallback;
+      this.currentColors[1] = canvasPalette.sky.fallback;
       return this.currentColors;
     }
     if (this.gradients.length === 1) {

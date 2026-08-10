@@ -1,5 +1,7 @@
 // Procedural heightmap terrain presets
 
+import { canvasPalette } from '../palette.js';
+
 export const terrainPresets = {
   // Deep background mountain peaks
   distantMountains: {
@@ -9,9 +11,9 @@ export const terrainPresets = {
     amplitude: 0.42,       // Takes up to 42% of canvas height
     baseHeight: 0.50,      // Centered at mid-screen
     parallaxFactor: 0.12,  // Minimal movement
-    baseColor: "#36454f",   // Slate charcoal/grey
+    baseColor: canvasPalette.terrain.distantMountains.base, // Slate charcoal/grey
     spillStrength: 0.8,    // High atmospheric scattering (haze/sky tint)
-    shadowColor: "#1a242f",
+    shadowColor: canvasPalette.terrain.distantMountains.shadow,
     seed: 1337
   },
 
@@ -23,9 +25,9 @@ export const terrainPresets = {
     amplitude: 0.28,
     baseHeight: 0.62,
     parallaxFactor: 0.25,
-    baseColor: "#283b48",   // Dark blue-grey slate
+    baseColor: canvasPalette.terrain.midMountains.base, // Dark blue-grey slate
     spillStrength: 0.6,
-    shadowColor: "#141e26",
+    shadowColor: canvasPalette.terrain.midMountains.shadow,
     seed: 5678
   },
 
@@ -37,9 +39,9 @@ export const terrainPresets = {
     amplitude: 0.16,
     baseHeight: 0.74,
     parallaxFactor: 0.55,
-    baseColor: "#182d24",   // Deep forest moss green
+    baseColor: canvasPalette.terrain.rollingHills.base, // Deep forest moss green
     spillStrength: 0.4,
-    shadowColor: "#0b1510",
+    shadowColor: canvasPalette.terrain.rollingHills.shadow,
     seed: 8888
   },
 
@@ -51,9 +53,9 @@ export const terrainPresets = {
     amplitude: 0.05,
     baseHeight: 0.88,
     parallaxFactor: 0.90,  // Moves rapidly relative to scroll/cursor
-    baseColor: "#1e3314",   // Rich soil/grass green
+    baseColor: canvasPalette.terrain.foregroundPlains.base, // Rich soil/grass green
     spillStrength: 0.2,    // Little atmospheric scatter, highly saturated
-    shadowColor: "#0b1407",
+    shadowColor: canvasPalette.terrain.foregroundPlains.shadow,
     seed: 9999
   }
 };

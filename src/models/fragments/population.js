@@ -1,5 +1,7 @@
 // Presets for atmospheric items and animal behavior
 
+import { canvasPalette } from '../palette.js';
+
 export const populationPresets = {
   clouds: {
     maxCount: 8,
@@ -9,7 +11,7 @@ export const populationPresets = {
     sizeMax: 320,
     opacityMin: 0.25,
     opacityMax: 0.75,
-    color: "#ffffff"
+    color: canvasPalette.population.cloud
   },
 
   grazingDeer: {
@@ -22,7 +24,7 @@ export const populationPresets = {
     grazingTimeMax: 15.0,
     walkingTimeMin: 2.0,
     walkingTimeMax: 6.0,
-    color: "#1c2214"
+    color: canvasPalette.population.deer
   },
 
   // Extreme music rain — rainIntensity scales live up to this ceiling
@@ -31,6 +33,6 @@ export const populationPresets = {
     thickness: 2.4,
     fallSpeed: 920,
     opacity: 0.55,
-    color: "#7ec8ff"
+    color: canvasPalette.population.rain
   }
 };

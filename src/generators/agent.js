@@ -1,4 +1,5 @@
 import { CanvasPrimitive } from '../runtime/primitive.js';
+import { canvasPalette } from '../models/palette.js';
 import { registerPrimitive } from '../runtime/registry.js';
 import { drawDeerSilhouette } from '../graphics/draw.js';
 import { randomRange, randomChoice, createRandom } from '../utils/math.js';
@@ -178,7 +179,7 @@ export class AgentPrimitive extends CanvasPrimitive {
     const heightmapLayer = services.layers && services.layers[this.config.anchorHeightmap];
     const heightmapLookup = heightmapLayer ? (x) => heightmapLayer.getHeightAt(x) : (x) => this.height * 0.85;
 
-    const baseColor = this.preset.color || "#222222";
+    const baseColor = this.preset.color || canvasPalette.population.fallbackAnimal;
     const litColor = services.lighting.illuminate(baseColor, lightState, 0.4);
     const illuminatedColor = services.lighting.applyMoodGlow(litColor, lightState);
 

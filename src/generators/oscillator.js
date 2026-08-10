@@ -1,4 +1,5 @@
 import { CanvasPrimitive } from '../runtime/primitive.js';
+import { canvasPalette } from '../models/palette.js';
 import { registerPrimitive } from '../runtime/registry.js';
 import { drawGrassMeadow, drawPineTrees } from '../graphics/draw.js';
 import { randomRange, randomChoice, createRandom } from '../utils/math.js';
@@ -43,7 +44,7 @@ export class OscillatorPrimitive extends CanvasPrimitive {
       for (let i = 0; i < p.treeCount; i++) {
         const x = randomRange(0, this.width, prng);
         const height = randomRange(p.heightMin, p.heightMax, prng);
-        const color = randomChoice(p.treeColors || ["#112211"], prng);
+        const color = randomChoice(p.treeColors || [canvasPalette.vegetation.fallbackTree], prng);
         
         this.elements.push({
           type: 'tree',
@@ -67,7 +68,7 @@ export class OscillatorPrimitive extends CanvasPrimitive {
         const x = (i / bladeCount) * this.width + randomRange(-4, 4, prng);
         const height = randomRange(p.heightMin, p.heightMax, prng);
         const thickness = randomRange(p.thickness * 0.7, p.thickness * 1.3, prng);
-        const color = randomChoice(p.bladeColors || ["#224422"], prng);
+        const color = randomChoice(p.bladeColors || [canvasPalette.vegetation.fallbackGrass], prng);
         
         const isFlower = prng() < (p.flowerChance || 0.0);
         const flowerColor = isFlower ? randomChoice(p.flowerColors, prng) : null;

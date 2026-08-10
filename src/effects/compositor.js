@@ -1,5 +1,7 @@
 // Compositor to manage layer blending, opacity transitions, and depth haze
 
+import { canvasPalette } from '../models/palette.js';
+
 export class Compositor {
   constructor() {
     // Base strength of the atmospheric haze (higher = more fog density)
@@ -50,7 +52,7 @@ export class Compositor {
 
     // Linear gradient stretching from middle height to screen bottom
     const grad = ctx.createLinearGradient(0, height * 0.4, 0, height);
-    grad.addColorStop(0, "rgba(255, 255, 255, 0)");
+    grad.addColorStop(0, canvasPalette.terrain.depthHazeTransparent);
     grad.addColorStop(0.9, horizonColor);
 
     ctx.fillStyle = grad;

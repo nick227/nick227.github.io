@@ -1,31 +1,24 @@
 import { lerpHex, applyColorSpill, calculateEdgeLight } from '../utils/color.js';
+import { canvasPalette } from '../models/palette.js';
 
 export class LightingService {
   constructor() {
     // Lighting presets for the four daily phases
     this.lightThemes = {
       night: {
-        ambient: "#090d1f",
-        skySpill: "#11183c",
-        rimLight: "#4e5989",
+        ...canvasPalette.lighting.night,
         intensity: 0.15
       },
       dawn: {
-        ambient: "#403147",
-        skySpill: "#ff9955",
-        rimLight: "#ffddaa",
+        ...canvasPalette.lighting.dawn,
         intensity: 0.65
       },
       day: {
-        ambient: "#ffffff",
-        skySpill: "#b1dbf3",
-        rimLight: "#ffffff",
+        ...canvasPalette.lighting.day,
         intensity: 1.0
       },
       dusk: {
-        ambient: "#2d2440",
-        skySpill: "#f04422",
-        rimLight: "#ffaa55",
+        ...canvasPalette.lighting.dusk,
         intensity: 0.55
       }
     };
@@ -138,6 +131,6 @@ export class LightingService {
   applyMoodGlow(baseColor, lightState) {
     const glow = lightState.moodBoost + (lightState.lightningFlash || 0);
     if (!glow) return baseColor;
-    return calculateEdgeLight(baseColor, '#fff2c0', Math.min(1, glow) * 0.75);
+    return calculateEdgeLight(baseColor, canvasPalette.lighting.moodGlow, Math.min(1, glow) * 0.75);
   }
 }

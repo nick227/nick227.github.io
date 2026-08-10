@@ -1,5 +1,7 @@
 // Purely stateless 2D Canvas drawing functions
 
+import { canvasPalette } from '../models/palette.js';
+
 // 1. Draw Sky Backdrop and Sun/Moon
 export function drawBackdrop(ctx, width, height, colors, sunPos, moonPos, celestial) {
   const grad = ctx.createLinearGradient(0, 0, 0, height);
@@ -19,7 +21,7 @@ export function drawBackdrop(ctx, width, height, colors, sunPos, moonPos, celest
     );
     sunGlow.addColorStop(0, celestial.sunColor);
     sunGlow.addColorStop(0.2, celestial.sunColor);
-    sunGlow.addColorStop(1, "rgba(255, 251, 230, 0)");
+    sunGlow.addColorStop(1, canvasPalette.celestial.sunGlowTransparent);
     ctx.fillStyle = sunGlow;
     ctx.beginPath();
     ctx.arc(sunPos.x, sunPos.y, celestial.sunGlow, 0, Math.PI * 2);
@@ -41,7 +43,7 @@ export function drawBackdrop(ctx, width, height, colors, sunPos, moonPos, celest
     );
     moonGlow.addColorStop(0, celestial.moonColor);
     moonGlow.addColorStop(0.3, celestial.moonColor);
-    moonGlow.addColorStop(1, "rgba(230, 238, 250, 0)");
+    moonGlow.addColorStop(1, canvasPalette.celestial.moonGlowTransparent);
     ctx.fillStyle = moonGlow;
     ctx.beginPath();
     ctx.arc(moonPos.x, moonPos.y, celestial.moonGlow, 0, Math.PI * 2);
@@ -53,7 +55,7 @@ export function drawBackdrop(ctx, width, height, colors, sunPos, moonPos, celest
     ctx.fill();
 
     ctx.globalCompositeOperation = 'destination-out';
-    ctx.fillStyle = "rgba(0, 0, 0, 1)";
+    ctx.fillStyle = canvasPalette.celestial.moonCutout;
     ctx.beginPath();
     ctx.arc(moonPos.x - celestial.moonSize * 0.4, moonPos.y - celestial.moonSize * 0.2, celestial.moonSize, 0, Math.PI * 2);
     ctx.fill();
@@ -198,7 +200,7 @@ export function drawPineTrees(ctx, trees, heightmapLookup, globalWindAngle, colo
     ctx.transform(1, 0, Math.sin(swayAngle), 1, 0, 0);
 
     // Draw trunk
-    ctx.fillStyle = "#1e130c";
+    ctx.fillStyle = canvasPalette.vegetation.treeTrunk;
     ctx.fillRect(-w * 0.08, -h * 0.15, w * 0.16, h * 0.15);
 
     // Draw branch layers
@@ -256,7 +258,7 @@ export function drawGrassMeadow(ctx, blades, heightmapLookup, getWindDisplacemen
       ctx.arc(tipX, tipY, blade.flowerSize, 0, Math.PI * 2);
       ctx.fill();
 
-      ctx.fillStyle = "#ffffff";
+      ctx.fillStyle = canvasPalette.vegetation.flowerCenter;
       ctx.beginPath();
       ctx.arc(tipX, tipY, blade.flowerSize * 0.4, 0, Math.PI * 2);
       ctx.fill();
@@ -383,9 +385,9 @@ export function drawAurora(ctx, ribbons, width, intensity) {
     ctx.closePath();
 
     const grad = ctx.createLinearGradient(0, band.baseY - band.amplitude, 0, band.baseY + band.thickness + band.amplitude);
-    grad.addColorStop(0, 'rgba(0,0,0,0)');
+    grad.addColorStop(0, canvasPalette.phenomena.transparent);
     grad.addColorStop(0.5, band.color);
-    grad.addColorStop(1, 'rgba(0,0,0,0)');
+    grad.addColorStop(1, canvasPalette.phenomena.transparent);
 
     ctx.fillStyle = grad;
     ctx.globalAlpha = intensity * band.opacity;
@@ -410,7 +412,7 @@ export function drawMeteors(ctx, particles, activeCount = particles.length) {
     const grad = ctx.createLinearGradient(p.x, p.y, tailX, tailY);
     grad.addColorStop(0, p.color);
     grad.addColorStop(0.35, p.color);
-    grad.addColorStop(1, 'rgba(255, 255, 255, 0)');
+    grad.addColorStop(1, canvasPalette.celestial.meteorTailTransparent);
 
     ctx.strokeStyle = grad;
     ctx.lineWidth = p.size;
@@ -421,7 +423,7 @@ export function drawMeteors(ctx, particles, activeCount = particles.length) {
     ctx.lineTo(tailX, tailY);
     ctx.stroke();
 
-    ctx.fillStyle = '#ffffff';
+    ctx.fillStyle = canvasPalette.celestial.white;
     ctx.beginPath();
     ctx.arc(p.x, p.y, p.size * 0.65, 0, Math.PI * 2);
     ctx.fill();
@@ -534,8 +536,8 @@ export function drawUfos(ctx, particles, activeCount = particles.length) {
 
     // Beam
     const beam = ctx.createLinearGradient(0, 0, 0, p.size * 2.2);
-    beam.addColorStop(0, 'rgba(180,255,220,0.35)');
-    beam.addColorStop(1, 'rgba(180,255,220,0)');
+    beam.addColorStop(0, canvasPalette.phenomena.ufoBeam);
+    beam.addColorStop(1, canvasPalette.phenomena.ufoBeamTransparent);
     ctx.fillStyle = beam;
     ctx.beginPath();
     ctx.moveTo(-p.size * 0.25, 0);
@@ -551,13 +553,13 @@ export function drawUfos(ctx, particles, activeCount = particles.length) {
     ctx.ellipse(0, 0, p.size * 0.55, p.size * 0.16, 0, 0, Math.PI * 2);
     ctx.fill();
 
-    ctx.fillStyle = '#e8fff8';
+    ctx.fillStyle = canvasPalette.phenomena.ufoDome;
     ctx.beginPath();
     ctx.ellipse(0, -p.size * 0.08, p.size * 0.22, p.size * 0.14, 0, Math.PI, Math.PI * 2);
     ctx.fill();
 
     // Lights
-    ctx.fillStyle = '#ff4d6d';
+    ctx.fillStyle = canvasPalette.phenomena.dangerGlow;
     for (let L = -2; L <= 2; L++) {
       ctx.beginPath();
       ctx.arc(L * p.size * 0.16, p.size * 0.04, 2.2, 0, Math.PI * 2);
@@ -610,7 +612,7 @@ export function drawMonsters(ctx, particles, activeCount = particles.length) {
     ctx.fillRect(4 * s, -10 * s - stomp, 6 * s, 12 * s);
 
     // Eye glow
-    ctx.fillStyle = '#ff4d6d';
+    ctx.fillStyle = canvasPalette.phenomena.dangerGlow;
     ctx.beginPath();
     ctx.arc(18 * s, -34 * s + stomp, 2.5 * s, 0, Math.PI * 2);
     ctx.fill();

@@ -1,11 +1,7 @@
-import {
-  blogListPrimary,
-  blogListMore,
-  moreArticleMetadata
-} from '../blog/index.js';
-import { ArticleReader } from '../article-reader.js';
+import { homepageItems } from '../homepage-list.js';
+import { ArticleReader, ProjectReader } from '../article-reader.js';
 
-function createArticleRow(blog) {
+function createArticleRow(item) {
   const listItem = document.createElement('li');
   const button = document.createElement('button');
 
@@ -15,26 +11,27 @@ function createArticleRow(blog) {
     <span class="articles-title"></span>
     <span class="article-link-arrow" aria-hidden="true">↗</span>
   `;
-  button.querySelector('.articles-title').textContent = blog.title;
+  button.querySelector('.articles-title').textContent = item.listTitle;
   button.addEventListener('click', () => {
-    ArticleReader.navigate(blog.slug, { trigger: button });
+    const reader = item.type === 'project' ? ProjectReader : ArticleReader;
+    reader.navigate(item.slug, { trigger: button });
   });
 
   listItem.appendChild(button);
   return listItem;
 }
 
-function renderList(container, blogs) {
+function renderList(container, items) {
   if (!container) return;
-  blogs.forEach((blog) => {
-    container.appendChild(createArticleRow(blog));
+  items.forEach((item) => {
+    container.appendChild(createArticleRow(item));
   });
 }
 
 function wireShowMoreToggle(moreContainer, toggleButton) {
   const controlBar = toggleButton?.closest('.control-bar');
 
-  if (!moreContainer || !toggleButton || moreArticleMetadata.length === 0) {
+  if (!moreContainer || !toggleButton || moreContainer.childElementCount === 0) {
     controlBar?.classList.add('hidden');
     return;
   }
@@ -56,8 +53,7 @@ function BlogListGenerator() {
   const moreContainer = document.querySelector('.blog-list-more');
   const toggleButton = document.querySelector('[data-control-bar-button]');
 
-  renderList(blogListContainer, blogListPrimary);
-  renderList(moreContainer, blogListMore);
+  renderList(blogListContainer, homepageItems);
   wireShowMoreToggle(moreContainer, toggleButton);
 }
 

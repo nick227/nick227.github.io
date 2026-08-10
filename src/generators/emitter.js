@@ -3,8 +3,9 @@ import { registerPrimitive } from '../runtime/registry.js';
 import { drawStars, drawClouds, drawWeather, drawLeaves, drawBirds, drawAurora, drawMeteors, drawUfos, drawMonsters } from '../graphics/draw.js';
 import { randomRange, randomChoice, createRandom } from '../utils/math.js';
 import { spawnMusicPhenoms } from './music-phenoms.js';
+import { canvasPalette } from '../models/palette.js';
 
-const AURORA_COLORS = ['rgba(120,255,180,0.9)', 'rgba(90,190,255,0.85)', 'rgba(200,130,255,0.8)'];
+const AURORA_COLORS = canvasPalette.phenomena.aurora;
 
 export class EmitterPrimitive extends CanvasPrimitive {
   constructor(config) {
@@ -171,7 +172,7 @@ export class EmitterPrimitive extends CanvasPrimitive {
         wingPosition: 0.0,
         flapTimer: 0.0,
         flapInterval: randomRange(0.10, 0.18, this.prng),
-        color: "#1c2432"
+        color: canvasPalette.population.bird
       });
     }
   }
@@ -193,7 +194,7 @@ export class EmitterPrimitive extends CanvasPrimitive {
           wobble: randomRange(0, Math.PI * 2, this.prng),
           wobbleSpeed: randomRange(1.8, 3.5, this.prng),
           wobbleRange: 3.5,
-          color: "#aaff33"
+          color: canvasPalette.population.firefly
         }
       );
     }
@@ -236,7 +237,9 @@ export class EmitterPrimitive extends CanvasPrimitive {
             wobble: randomRange(0, Math.PI * 2, this.prng),
             wobbleSpeed: randomRange(2.0, 4.2, this.prng),
             wobbleRange: 4.5,
-            color: this.particleTypes.includes('snow') ? "#aaff33" : "#ffffff"
+            color: this.particleTypes.includes('snow')
+              ? canvasPalette.population.firefly
+              : canvasPalette.celestial.white
           }
         );
       }
@@ -247,8 +250,8 @@ export class EmitterPrimitive extends CanvasPrimitive {
     if (this.parallaxFactor > 0.15) return;
 
     const palette = data.colorful
-      ? ['#ff4d6d', '#ff9f1c', '#ffe66d', '#7bf1a8', '#4cc9f0', '#c77dff', '#ffffff']
-      : ['#ffffff', '#cdeaff', '#ffe9c2'];
+      ? canvasPalette.phenomena.meteors
+      : canvasPalette.phenomena.naturalMeteors;
     const count = data.count || 2;
     for (let i = 0; i < count; i++) {
       const startX = randomRange(this.width * 0.05, this.width * 0.9, this.prng);
@@ -302,7 +305,7 @@ export class EmitterPrimitive extends CanvasPrimitive {
             alpha: 0.0,
             twinkleSpeed: randomRange(1.5, 4.0, this.prng),
             twinklePhase: randomRange(0, Math.PI * 2, this.prng),
-            color: randomChoice(starConfig.starColors || ["#ffffff"], this.prng)
+            color: randomChoice(starConfig.starColors || [canvasPalette.celestial.white], this.prng)
           }
         );
       }
@@ -326,7 +329,7 @@ export class EmitterPrimitive extends CanvasPrimitive {
               size: randomRange(cloudConfig.sizeMin, cloudConfig.sizeMax, this.prng),
               opacity: randomRange(cloudConfig.opacityMin, cloudConfig.opacityMax, this.prng),
               speed: randomRange(cloudConfig.speedMin, cloudConfig.speedMax, this.prng),
-              color: cloudConfig.color || "#ffffff"
+              color: cloudConfig.color || canvasPalette.population.cloud
             }
           );
         }
@@ -448,7 +451,7 @@ export class EmitterPrimitive extends CanvasPrimitive {
         const burst = Math.min(40, 12 + Math.floor(rainIntensity * 32));
         const countToSpawn = Math.min(burst, effectiveMax - currentRainCount);
         const rainColor = (services.atmosphere && services.atmosphere.skyShift > 0.3)
-          ? '#a8f0ff'
+          ? canvasPalette.population.apocalypseRain
           : rainConfig.color;
 
         for (let i = 0; i < countToSpawn; i++) {

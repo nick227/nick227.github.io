@@ -583,13 +583,13 @@ export const ArticleReader = createReader({
   footerClose: 'Back to all articles',
 });
 
-/** Projects reader — `#project/<filename-slug>` */
+/** Project-backed writing reader — retains existing `#project/<filename-slug>` URLs. */
 export const ProjectReader = createReader({
   hashPrefix:  'project',
-  eyebrow:     'Nick Rios / Projects',
-  closeLabel:  'Back to projects',
-  nextLabel:   'Next Project',
-  footerClose: 'Back to all projects',
+  eyebrow:     'Nick Rios / Writing',
+  closeLabel:  'Back to writing',
+  nextLabel:   'Next Article',
+  footerClose: 'Back to all articles',
 });
 
 readers.push(ArticleReader, ProjectReader);
