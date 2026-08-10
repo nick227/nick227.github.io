@@ -40,27 +40,6 @@ const projectMetadata = [
     logoColor: 'proj-color-green',
   },
   {
-    slug: 'crunkbox',
-    title: 'crunkbox.com',
-    description: 'Solo-built hip-hop and electronic music community on PHP/Jamroom — signed 80 quality artists and promoted them online and at Austin venues.',
-    logoInitials: 'CB',
-    logoColor: 'proj-color-orange',
-  },
-  {
-    slug: 'southshoresoldiers',
-    title: 'southshoresoldiers.com',
-    description: 'Freelance website for a Lake Tahoe snowboard camp — camp identity, programs, and seasonal signup pages.',
-    logoInitials: 'SS',
-    logoColor: 'proj-color-teal',
-  },
-  {
-    slug: 'screenplay-to-video',
-    title: 'Screenplay to Video',
-    description: 'Turns a raw story into a synced storyboard — five-stage AI pipeline for narration, visual prompts, keyframe images, video, and cloned-voice narration.',
-    logoInitials: 'SV',
-    logoColor: 'proj-color-pink',
-  },
-  {
     slug: 'poker-champ',
     title: 'Poker Champ',
     description: 'Real-time multiplayer Texas Hold\'em on Colyseus and Expo, with named AI bot opponents and a persistent, reconnect-safe game state.',
@@ -115,6 +94,27 @@ const projectMetadata = [
     description: 'Desktop automation tool that times clicks and clipboard pastes against any app\'s window — built to drive prompt stacks into an AI IDE.',
     logoInitials: 'PS',
     logoColor: 'proj-color-purple',
+  },
+  {
+    slug: 'crunkbox',
+    title: 'crunkbox.com',
+    description: 'Solo-built hip-hop and electronic music community on PHP/Jamroom — signed 80 quality artists and promoted them online and at Austin venues.',
+    logoInitials: 'CB',
+    logoColor: 'proj-color-orange',
+  },
+  {
+    slug: 'southshoresoldiers',
+    title: 'southshoresoldiers.com',
+    description: 'Freelance website for a Lake Tahoe snowboard camp — camp identity, programs, and seasonal signup pages.',
+    logoInitials: 'SS',
+    logoColor: 'proj-color-teal',
+  },
+  {
+    slug: 'screenplay-to-video',
+    title: 'Screenplay to Video',
+    description: 'Turns a raw story into a synced storyboard — five-stage AI pipeline for narration, visual prompts, keyframe images, video, and cloned-voice narration.',
+    logoInitials: 'SV',
+    logoColor: 'proj-color-pink',
   },
 ];
 

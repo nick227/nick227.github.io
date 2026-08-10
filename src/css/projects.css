@@ -146,6 +146,17 @@
   width: min(100%, 900px);
 }
 
+.proj-repo-link {
+  font-size: 14px;
+  font-weight: 600;
+}
+
+.proj-repo-link a {
+  display: inline-flex;
+  gap: 6px;
+  align-items: center;
+}
+
 /* Two-column alternating section */
 .proj-section {
   display: grid;

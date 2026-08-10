@@ -222,8 +222,8 @@
 
 .company-strip {
   width: 100%;
-  margin-top: clamp(24px, 4vh, 22px);
-  padding-top: clamp(24px, 4vh, 22px);
+  margin: clamp(24px, 4vh, 22px) auto;
+  padding: clamp(24px, 4vh, 22px) auto;
 }
 
 .company-strip > p {

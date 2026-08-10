@@ -6,6 +6,10 @@ const documents = import.meta.glob('./*.html', {
 
 const primaryArticleMetadata = [
   {
+    slug: 'what-should-next-generation-forms-look-like',
+    title: 'What should next-generation forms look like?'
+  },
+  {
     slug: 'mass-image-harvesting-with-variety-and-studio-quality',
     title: 'Mass image harvesting with variety and studio quality'
   },
