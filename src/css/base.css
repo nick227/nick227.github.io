@@ -1,55 +1,91 @@
-/* Base Document Reset */
+/* Document baseline. Also inlined in index.html for the first paint. */
 
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
 }
 
-html, body {
+html {
   width: 100%;
   height: 100%;
-  background-color: var(--color-bg-deep);
-  font-family: var(--font-sans);
-  color: var(--color-txt-primary);
-  -webkit-font-smoothing: antialiased;
-  /* The layout targets a single viewport; overflow is a safety net for
-     viewports too short/narrow to fit everything without scroll. */
-  overflow-y: auto;
-  overflow-x: hidden;
+  scroll-behavior: smooth;
+  scroll-snap-type: y mandatory;
+  margin: 0;
+  padding: 0;
+}
+
+body {
+  width: 100%;
+  min-width: 320px;
+  min-height: 100%;
+  background: var(--view-background, var(--color-bg-deep));
+  transition:
+    background-color var(--duration-theme) ease,
+    color var(--duration-theme) ease;
+  margin: 0;
+  padding: 0;
+}
+
+a {
+  color: inherit;
+  text-decoration: none;
+}
+
+a:focus-visible,
+button:focus-visible {
+  outline: 2px solid currentColor;
+  outline-offset: 5px;
+}
+
+button {
+  color: inherit;
+  font: inherit;
+}
+
+img {
+  max-width: 100%;
+  max-height: 100%;
+}
+
+p {
+  font-size: var(--font-size-medium);
+  line-height: 1.5;
 }
 
 ul {
-  list-style: square;
+  padding-left: 1.5rem;
+  margin: 20px 0;
+  list-style: disc;
+}
+
+.align-right {
+  justify-content: flex-end;
+  display: flex;
+}
+
+.row {
+  display: flex;
+}
+
+.col-50 {
+  width: 50%;
+}
+
+.col-25 {
+  width: 25%;
+}
+
+.col-33 {
+  width: 33%;
+}
+
+.w-full {
+  width: 100%;
 }
 
 .hidden {
   display: none;
 }
-
-/* Background Canvas fixed behind scrolling page content */
-#nature-canvas {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 0;
-  display: block;
-}
-
-/* Fixed scrim keeps text legible over bright sky/weather channels.
-   Content now spans the full page width, so the darkening needs to be
-   even across x and only shape itself vertically (sky vs. ground). */
-#scrim {
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100%;
-  height: 100%;
-  z-index: 1;
-  pointer-events: none;
-}
-
-.mb-60 { margin-bottom: 60px; }
-.mt-60 { margin-top: 60px; }

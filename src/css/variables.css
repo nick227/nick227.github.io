@@ -2,23 +2,34 @@
 
 :root {
   /* Colors */
-  --color-bg-deep: #02040a;
-  --color-accent: #daff00;
-  --color-accent-glow: rgba(218, 255, 0, 0.4);
-
-  --color-border: rgba(255, 255, 255, 0.15);
-
-  --color-txt-bright: #ffffff;
-  --color-txt-primary: #f3f4f6;
-  --color-txt-secondary: #9ca3af;
-  --color-txt-dim: #d1d5db;
-  --color-txt-muted: rgba(255, 255, 255, 0.4);
-
+  --color-bg-deep: #ffffff;
+  --color-txt-primary: #050505;
+  --color-txt-secondary: #858585;
+  --color-txt-accent: #ab0669;
+  --color-gray: #dcd7d7;
   /* Fonts */
-  --font-sans: 'Outfit', sans-serif;
+  --font-sans: "Outfit", Arial, sans-serif;
+  --font-mono: "SFMono-Regular", Consolas, "Liberation Mono", monospace;
+  --font-size-medium: 1.125rem;
+  --font-size-stage-label: clamp(0.62rem, 1vw, 0.76rem);
+  --letter-spacing-stage-label: 0.12em;
 
   /* Layout Rhythm */
-  --space-page-y: clamp(10px, 2vh, 28px);
-  --space-inline: clamp(24px, 6vw, 72px);
-  --width-content: 740px;
+  --width-content: 1128px;
+  --width-reading: 760px;
+  --width-reading-wide: 860px;
+  --width-note: 580px;
+  --page-gutter: clamp(22px, 4.5vw, 72px);
+  --header-top: 20px;
+  --header-space: 68px;
+  --footer-bottom: 0px;
+  --footer-space: 76px;
+  --stage-opening-height: 410px;
+  --stage-opening-height-compact: 310px;
+
+  /* Lines and Motion */
+  --rule-subtle: color-mix(in srgb, currentColor 35%, transparent);
+  --duration-theme: 240ms;
+  --duration-stage: 500ms;
+  --ease-expressive: cubic-bezier(.16, 1, .3, 1);
 }

@@ -1,0 +1,207 @@
+/* Reusable animated shapes */
+
+/* Cube */
+
+.cube-wrap {
+  z-index: 0;
+  display: flex;
+  width: 100%;
+  height: 160px;
+  align-items: center;
+  justify-content: center;
+  perspective: 800px;
+}
+
+.cube {
+  --size: 200px;
+
+  position: relative;
+  width: var(--size);
+  height: var(--size);
+  transform-style: preserve-3d;
+  animation: cube-spin 10s linear infinite;
+}
+
+.cube__face {
+  position: absolute;
+  inset: 0;
+  border: 1px solid rgba(255, 255, 255, 0.9);
+}
+
+.cube__face--front {
+  transform: translateZ(calc(var(--size) / 2));
+}
+
+.cube__face--back {
+  transform: rotateY(180deg) translateZ(calc(var(--size) / 2));
+}
+
+.cube__face--right {
+  transform: rotateY(90deg) translateZ(calc(var(--size) / 2));
+}
+
+.cube__face--left {
+  transform: rotateY(-90deg) translateZ(calc(var(--size) / 2));
+}
+
+.cube__face--top {
+  transform: rotateX(90deg) translateZ(calc(var(--size) / 2));
+}
+
+.cube__face--bottom {
+  transform: rotateX(-90deg) translateZ(calc(var(--size) / 2));
+}
+
+@keyframes cube-spin {
+  from { transform: rotateX(-20deg) rotateY(0deg); }
+  to { transform: rotateX(340deg) rotateY(360deg); }
+}
+
+/* Chevron flow */
+
+.chevron-flow {
+  --chevron-color: #111;
+  --chevron-width: 13.5rem;
+  --chevron-height: 1400px;
+  --chevron-gap: 4rem;
+  --speed: 1999ms;
+
+  position: relative;
+  width: 100%;
+  height: 400px;
+  overflow: hidden;
+  animation: chevron-fade-out 3s forwards;
+}
+
+.chevron-flow__track {
+  display: flex;
+  width: max-content;
+  align-items: center;
+  gap: var(--chevron-gap);
+  animation: chevron-roll var(--speed) linear infinite;
+}
+
+.chevron {
+  width: var(--chevron-width);
+  height: var(--chevron-height);
+  flex: 0 0 auto;
+  background: var(--chevron-color);
+  opacity: 0.35;
+  clip-path: polygon(
+    0 0,
+    58% 0,
+    100% 50%,
+    58% 100%,
+    0 100%,
+    42% 50%
+  );
+}
+
+@keyframes chevron-roll {
+  from { transform: translateX(0); }
+  to {
+    transform: translateX(
+      calc(-1 * (var(--chevron-width) - var(--chevron-gap)) * 8)
+    );
+  }
+}
+
+@keyframes chevron-fade-out {
+  from { opacity: 1; }
+  to { opacity: 0; }
+}
+
+/* Animated border */
+
+.pipe-border {
+  --pipe-color: currentColor;
+  --pipe-size: 4px;
+  --pipe-duration: 320ms;
+
+  position: relative;
+  width: 100%;
+  height: 400px;
+}
+
+.pipe-border__content {
+  position: relative;
+  z-index: 1;
+}
+
+.pipe {
+  position: absolute;
+  background: var(--pipe-color);
+  animation-timing-function: ease-out;
+  pointer-events: none;
+}
+
+.pipe-top {
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: var(--pipe-size);
+  transform: scaleX(0);
+  transform-origin: left center;
+  animation: pipe-x var(--pipe-duration) forwards;
+}
+
+.pipe-right {
+  top: 0;
+  right: 0;
+  width: var(--pipe-size);
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: center top;
+  animation: pipe-y var(--pipe-duration) var(--pipe-duration) forwards;
+}
+
+.pipe-bottom {
+  right: 0;
+  bottom: 0;
+  width: 100%;
+  height: var(--pipe-size);
+  transform: scaleX(0);
+  transform-origin: right center;
+  animation:
+    pipe-x var(--pipe-duration) calc(var(--pipe-duration) * 2) forwards;
+}
+
+.pipe-left {
+  bottom: 0;
+  left: 0;
+  width: var(--pipe-size);
+  height: 100%;
+  transform: scaleY(0);
+  transform-origin: center bottom;
+  animation:
+    pipe-y var(--pipe-duration) calc(var(--pipe-duration) * 3) forwards;
+}
+
+@keyframes pipe-x {
+  from { transform: scaleX(0); }
+  to { transform: scaleX(1); }
+}
+
+@keyframes pipe-y {
+  from { transform: scaleY(0); }
+  to { transform: scaleY(1); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cube,
+  .chevron-flow,
+  .chevron-flow__track,
+  .pipe {
+    animation: none;
+  }
+
+  .pipe-top,
+  .pipe-bottom {
+    transform: scaleX(1);
+  }
+
+  .pipe-left,
+  .pipe-right {
+    transform: scaleY(1);
+  }
+}

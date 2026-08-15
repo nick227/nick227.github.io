@@ -1,0 +1,21 @@
+/* Global accessibility overrides load last to win the cascade. */
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  body,
+  .site-navigation a::after,
+  .site-navigation button::after {
+    transition: none;
+  }
+
+  .stage-item,
+  .stage-item.stage-item-out,
+  .grow-text {
+    opacity: 1;
+    animation: none;
+    transform: none;
+  }
+}

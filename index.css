@@ -2,7 +2,14 @@
 
 @import "./src/css/variables.css";
 @import "./src/css/base.css";
-@import "./src/css/grid.css";
+@import "./src/css/typography.css";
+@import "./src/css/animations.css";
 @import "./src/css/components.css";
-@import "./src/css/reader.css";
-@import "./src/css/projects.css";
+@import "./src/css/pages.css";
+@import "./src/css/shapes.css";
+@import "./src/css/pages/pipelines.css";
+@import "./src/css/pages/frameworks.css";
+@import "./src/css/pages/creative.css";
+@import "./src/css/pages/leadership.css";
+@import "./src/css/mobile.css";
+@import "./src/css/accessibility.css";

@@ -1,0 +1,73 @@
+/* Site shell breakpoints. Slideshow breakpoints stay with their page module. */
+
+@media (max-width: 1050px) {
+  .section-body {
+    grid-template-rows: minmax(330px, 52vh) auto;
+    padding-top: 30px;
+  }
+
+  .site-subtext {
+    grid-template-columns: 1fr;
+    gap: 55px;
+  }
+
+}
+
+@media (max-width: 620px) {
+  :root {
+    --header-space: 92px;
+  }
+
+  .page-title,
+  .site-title {
+    font-size: 4.5em;
+  }
+
+  .home {
+    display: block;
+  }
+
+  .section-header {
+    align-items: flex-start;
+  }
+
+  .site-navigation {
+    display: grid;
+    grid-template-columns: repeat(2, auto);
+    gap: 7px 22px;
+    text-align: right;
+  }
+
+  .section-body {
+    display: block;
+    padding-top: 0;
+  }
+
+  .site-main {
+    min-height: 54svh;
+    overflow: hidden;
+  }
+
+  .site-title {
+    font-size: clamp(5.3rem, 25.5vw, 8.6rem);
+    line-height: 0.86;
+    white-space: normal;
+  }
+
+  .site-subtext {
+    display: block;
+    padding-bottom: 0;
+  }
+
+  .intro-copy {
+    display: none;
+  }
+
+  .work-grid {
+    gap: 22px 26px;
+  }
+
+  .section-footer p {
+    line-height: 1.45;
+  }
+}

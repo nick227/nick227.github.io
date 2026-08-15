@@ -1,0 +1,38 @@
+body {
+  color: var(--view-color, var(--color-txt-primary));
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+.page-title,
+.site-title {
+  font-size: clamp(5.2rem, 14vw, 17rem);
+  font-weight: 700;
+  letter-spacing: -0.07em;
+  line-height: 0.82;
+  white-space: nowrap;
+}
+
+.page-title {
+  font-size: 13em;
+}
+
+.intro-copy > .link,
+.work-grid .link {
+  font-size: 1rem;
+  font-weight: 700;
+  line-height: 1.15;
+}
+
+.intro-copy p,
+.work-grid p {
+  color: var(--color-txt-secondary);
+  color: color-mix(
+    in srgb,
+    var(--view-color, var(--color-txt-primary)) 58%,
+    var(--view-background, var(--color-bg-deep))
+  );
+  font-size: 1rem;
+  font-weight: 400;
+  line-height: 1.18;
+}

@@ -1,0 +1,126 @@
+/* Shared slideshow stage primitives */
+
+.stage {
+  overflow: hidden;
+}
+
+.stage-item {
+  width: 100%;
+  opacity: 0;
+  animation: stage-in var(--duration-stage) ease forwards;
+}
+
+.stage-item.stage-item-out {
+  animation: stage-out var(--duration-stage) ease forwards;
+}
+
+.stage-content {
+  position: relative;
+  display: flex;
+  width: 100%;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-opening {
+  min-height: var(--stage-opening-height);
+}
+
+.stage-start {
+  align-items: flex-start;
+}
+
+.stage-stretch {
+  align-items: stretch;
+}
+
+.stage-layer {
+  position: absolute;
+}
+
+.stage-center {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.stage-label {
+  margin-bottom: var(--stage-label-space, clamp(22px, 3.5vw, 38px));
+  font-family: var(--font-mono);
+  font-size: var(--font-size-stage-label);
+  font-weight: 700;
+  letter-spacing: var(--letter-spacing-stage-label);
+  text-transform: uppercase;
+}
+
+.stage-note {
+  max-width: var(--width-note);
+  align-self: flex-end;
+  font-size: clamp(0.82rem, 1.45vw, 1.05rem);
+  line-height: 1.45;
+  text-align: right;
+}
+
+.reading-column {
+  width: min(100%, var(--reading-column-width, var(--width-reading)));
+}
+
+.reading-column--wide {
+  --reading-column-width: var(--width-reading-wide);
+}
+
+.ruled-list {
+  padding: 0;
+  border-top: var(--rule-width, 1px) solid currentColor;
+  margin: 0;
+  list-style: none;
+}
+
+.ruled-list > li {
+  border-bottom: 1px solid var(--rule-color, currentColor);
+}
+
+.meta-list > li {
+  font-family: var(--font-mono);
+  font-size: var(--font-size-stage-label);
+  font-weight: 700;
+  text-transform: uppercase;
+}
+
+@media (max-width: 720px) {
+  .stage-opening {
+    min-height: var(--stage-opening-height-compact);
+  }
+
+  .stage-note {
+    max-width: 88%;
+  }
+}
+
+/* PROJECTS */
+
+.page.projects {
+  width: var(--width-content);
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.project-item {
+  width: 100%;
+  padding: 10px 0;
+  margin: 40px 0;
+  border-bottom: 1px solid gray;
+}
+
+.keywords {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 5px;
+}
+
+.chip {
+  background: var(--color-gray);
+  padding: 2px 6px;
+  border-radius: 999px;
+}
