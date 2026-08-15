@@ -104,6 +104,7 @@
   width: var(--width-content);
   max-width: 100%;
   margin: 0 auto;
+  color: var(--color-txt-primary);
 }
 
 .project-item {
