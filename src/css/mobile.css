@@ -31,13 +31,6 @@
     align-items: flex-start;
   }
 
-  .site-navigation {
-    display: grid;
-    grid-template-columns: repeat(2, auto);
-    gap: 7px 22px;
-    text-align: right;
-  }
-
   .section-body {
     display: block;
     padding-top: 0;
@@ -49,7 +42,7 @@
   }
 
   .site-title {
-    font-size: clamp(5.3rem, 25.5vw, 8.6rem);
+    font-size: clamp(12rem, 25.5vw, 8.6rem);
     line-height: 0.86;
     white-space: normal;
   }

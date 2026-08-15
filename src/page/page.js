@@ -7,6 +7,7 @@ import { Blog } from './blog.js';
 export class Page {
   #pageData;
   #initialView;
+  #homeElement;
   #stage;
   #navigation;
   #body;
@@ -15,10 +16,12 @@ export class Page {
   #activeView = null;
   #started = false;
   #projectsElement;
+  #pagePositionObserver = null;
 
   constructor({
     pageData,
     navigationElement,
+    homeElement,
     stageElement,
     projectsElement,
     blogElement,
@@ -30,6 +33,7 @@ export class Page {
     this.#pageData = pageData;
     this.#initialView = initialView;
     this.#body = bodyElement;
+    this.#homeElement = homeElement;
     this.#projectsElement = projectsElement;
     this.#blogElement = blogElement;
 
@@ -52,6 +56,7 @@ export class Page {
     this.#navigation.start();
     this.#started = true;
 
+    this.#observePagePosition();
     this.setView(this.#initialView);
     this.setupProjects();
     this.setupBlog();
@@ -68,10 +73,29 @@ export class Page {
     this.#projectsElement.innerHTML = html;
   }
 
+  #observePagePosition() {
+    this.#pagePositionObserver = new IntersectionObserver(
+      ([entry]) => {
+        const isBelowHome = (
+          !entry.isIntersecting &&
+          entry.boundingClientRect.top < 0
+        );
+
+        this.#body.classList.toggle('is-below-home', isBelowHome);
+      },
+      { threshold: 0 },
+    );
+
+    this.#pagePositionObserver.observe(this.#homeElement);
+  }
+
   stop() {
     if (!this.#started) return;
 
     this.#navigation.stop();
+    this.#pagePositionObserver?.disconnect();
+    this.#pagePositionObserver = null;
+    this.#body.classList.remove('is-below-home');
     this.#blog?.unmount();
     this.#stage.clear();
     this.#removeViewTheme();
