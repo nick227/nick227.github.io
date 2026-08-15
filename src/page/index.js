@@ -4,9 +4,10 @@ import { Page } from './page.js';
 const navigationElement = document.body;
 const stageElement = document.querySelector('.stage');
 const projectsElement = document.querySelector('#projects');
+const blogElement = document.querySelector('#blog');
 
-if (!stageElement) {
-  throw new Error('Required DOM element (.stage) was not found.');
+if (!stageElement || !projectsElement || !blogElement) {
+  throw new Error('One or more required page elements were not found.');
 }
 
 // Change this during development/testing to load a specific page first.
@@ -17,6 +18,7 @@ const page = new Page({
   navigationElement,
   stageElement,
   projectsElement,
+  blogElement,
   initialView: INITIAL_VIEW,
 });
 

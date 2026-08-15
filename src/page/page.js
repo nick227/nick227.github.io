@@ -2,6 +2,7 @@ import { Stage } from './stage.js';
 import { Navigation } from './navigation.js';
 import { validatePageData } from './validatePageData.js';
 import { Projects } from './projects.js';
+import { Blog } from './blog.js';
 
 export class Page {
   #pageData;
@@ -9,6 +10,8 @@ export class Page {
   #stage;
   #navigation;
   #body;
+  #blog;
+  #blogElement;
   #activeView = null;
   #started = false;
   #projectsElement;
@@ -18,6 +21,7 @@ export class Page {
     navigationElement,
     stageElement,
     projectsElement,
+    blogElement,
     initialView = 'home',
     bodyElement = document.body,
   }) {
@@ -27,6 +31,7 @@ export class Page {
     this.#initialView = initialView;
     this.#body = bodyElement;
     this.#projectsElement = projectsElement;
+    this.#blogElement = blogElement;
 
     this.#stage = new Stage(stageElement);
     this.#navigation = new Navigation(
@@ -49,6 +54,12 @@ export class Page {
 
     this.setView(this.#initialView);
     this.setupProjects();
+    this.setupBlog();
+  }
+
+  setupBlog() {
+    this.#blog = new Blog();
+    this.#blog.mount(this.#blogElement);
   }
 
   setupProjects() {
@@ -61,6 +72,7 @@ export class Page {
     if (!this.#started) return;
 
     this.#navigation.stop();
+    this.#blog?.unmount();
     this.#stage.clear();
     this.#removeViewTheme();
 
