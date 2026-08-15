@@ -63,4 +63,17 @@
   .section-footer p {
     line-height: 1.45;
   }
+
+  .stage-content ul {
+    display: none;
+  }
+
+  .grow-text {
+    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
+    animation: none !important;
+  }
+
+  .creative-finale__content h2 {
+    font-size: clamp(1.2rem, 4.8vw, 4.5rem);
+  }
 }
