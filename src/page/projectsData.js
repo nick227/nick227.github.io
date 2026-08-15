@@ -9,6 +9,14 @@ export const projectsData = [
     blog: "why-i-think-langchain-is-overrated.html"
   },
   {
+    title: "AI Code Review Agent",
+    subText: "Automated GitLab reviews delivered to Microsoft Teams",
+    paragraph: "Triggered on every repository push, this AI agent summarized branch changes, reviewed the code, and generated actionable recommendations and suggestions. It automatically posted each review to Microsoft Teams, keeping the entire team informed while creating a rich, easily accessible history of development across every branch.",
+    keywords: ["AI Agents", "GitLab", "Microsoft Teams", "Code Review"],
+    link: "",
+    github: ""
+  },
+  {
     title: "Cisco Single Pane of Glass",
     subText: "Unified data-center operations and alerting dashboard",
     paragraph: "This award-winning platform gave data-center operators one reliable view of fleet health. It unified microservice data, search, graph relationships, predictive alerts, and legacy ticketing systems.",
