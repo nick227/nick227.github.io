@@ -4,7 +4,7 @@ const documents = import.meta.glob('./*.html', {
   import: 'default'
 });
 
-const primaryArticleMetadata = [
+const articleMetadata = [
   {
     slug: 'what-should-next-generation-forms-look-like',
     title: 'What should next-generation forms look like?'
@@ -159,11 +159,6 @@ const primaryArticleMetadata = [
   }
 ];
 
-const moreArticleMetadata = [
-];
-
-const articleMetadata = [...primaryArticleMetadata, ...moreArticleMetadata];
-
 function toBlogEntry(article) {
   return {
     ...article,
@@ -172,13 +167,7 @@ function toBlogEntry(article) {
 }
 
 const blogList = articleMetadata.map(toBlogEntry);
-const blogListPrimary = primaryArticleMetadata.map(toBlogEntry);
-const blogListMore = moreArticleMetadata.map(toBlogEntry);
 
 export {
-  articleMetadata,
-  moreArticleMetadata,
   blogList,
-  blogListPrimary,
-  blogListMore
 };

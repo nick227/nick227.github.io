@@ -42,7 +42,7 @@
   }
 
   .site-title {
-    font-size: clamp(12rem, 25.5vw, 8.6rem);
+    font-size: clamp(5.5rem, 46vw, 17rem);
     line-height: 0.86;
     white-space: normal;
   }
@@ -62,10 +62,6 @@
 
   .section-footer p {
     line-height: 1.45;
-  }
-
-  .stage-content ul {
-    display: none;
   }
 
   .grow-text {

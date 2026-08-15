@@ -2,6 +2,7 @@ import { articleHref } from './blogRoutes.js';
 
 const SELECTORS = {
   index: '[data-blog-index]',
+  indexTitle: '[data-blog-index-title]',
   reader: '[data-blog-reader]',
   readerTitle: '[data-blog-reader-title]',
   readerMeta: '[data-blog-reader-meta]',
@@ -26,10 +27,14 @@ export class BlogView {
     this.#elements = this.#collectElements();
   }
 
-  showIndex() {
+  showIndex({ scroll = false } = {}) {
     this.#requireMount();
     this.#elements.index.hidden = false;
     this.#elements.reader.hidden = true;
+
+    if (scroll) {
+      this.#scrollAndFocus(this.#elements.indexTitle);
+    }
   }
 
   showArticle({ article, nextArticle, scroll = false }) {
@@ -45,8 +50,11 @@ export class BlogView {
     this.#elements.reader.hidden = false;
 
     if (scroll) {
-      this.#container.scrollIntoView({ block: 'start' });
+      this.#scrollAndFocus(this.#elements.title);
+      return;
     }
+
+    this.#elements.title.focus({ preventScroll: true });
   }
 
   #renderNextArticle(article) {
@@ -57,9 +65,21 @@ export class BlogView {
     this.#elements.nextTitle.textContent = article.title;
   }
 
+  #scrollAndFocus(element) {
+    requestAnimationFrame(() => {
+      // Wait through a second frame so browser scroll anchoring observes the
+      // reading-mode layout before we establish the final route position.
+      requestAnimationFrame(() => {
+        this.#container.scrollIntoView({ block: 'start' });
+        element.focus({ preventScroll: true });
+      });
+    });
+  }
+
   #collectElements() {
     const elements = {
       index: this.#container.querySelector(SELECTORS.index),
+      indexTitle: this.#container.querySelector(SELECTORS.indexTitle),
       reader: this.#container.querySelector(SELECTORS.reader),
       title: this.#container.querySelector(SELECTORS.readerTitle),
       meta: this.#container.querySelector(SELECTORS.readerMeta),
@@ -85,21 +105,22 @@ export class BlogView {
 function renderBlog(articles) {
   return `
     <section class="blog-index" data-blog-index>
+      <h2 class="blog-heading" data-blog-index-title tabindex="-1">Blog</h2>
       <ol class="blog-list">
         ${articles.map(renderBlogRow).join('')}
       </ol>
     </section>
 
     <article class="blog-reader" data-blog-reader aria-labelledby="blog-reader-title" hidden>
-      <a class="blog-reader-back" href="#blog">← Back to home</a>
+      <a class="blog-reader-back" href="#blog">← All writing</a>
       <header class="blog-reader-header">
-        <p class="blog-reader-eyebrow">Nick Rios / Writing</p>
-        <h1 id="blog-reader-title" data-blog-reader-title></h1>
+        <p class="blog-reader-eyebrow">Nick Rios / Blog</p>
+        <h1 id="blog-reader-title" data-blog-reader-title tabindex="-1"></h1>
         <p class="blog-reader-meta" data-blog-reader-meta></p>
       </header>
       <div class="blog-reader-body" data-blog-reader-body></div>
       <a class="blog-reader-next" data-blog-reader-next href="#blog">
-        <span>Next article</span>
+        <span>Next article <span aria-hidden="true">→</span></span>
         <strong data-blog-reader-next-title></strong>
       </a>
     </article>`;

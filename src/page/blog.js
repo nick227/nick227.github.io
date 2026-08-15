@@ -3,6 +3,8 @@ import { BlogCatalog } from './blog/blogCatalog.js';
 import { articleSlugFromHash } from './blog/blogRoutes.js';
 import { BlogView } from './blog/blogView.js';
 
+const READING_MODE_CLASS = 'is-blog-reading';
+
 /** Coordinates article data, URL state, and the blog view. */
 export class Blog {
   #catalog;
@@ -35,6 +37,7 @@ export class Blog {
     if (!this.#mounted) return;
 
     window.removeEventListener('hashchange', this.#handleRouteChange);
+    document.body.classList.remove(READING_MODE_CLASS);
     document.title = this.#originalDocumentTitle;
     this.#view = null;
     this.#mounted = false;
@@ -49,11 +52,16 @@ export class Blog {
     const article = slug ? this.#catalog.find(slug) : null;
 
     if (!article) {
-      this.#view.showIndex();
+      const shouldScrollToIndex = (
+        scroll && (window.location.hash === '#blog' || Boolean(slug))
+      );
+      document.body.classList.remove(READING_MODE_CLASS);
+      this.#view.showIndex({ scroll: shouldScrollToIndex });
       document.title = this.#originalDocumentTitle;
       return;
     }
 
+    document.body.classList.add(READING_MODE_CLASS);
     this.#view.showArticle({
       article,
       nextArticle: this.#catalog.nextAfter(slug),

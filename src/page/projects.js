@@ -31,9 +31,7 @@ export class Projects {
             </div>
             <div class="more-info w-full">
                 <p>${project.paragraph}</p>
-                <ul>
-                    ${project.link ? `<li><a href="${project.link}" target="_blank">${project.link}</a></li>` : ''}
-                </ul>
+                ${project.link ? `<ul><li><a href="${project.link}" target="_blank" rel="noopener noreferrer">${project.link}</a></li></ul>` : ''}
             </div>
         </div>`;
 

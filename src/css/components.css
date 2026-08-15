@@ -12,24 +12,6 @@
   grid-template-rows: 1fr;
 }
 
-.contact,
-.about {
-  background-color: #e9e9f5;
-}
-
-.page.experience {
-  width: 100%;
-  height: 100%;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-}
-
-.page.about .section {
-  margin: 0 auto;
-}
-
 .section {
   width: min(100%, var(--width-content));
   margin-inline: auto;
@@ -72,7 +54,9 @@
 }
 
 body.is-below-home .section-header,
-body.is-below-home .section-footer {
+body.is-below-home .section-footer,
+body.is-blog-reading .section-header,
+body.is-blog-reading .section-footer {
   color: var(--color-txt-primary);
 }
 
@@ -82,11 +66,16 @@ body.is-below-home {
 }
 
 body.is-below-home .section-header::before,
-body.is-below-home .section-footer::before {
+body.is-below-home .section-footer::before,
+body.is-blog-reading .section-header::before,
+body.is-blog-reading .section-footer::before {
   background-color: var(--color-bg-deep);
 }
 
 .site-branding {
+  display: inline-flex;
+  min-height: 44px;
+  align-items: center;
   font-size: 1.125rem;
   font-weight: 700;
   letter-spacing: -0.045em;
@@ -104,7 +93,12 @@ body.is-below-home .section-footer::before {
 .site-navigation a,
 .site-navigation button {
   position: relative;
-  padding: 0;
+  display: inline-flex;
+  min-width: 44px;
+  min-height: 44px;
+  align-items: center;
+  justify-content: center;
+  padding: 0 2px;
   border: 0;
   background: none;
   color: inherit;
@@ -118,7 +112,7 @@ body.is-below-home .section-footer::before {
 .site-navigation button::after {
   position: absolute;
   right: 0;
-  bottom: -5px;
+  bottom: 5px;
   left: 0;
   height: 1px;
   background: currentColor;
@@ -209,15 +203,15 @@ body.is-below-home .section-footer::before {
 .social-links {
   display: flex;
   align-items: center;
-  gap: 27px;
-  min-height: 25px;
-  margin-bottom: 4px;
+  gap: clamp(8px, 2vw, 18px);
+  min-height: 44px;
+  margin-bottom: 0;
 }
 
 .social-links a {
   display: grid;
-  width: 18px;
-  height: 18px;
+  width: 44px;
+  height: 44px;
   place-items: center;
   color: inherit;
   font-size: 0.8rem;

@@ -24,6 +24,4 @@ const page = new Page({
   initialView: INITIAL_VIEW,
 });
 
-page.start();
-
 export { page };
