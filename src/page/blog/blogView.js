@@ -1,4 +1,5 @@
 import { articleHref } from './blogRoutes.js';
+import { attachShowMore } from '../showMore.js';
 
 const SELECTORS = {
   index: '[data-blog-index]',
@@ -25,6 +26,7 @@ export class BlogView {
   mount(articles) {
     this.#container.innerHTML = renderBlog(articles);
     this.#elements = this.#collectElements();
+    attachShowMore(this.#container.querySelector('.blog-list'));
   }
 
   showIndex({ scroll = false } = {}) {

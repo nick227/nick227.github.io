@@ -3,6 +3,7 @@ import { Navigation } from './navigation.js';
 import { validatePageData } from './validatePageData.js';
 import { Projects } from './projects.js';
 import { Blog } from './blog.js';
+import { attachShowMore } from './showMore.js';
 
 /**
  * Application composition root for the portfolio page.
@@ -127,8 +128,9 @@ export class Page {
     // Keep the section heading here because Page owns the section container.
     this.#projectsElement.innerHTML = `
       <h2 class="projects-heading">Projects</h2>
-      ${html}
+      <div class="project-list">${html}</div>
     `;
+    attachShowMore(this.#projectsElement.querySelector('.project-list'));
   }
 
   #setupBlog() {
