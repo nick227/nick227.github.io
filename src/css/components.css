@@ -10,6 +10,18 @@
 .home {
   display: grid;
   grid-template-rows: 1fr;
+  margin-bottom: 152px !important;
+  background: var(--view-background, var(--color-bg-deep));
+  color: var(--view-color, var(--color-txt-primary));
+  transition:
+    background-color var(--duration-theme) ease,
+    color var(--duration-theme) ease;
+}
+
+.page.home {
+  width: 100%;
+  margin-right: 0;
+  margin-left: 0;
 }
 
 .section {
@@ -57,11 +69,6 @@ body.is-below-home .section-header,
 body.is-below-home .section-footer,
 body.is-blog-reading .section-header,
 body.is-blog-reading .section-footer {
-  color: var(--color-txt-primary);
-}
-
-body.is-below-home {
-  background-color: var(--color-bg-deep);
   color: var(--color-txt-primary);
 }
 

@@ -183,3 +183,93 @@
     animation: none;
   }
 }
+
+/* Content screen: packets stream down a tube past each pipeline stage.
+   Packets are clipped by the tube, so the motion never leaves its box. */
+.pipe-flow {
+  display: grid;
+  width: min(100%, 400px);
+  grid-template-columns: 30px 1fr;
+  gap: 24px;
+}
+
+.pipe-flow__tube {
+  position: relative;
+  border: 3px solid currentColor;
+  border-radius: 999px;
+  overflow: hidden;
+}
+
+.pipe-flow__tube span {
+  position: absolute;
+  top: -12px;
+  left: 50%;
+  width: 10px;
+  height: 10px;
+  margin-left: -5px;
+  border-radius: 50%;
+  background: currentColor;
+  animation: pipe-packet 3s linear infinite;
+  animation-delay: calc(var(--packet) * -0.5s);
+}
+
+.pipe-flow__stages {
+  display: flex;
+  flex-direction: column;
+  gap: 14px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+
+.pipe-flow__stages li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 12px 16px;
+  border: 1px solid var(--rule-subtle);
+  border-radius: 12px;
+}
+
+/* Short pipe joint from the tube to each stage. */
+.pipe-flow__stages li::before {
+  position: absolute;
+  top: 50%;
+  left: -24px;
+  width: 24px;
+  height: 3px;
+  margin-top: -1.5px;
+  background: currentColor;
+  content: "";
+}
+
+.pipe-flow__stages strong {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.pipe-flow__stages span {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+.pipe-flow__stages .is-owned {
+  border-color: var(--view-color);
+  background: var(--view-color);
+  color: var(--view-background);
+}
+
+.pipe-flow__stages .is-owned::before {
+  background: var(--view-color);
+}
+
+@keyframes pipe-packet {
+  to { top: 100%; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .pipe-flow__tube span {
+    animation: none;
+  }
+}

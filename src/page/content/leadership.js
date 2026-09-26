@@ -3,82 +3,51 @@ export const leadership = {
   color: '#180702',
   screens: [
     {
-      timer: 2800,
+      timer: 800,
       html: `
-        <div class="stage-content stage-opening leadership-opening">
-          <div class="leadership-pace" aria-hidden="true">
-            <span><i></i></span>
-            <span><i></i></span>
-            <span><i></i></span>
-            <span><i></i></span>
-          </div>
+          <div class="stage-content">
           <h1 class="page-title">Leadership</h1>
         </div>
       `,
     },
     {
-      timer: 3900,
       html: `
-        <div class="stage-content stage-start leadership-clarity">
-          <p class="stage-label">From ambiguity to action</p>
-          <h2>Make the work clear enough to move.</h2>
-          <p class="stage-note">
-            I break requirements into small, well-sized units, make the hard
-            tradeoffs visible, and give people work they can own without being
-            overwhelmed.
-          </p>
-          <ol class="leadership-workflow ruled-list meta-list">
-            <li>Understand</li>
-            <li>Size</li>
-            <li>Delegate</li>
-            <li>Execute</li>
-          </ol>
-        </div>
-      `,
-    },
-    {
-      timer: 4100,
-      html: `
-        <div class="stage-content stage-start leadership-example">
-          <p class="stage-label">Lead by example</p>
-          <div class="leadership-example__grid">
-            <h2>I stay close to the work.</h2>
-            <div>
-              <p>
-                I take on complex problems myself and work alongside developers
-                when the path is unclear. That builds shared responsibility
-                instead of silos.
-              </p>
-              <ul>
-                <li>Keep ownership shared</li>
-                <li>Make workloads visible</li>
-                <li>Mentor through real decisions</li>
-              </ul>
-            </div>
-          </div>
-        </div>
-      `,
-    },
-    {
-      html: `
-        <div class="stage-content stage-start leadership-finale">
-          <div class="reading-column reading-column--wide leadership-finale__content">
-            <p class="stage-label">Design · Engineering · Product</p>
-            <h2>Trust comes from sound decisions and follow-through.</h2>
-            <p>
-              I have years of experience working across design, development,
-              and product management. I listen for each discipline's concerns,
-              keep the team optimistic, and stay focused on getting useful work
-              finished.
-            </p>
-            <ul class="leadership-values ruled-list meta-list">
-              <li>Clarity</li>
-              <li>Judgment</li>
-              <li>Delegation</li>
-              <li>Mentorship</li>
-              <li>Alignment</li>
-              <li>Execution</li>
+      <h1>Leadership</h1>
+        <div class="row">
+          <div class="col-50">
+          <h3>Track record</h3>
+
+            <ul>
+              <li><h3>Digital Harbor — Team lead</h3>
+              <p>Led three product initiatives and was chosen for the company-wide leadership retreat.</p>
+              </li>
+
+              <li><h3>Cisco — Local and offshore teams</h3>
+              <p>Led teams in Austin and overseas, and ran hiring, interviews, and the team’s scrum.</p>
+              </li>
+
+              <li><h3>Digital Harbor — AI innovation calls</h3>
+              <p>Hosted weekly calls where we shared AI stories, watched demos, and talked through what mattered for our products.</p>
+              </li>
             </ul>
+            <p>
+            I lead by example and take on the hardest or most cross-cutting work myself.
+            Sometimes a team isn’t stuck on skill; it is waiting for someone to go first.
+            At Digital Harbor, two Angular products had to match, and nobody owned the shared library that would make that possible.
+            I started it, and the team built on it.
+            I break big goals into small pieces and make hard tradeoffs visible.
+            Ask the people who have worked with me, and they will tell you I have lots of opinions.
+            I share them openly, so the team always knows where I stand and can push back.
+            </p>
+          </div>
+          <div class="col-50 center">
+            <div class="leadership-pace" aria-hidden="true">
+              <span><i></i></span>
+              <span><i></i></span>
+              <span><i></i></span>
+              <span><i></i></span>
+              <span><i></i></span>
+            </div>
           </div>
         </div>
       `,

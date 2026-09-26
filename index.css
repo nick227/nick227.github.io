@@ -7,9 +7,12 @@
 @import "./src/css/components.css";
 @import "./src/css/pages.css";
 @import "./src/css/shapes.css";
+@import "./src/css/pages/architecture.css";
+@import "./src/css/pages/automation.css";
 @import "./src/css/pages/pipelines.css";
 @import "./src/css/pages/frameworks.css";
 @import "./src/css/pages/creative.css";
 @import "./src/css/pages/leadership.css";
+@import "./src/css/pages/resume.css";
 @import "./src/css/mobile.css";
 @import "./src/css/accessibility.css";

@@ -1,0 +1,107 @@
+/* Architecture page: the generation spine. */
+
+/* Spine: five layers on a rail. A pulse runs down the rail and each layer
+   lights as it passes, looping forever inside the list's own box. */
+.arch-spine {
+  --spine-cycle: 25s;
+  --spine-step: 0.8s;
+
+  position: relative;
+  display: flex;
+  width: min(100%, 360px);
+  flex-direction: column;
+  gap: 18px;
+  padding: 0 0 0 36px;
+  margin: 0;
+  list-style: none;
+  overflow: hidden;
+}
+
+.arch-spine::before,
+.arch-spine::after {
+  position: absolute;
+  left: 11px;
+  content: "";
+}
+
+.arch-spine::before {
+  top: 0;
+  bottom: 0;
+  width: 2px;
+  background: var(--rule-subtle);
+}
+
+.arch-spine::after {
+  top: 0;
+  width: 8px;
+  height: 8px;
+  margin-left: -3px;
+  border-radius: 50%;
+  background: currentColor;
+  box-shadow: 0 0 14px 4px currentColor;
+  animation: arch-pulse var(--spine-cycle) linear infinite;
+}
+
+.arch-spine li {
+  position: relative;
+  display: flex;
+  flex-direction: column;
+  gap: 2px;
+  padding: 14px 18px;
+  border: 1px solid var(--rule-subtle);
+  border-radius: 12px;
+  animation: arch-layer var(--spine-cycle) ease infinite;
+  animation-delay: calc(var(--layer) * var(--spine-step));
+}
+
+.arch-spine li::before {
+  position: absolute;
+  top: 50%;
+  left: -30px;
+  width: 10px;
+  height: 10px;
+  border: 2px solid currentColor;
+  border-radius: 50%;
+  background: var(--view-background, #1746d1);
+  content: "";
+  transform: translateY(-50%);
+}
+
+.arch-spine strong {
+  font-family: var(--font-mono);
+  font-size: 1rem;
+}
+
+.arch-spine span {
+  font-size: 0.85rem;
+  opacity: 0.8;
+}
+
+/* Travels the rail in 80% of the cycle so it passes each layer as it lights. */
+@keyframes arch-pulse {
+  0% { top: 0; opacity: 1; }
+  80% { top: calc(100% - 8px); opacity: 1; }
+  100% { top: calc(100% - 8px); opacity: 0; }
+}
+
+@keyframes arch-layer {
+  0%,
+  22%,
+  100% {
+    background: transparent;
+    color: inherit;
+  }
+
+  6%,
+  14% {
+    background: var(--view-color, #ffffff);
+    color: var(--view-background, #1746d1);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .arch-spine::after,
+  .arch-spine li {
+    animation: none;
+  }
+}

@@ -1,82 +1,100 @@
+const pipelineStages = [
+  { label: 'Splunk agents', note: 'Thousands of devices' },
+  { label: 'Kafka', note: 'Event stream' },
+  { label: 'Akka / Scala', note: 'Analysis' },
+  { label: 'Elasticsearch', note: 'My layer: schema, APIs, search', owned: true },
+  { label: 'Support UI', note: '30 engineers acting on tickets' },
+];
+
+const pipelineResources = [
+  {
+    kind: 'Blog',
+    title: 'Elasticsearch without locking your database',
+    description: 'How ES answers queries and what a good index schema looks like.',
+    href: '#article/elasticsearch-full-text-search-without-locking-your-database',
+  },
+  {
+    kind: 'Blog',
+    title: 'Optimizing for Neo4j',
+    description: 'Model for the questions you ask, not for table purity.',
+    href: '#article/optimizing-for-neo4j',
+  },
+  {
+    kind: 'Blog',
+    title: 'Mass image harvesting',
+    description: 'Batch image generation with prompt variety and fail-fast queues.',
+    href: '#article/mass-image-harvesting-with-variety-and-studio-quality',
+  },
+  {
+    kind: 'Blog',
+    title: 'n8n is pretty cool, and why I hate it',
+    description: 'Visual automation for solo projects, and why backups matter.',
+    href: '#article/actually-n8n-is-pretty-cool-and-why-i-hate-it',
+  },
+];
+
 export const pipelines = {
   backgroundColor: '#b9ddff',
   color: '#071a2c',
   screens: [
     {
-      timer: 2220,
+      timer: 600,
       html: `
-        <div class="pipe-border stage-content pipeline-opening">
-          <span class="pipe pipe-top"></span>
-          <span class="pipe pipe-right"></span>
-          <span class="pipe pipe-bottom"></span>
-          <span class="pipe pipe-left"></span>
-          <div class="pipe-border__content">
-            <h1 class="page-title">Pipelines</h1>
+          <div class="stage-content">
+              <div class="pipe-border absolute pipeline-opening">
+                <span class="pipe pipe-top"></span>
+                <span class="pipe pipe-right"></span>
+                <span class="pipe pipe-bottom"></span>
+                <span class="pipe pipe-left"></span>
+                <div class="pipe-border__content">
+                  <h1 class="page-title">Pipelines</h1>
+                </div>
+              </div>
           </div>
-        </div>
-      `,
-    },
-    {
-      timer: 3200,
-      html: `
-        <div class="stage-content stage-start">
-          <p class="stage-label">One architectural idea</p>
-          <div class="pipeline-scope__grid">
-            <span>UI state</span>
-            <span>API requests</span>
-            <span>AI + tools</span>
-            <span>search indexes</span>
-            <span>queues + streams</span>
-            <span>data infrastructure</span>
-          </div>
-          <div class="pipeline-route" aria-label="Input moves through four stages to become output">
-            <span>input</span><i aria-hidden="true"></i>
-            <span>transform</span><i aria-hidden="true"></i>
-            <span>validate</span><i aria-hidden="true"></i>
-            <span>route</span><i aria-hidden="true"></i>
-            <span>output</span>
-          </div>
-        </div>
-      `,
-    },
-    {
-      timer: 3800,
-      html: `
-        <div class="stage-content stage-stretch">
-          <p class="stage-label">Same pattern. Different work.</p>
-          <div class="pipeline-flow-list">
-            <div class="pipeline-flow">
-              <strong>Streaming</strong>
-              <span>ingest</span><span>transcode</span><span>moderate</span><span>deliver</span>
-            </div>
-            <div class="pipeline-flow">
-              <strong>Commerce</strong>
-              <span>checkout</span><span>authorize</span><span>fulfill</span><span>notify</span>
-            </div>
-            <div class="pipeline-flow">
-              <strong>Finance</strong>
-              <span>receive</span><span>validate</span><span>reconcile</span><span>report</span>
-            </div>
-            <div class="pipeline-flow">
-                <strong>Tools</strong>
-                <span>Kafka / </span><span>RabbitMQ / </span><span>Redis / </span><span>Splunk / </span>
-            </div>
-          </div>
-        </div>
       `,
     },
     {
       html: `
-        <div class="stage-content pipeline-controls">
-          <p class="stage-label">Built for real conditions</p>
-          <h2>Flow control is beautiful.</h2>
-          <ul class="pipeline-control-list ruled-list">
-            <li><span>01</span> Buffer the traffic</li>
-            <li><span>02</span> Catch the failures</li>
-            <li><span>03</span> Record every handoff</li>
-            <li><span>04</span> Make pipelines safe</li>
-            <li><span>05</span> Predictable results</li>
-          </ul>
+        <h1>Pipelines</h1>
+        <div class="row row-stack">
+          <div class="col-50">
+            <p class="page-lead">I build multilevel pipelines to transform and deliver data.</p>
+            <p>
+            Data arrives from many places, in many shapes.
+            A good pipeline can be taken apart and put together again.
+            At Cisco, Splunk agents on thousands of devices streamed through Kafka and a Scala analysis stage.
+            It all landed in the Elasticsearch layer I owned, which held two terabytes even on our development system.
+            I owned the schema, the APIs, and the front-end support engineers used to act on tickets.
+            </p>
+
+            <h3 class="mt-6">Read it</h3>
+            <ul class="resource-cards">
+              ${pipelineResources.map(resource => `
+                <li>
+                  <a href="${resource.href}">
+                    <span class="resource-cards__kind">${resource.kind}</span>
+                    <strong>${resource.title}</strong>
+                    <span>${resource.description}</span>
+                  </a>
+                </li>
+              `).join('')}
+            </ul>
+          </div>
+          <div class="col-50 center">
+            <div class="pipe-flow" role="img" aria-label="Cisco event pipeline: Splunk agents, Kafka, Akka and Scala, Elasticsearch, support UI">
+              <div class="pipe-flow__tube">
+                ${[0, 1, 2, 3, 4, 5].map(packet => `<span style="--packet: ${packet}"></span>`).join('')}
+              </div>
+              <ol class="pipe-flow__stages">
+                ${pipelineStages.map(stage => `
+                  <li${stage.owned ? ' class="is-owned"' : ''}>
+                    <strong>${stage.label}</strong>
+                    <span>${stage.note}</span>
+                  </li>
+                `).join('')}
+              </ol>
+            </div>
+          </div>
         </div>
       `,
     },

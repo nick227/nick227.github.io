@@ -20,11 +20,11 @@ html {
 body {
   width: 100%;
   min-width: 320px;
+  /* index.html inlines height: 100% for first paint; let the body grow
+     with content taller than the viewport. */
+  height: auto;
   min-height: 100%;
-  background: var(--view-background, var(--color-bg-deep));
-  transition:
-    background-color var(--duration-theme) ease,
-    color var(--duration-theme) ease;
+  background: var(--color-bg-deep);
   margin: 0;
   padding: 0;
 }
@@ -72,8 +72,62 @@ ul {
 
 .col-50 {
   width: 50%;
+  position: relative;
 }
 
 .w-full {
   width: 100%;
+}
+
+.h-full {
+  height: 100%;
+}
+
+.center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.mt-1 {
+  margin-top: 0.25rem;
+}
+
+.mt-2 {
+  margin-top: 0.5rem;
+}
+
+.mt-3 {
+  margin-top: 0.75rem;
+}
+
+.mt-4 {
+  margin-top: 1rem;
+}
+
+.mt-5 {
+  margin-top: 1.25rem;
+}
+
+.mt-6 {
+  margin-top: 1.5rem;
+}
+
+.hidden {
+  display: none !important;
+}
+
+.link {
+  cursor: pointer;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 0.1em;
+  text-decoration-color: currentColor;
+  text-decoration-style: solid;
+  text-decoration-skip-ink: none;
+  text-decoration-skip-ink: none;
+}
+
+.absolute {
+  position: absolute !important;
 }

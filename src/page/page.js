@@ -159,8 +159,8 @@ export class Page {
   }
 
   #setViewTheme(view, data) {
-    // A view class supports view-specific selectors; custom properties carry
-    // the colors shared by the body, fixed shell, and stage content.
+    // A view class supports view-specific selectors. Custom properties carry
+    // the home-section colors used by the stage and the fixed shell.
     this.#removeViewTheme();
 
     this.#body.classList.add(`view-${view}`);

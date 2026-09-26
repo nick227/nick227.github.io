@@ -1,11 +1,6 @@
 /* Creative design slideshow */
 
-.creative-title-wrap {
-  position: relative;
-}
-
-.creative-opening .page-title,
-.creative-focus {
+.creative-opening .page-title {
   font-size: clamp(5rem, 15vw, 14rem);
 }
 
@@ -14,16 +9,60 @@
   animation: creative-dot-in 180ms ease 1900ms forwards;
 }
 
-.creative-focus {
+/* Right column: three rings drift apart and converge on one focal point, looping.
+   Offsets are sized so every ring stays inside the square container. */
+.creative-orbit {
+  position: relative;
+  width: min(100%, 420px);
+  aspect-ratio: 1;
+  overflow: hidden;
+}
+
+.creative-orbit > span {
   position: absolute;
-  right: -0.06em;
-  bottom: 0.01em;
-  width: 0.62em;
-  height: 0.62em;
-  border: 3px solid currentColor;
   border-radius: 50%;
-  pointer-events: none;
-  animation: creative-find-focus 2100ms cubic-bezier(.76, 0, .24, 1) both;
+}
+
+.creative-orbit__track {
+  inset: 4%;
+  border: 2px dashed currentColor;
+  opacity: 0.35;
+  animation: creative-orbit-spin 24s linear infinite;
+}
+
+.creative-orbit__ring {
+  top: 30%;
+  left: 30%;
+  width: 40%;
+  height: 40%;
+  border: 3px solid currentColor;
+  animation: creative-orbit-converge 6s ease-in-out infinite;
+}
+
+.creative-orbit__ring:nth-of-type(2) {
+  --orbit-x: 0%;
+  --orbit-y: -55%;
+}
+
+.creative-orbit__ring:nth-of-type(3) {
+  --orbit-x: 48%;
+  --orbit-y: 28%;
+  animation-delay: 120ms;
+}
+
+.creative-orbit__ring:nth-of-type(4) {
+  --orbit-x: -48%;
+  --orbit-y: 28%;
+  animation-delay: 240ms;
+}
+
+.creative-orbit__dot {
+  top: 46%;
+  left: 46%;
+  width: 8%;
+  height: 8%;
+  background: currentColor;
+  animation: creative-orbit-focus 6s ease-in-out infinite;
 }
 
 .creative-principle {
@@ -83,30 +122,37 @@
   margin-top: 8px;
 }
 
-@keyframes creative-find-focus {
-  0% {
-    opacity: 0;
-    transform: translateX(-720%) scale(0.3);
+@keyframes creative-orbit-converge {
+  0%,
+  100% {
+    transform: translate(var(--orbit-x), var(--orbit-y));
   }
 
-  28% {
-    opacity: 0.45;
-    transform: translateX(-470%) scale(1);
+  40%,
+  60% {
+    transform: translate(0, 0);
   }
+}
 
-  64% {
-    opacity: 0.7;
-    transform: translateX(-190%) scale(0.58);
-  }
-
-  86% {
-    opacity: 1;
-    transform: translateX(0) scale(0.22);
-  }
-
+@keyframes creative-orbit-focus {
+  0%,
+  30%,
+  70%,
   100% {
     opacity: 0;
-    transform: translateX(0) scale(0.06);
+    transform: scale(0.2);
+  }
+
+  45%,
+  55% {
+    opacity: 1;
+    transform: scale(1);
+  }
+}
+
+@keyframes creative-orbit-spin {
+  to {
+    transform: rotate(1turn);
   }
 }
 
@@ -115,7 +161,7 @@
 }
 
 @media (max-width: 720px) {
-  .creative-focus {
+  .creative-orbit__ring {
     border-width: 2px;
   }
 
@@ -142,7 +188,7 @@
     animation: none;
   }
 
-  .creative-focus {
-    display: none;
+  .creative-orbit > span {
+    animation: none;
   }
 }

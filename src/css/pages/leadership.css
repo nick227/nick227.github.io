@@ -11,11 +11,11 @@
 }
 
 .leadership-pace {
-  position: absolute;
-  inset: 50% 0 auto;
   display: grid;
-  gap: clamp(32px, 5vw, 54px);
-  transform: translateY(-50%);
+  gap: clamp(32px, 5vw, 54px);  
+  width: 80%;
+  height: 100%;
+  margin: auto;
 }
 
 .leadership-pace span {
@@ -32,7 +32,7 @@
   height: 11px;
   border-radius: 50%;
   background: currentColor;
-  animation: leadership-set-pace 2100ms cubic-bezier(.45, 0, .2, 1) both;
+  animation: leadership-set-pace 2100ms cubic-bezier(.45, 0, .2, 1) infinite;
 }
 
 .leadership-pace span:first-child i {
@@ -44,6 +44,7 @@
 .leadership-pace span:nth-child(2) i { animation-delay: 260ms; }
 .leadership-pace span:nth-child(3) i { animation-delay: 400ms; }
 .leadership-pace span:nth-child(4) i { animation-delay: 540ms; }
+.leadership-pace span:nth-child(5) i { animation-delay: 680ms; }
 
 .leadership-clarity h2 {
   max-width: 940px;

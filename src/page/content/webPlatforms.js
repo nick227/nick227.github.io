@@ -3,9 +3,65 @@ export const webPlatforms = {
   color: '#ffffff',
   screens: [
     {
-      timer: 2800,
+      timer: 200,
       html: `
-        <div class="stage-content stage-opening framework-opening">
+          <div class="stage-content">
+          <h1 class="page-title">Frameworks</h1>
+        </div>
+      `,
+    },
+    {
+      html: `
+        <h1>Frameworks</h1>
+        <div class="row">
+          <div class="col-50">
+
+          <ul>
+            <li>Angular
+            </li>
+
+            <li>React.js
+            </li>
+
+            <li>Vite
+            </li>
+
+            <li>NestJS
+            </li>
+
+            <li>Swagger
+            </li>
+
+            <li>OpenAPI
+            </li>
+
+            <li>Next.js
+            </li>
+
+            <li>LoopBack
+            </li>
+
+            <li>Lucene
+            </li>
+
+            <li>RxJS
+            </li>
+            
+
+            <li>PHP
+            </li>
+          </ul>
+          <p>
+          Frameworks change, but the core ideas carry over.
+          I have built interfaces for 20 years, across Angular, React, Vite, NestJS, LoopBack, Feathers, Django, Next.js, and PHP.
+          Today I reach for React first.
+          Its state handling is less verbose than Angular’s, and JSX asks you to learn very few framework-specific ideas.
+          It keeps web code close to React Native, and it is the framework AI tools write best.
+          The poker site taught me the most about testing.
+          Real-time games break in ways normal apps don’t, so it got more testing than anything else I have built.
+          </p>
+          </div>
+          <div class="col-50 center">
           <div class="framework-scaffold" aria-hidden="true">
             <span></span>
             <span></span>
@@ -13,68 +69,8 @@ export const webPlatforms = {
             <span></span>
             <span></span>
           </div>
-          <h1 class="page-title">Frameworks</h1>
-        </div>
-      `,
-    },
-    {
-      timer: 4200,
-      html: `
-        <div class="stage-content stage-stretch framework-spectrum">
-          <p class="stage-label">Across the web stack</p>
-          <div class="framework-spectrum__grid">
-            <section>
-              <p class="stage-label framework-side">Front end</p>
-              <h2>Angular<br>React<br>Vite</h2>
-              <p>Components, state, rendering, composition.</p>
-            </section>
-            <section>
-              <p class="stage-label framework-side">Back end + full stack</p>
-              <div class="framework-names">
-                <span>NestJS</span>
-                <span>LoopBack</span>
-                <span>Feathers</span>
-                <span>Django</span>
-                <span>Next.js</span>
-                <span>Smarty / PHP</span>
-              </div>
-              <p>Routes, services, data, validation, delivery.</p>
-            </section>
+
           </div>
-        </div>
-      `,
-    },
-    {
-      timer: 3800,
-      html: `
-        <div class="stage-content stage-stretch framework-common">
-          <p class="stage-label">Different syntax. Shared foundations.</p>
-          <div class="framework-common__map">
-            <span>routing</span>
-            <span>state</span>
-            <span>components</span>
-            <strong>Common<br>concepts</strong>
-            <span>services</span>
-            <span>data flow</span>
-            <span>validation</span>
-            <span>rendering</span>
-            <span>testing</span>
-          </div>
-        </div>
-      `,
-    },
-    {
-      html: `
-        <div class="stage-content stage-start framework-finale">
-          <p class="stage-label">Wide experience. Durable understanding.</p>
-          <h2>
-            Frameworks change.
-            <strong>The concepts transfer.</strong>
-          </h2>
-          <p>
-            I work comfortably across the stack because I understand the
-            patterns beneath the tools.
-          </p>
         </div>
       `,
     },

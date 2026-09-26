@@ -1,12 +1,46 @@
+const architectureLayers = [
+  { label: 'schema.prisma', note: 'Model defined once' },
+  { label: 'DMMF', note: 'Normalized metadata' },
+  { label: 'OpenAPI', note: 'The contract' },
+  { label: 'Server + SDK', note: 'Generated, never retyped' },
+  { label: 'Hooks → Pages', note: 'Typed all the way up' },
+];
+
+const architectureResources = [
+  {
+    kind: 'GitHub',
+    title: 'ssot-codegen',
+    description: 'Turns a Prisma schema into SDKs, API scaffolding, and a complete UI.',
+    href: 'https://github.com/nick227/ssot-codegen',
+  },
+  {
+    kind: 'Medium',
+    title: 'SSOT codegen pipeline with Prisma DMMF templates',
+    description: 'How the generator reads the schema and writes every routine layer.',
+    href: 'https://medium.com/@nick.rios/ssot-codegen-pipeline-with-prisma-backed-dmmf-templates-e0fc152d469f',
+  },
+  {
+    kind: 'GitHub',
+    title: 'nick-webapp-factory',
+    description: 'A Claude skill that builds full-stack apps on an OpenAPI-first spine.',
+    href: 'https://github.com/nick227/nick-webapp-factory-skill',
+  },
+  {
+    kind: 'Medium',
+    title: 'A Claude skill for consistent system designs',
+    description: 'Why I packaged my architecture as a skill, and how a build runs.',
+    href: 'https://medium.com/javascript-in-plain-english/i-wrote-a-claude-skill-to-produce-consistent-high-quality-system-designs-every-time-that-saves-187ac0e4e13e',
+  },
+];
+
 export const architecture = {
     backgroundColor: '#1746d1',
     color: '#ffffff',
     screens: [
       {
-        timer: 3600,
+        timer: 600,
         html: `<div class="stage-content">
             <h1 class="page-title stage-layer">Architecture</h1>
-            <div class="stage-center">
               <div class="cube-wrap">
                 <div class="cube">
                   <div class="cube__face cube__face--front"></div>
@@ -17,35 +51,44 @@ export const architecture = {
                   <div class="cube__face cube__face--bottom"></div>
                 </div>
               </div>
-            </div>
           </div>`
-      }, 
+      },
       {
         html: `
-          <div class="stage-content">
-            <div>
-              <h1>Performance that scales</h1>
+          <h1>Architecture</h1>
+          <div class="row row-stack">
+            <div class="col-50">
               <p>
-              My approach is declarative and model-first. I build streamlined systems that conserve resources and reduces operational costs. I believe in YAGNI, avoid boilerplate and treat the database as critical infrastructure.
+              I build systems from the data model up.
+              The model is defined once, in Prisma schema.
+              Everything routine is generated from it: validators, routes, the OpenAPI contract, a typed client SDK, and query hooks.
+              When the model changes, every layer changes with it.
+              Most teams overbuild, and hand-maintained glue code is where the bugs live.
+              Removing that code removes a whole class of errors.
               </p>
 
-              <ul>
-                <li><h3>Cisco — Single Pane of Glass</h3> 
-                <p>Unified microservices, Elasticsearch, Neo4j, operational data</p>
-                </li>
-
-                <li><h3>AI orchestration</h3>
-                <p>Built platform supporting 100+ LLM-powered agents and APIs</p>
-                </li>
-
-                <li><h3>Enterprise CMS</h3> 
-                <p>Consolidated major publishers onto shared systems at scale</p>
-                </li>
+              <h3 class="mt-6">Read it, run it</h3>
+              <ul class="resource-cards">
+                ${architectureResources.map(resource => `
+                  <li>
+                    <a href="${resource.href}" target="_blank" rel="noopener">
+                      <span class="resource-cards__kind">${resource.kind}</span>
+                      <strong>${resource.title}</strong>
+                      <span>${resource.description}</span>
+                    </a>
+                  </li>
+                `).join('')}
               </ul>
-
-              <p>
-              I am experienced sizing and delivering on requests for various scales and build up from zero cost to multi-million dollar systems. I have experience with both monolithic and microservice architectures, and I am comfortable working with back-end systems and technologies.
-              </p>
+            </div>
+            <div class="col-50 center">
+              <ol class="arch-spine" aria-label="Generation pipeline, from schema to pages">
+                ${architectureLayers.map((layer, index) => `
+                  <li style="--layer: ${index}">
+                    <strong>${layer.label}</strong>
+                    <span>${layer.note}</span>
+                  </li>
+                `).join('')}
+              </ol>
             </div>
           </div>
         `,

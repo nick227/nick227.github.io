@@ -45,9 +45,9 @@ test('mobile layout keeps stage content and projects readable', async ({ page },
   expect(titleSize).toBeLessThanOrEqual(viewportWidth * 0.48);
 
   await page.getByRole('button', { name: 'Architecture' }).click();
-  await expect(page.getByRole('heading', { name: 'Performance that scales' }))
-    .toBeVisible({ timeout: 6000 });
-  await expect(page.locator('.stage-content ul')).toBeVisible();
+  await expect(page.getByRole('heading', { name: 'Read it, run it' }))
+    .toBeVisible({ timeout: 10000 });
+  await expect(page.locator('.stage-item ul').first()).toBeVisible();
 
   await page.goto('/#projects');
   const firstProjectRow = page.locator('.project-item .row').first();

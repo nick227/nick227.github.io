@@ -1,5 +1,5 @@
 body {
-  color: var(--view-color, var(--color-txt-primary));
+  color: var(--color-txt-primary);
   font-family: var(--font-sans);
   -webkit-font-smoothing: antialiased;
 }
