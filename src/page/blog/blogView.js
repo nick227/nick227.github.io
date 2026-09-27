@@ -108,9 +108,20 @@ function renderBlog(articles) {
   return `
     <section class="blog-index" data-blog-index>
       <h2 class="blog-heading" data-blog-index-title tabindex="-1">Blog</h2>
-      <ol class="blog-list">
-        ${articles.map(renderBlogRow).join('')}
-      </ol>
+      <div class="blog-layout">
+        <div class="blog-feed">
+          <ol class="blog-list">
+            ${articles.map(renderBlogRow).join('')}
+          </ol>
+        </div>
+        <aside class="blog-author" aria-label="Author">
+          <p class="blog-author-mark" aria-hidden="true">N</p>
+          <div class="blog-author-copy">
+            <p class="blog-author-name">nick<span>rios</span></p>
+            <p class="blog-author-role">Senior software engineer &amp; AI architect</p>
+          </div>
+        </aside>
+      </div>
     </section>
 
     <article class="blog-reader" data-blog-reader aria-labelledby="blog-reader-title" hidden>
@@ -129,26 +140,37 @@ function renderBlog(articles) {
 }
 
 function renderBlogRow(article) {
+  const preview = articlePreview(article.document);
+  const dek = preview.dek
+    ? `<span class="blog-row-dek">${escapeHtml(preview.dek)}</span>`
+    : '';
+
   return `
     <li>
       <a class="blog-row" href="${articleHref(article.slug)}">
-        <span>${escapeHtml(article.title)}</span>
-        <span aria-hidden="true">↗</span>
+        <span class="blog-row-title">${escapeHtml(article.title)}</span>
+        <span class="blog-row-time">${preview.minutes} min</span>
+        ${dek}
       </a>
     </li>`;
 }
 
-function articleMeta(documentHtml = '') {
+function articlePreview(documentHtml = '') {
   const template = document.createElement('template');
   template.innerHTML = documentHtml;
   const text = template.content.textContent || '';
   const wordCount = text.split(/\s+/).filter(Boolean).length;
-  const readingTime = Math.max(
-    1,
-    Math.ceil(wordCount / WORDS_PER_MINUTE),
-  );
+  const paragraph = template.content.querySelector('p');
 
-  return `Nick Rios · ${readingTime} min read`;
+  return {
+    minutes: Math.max(1, Math.ceil(wordCount / WORDS_PER_MINUTE)),
+    dek: (paragraph?.textContent || '').replace(/\s+/g, ' ').trim(),
+  };
+}
+
+function articleMeta(documentHtml = '') {
+  const { minutes } = articlePreview(documentHtml);
+  return `Nick Rios · ${minutes} min read`;
 }
 
 function escapeHtml(value) {
