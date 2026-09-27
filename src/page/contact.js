@@ -168,7 +168,7 @@ export class Contact {
     this.#showFeedback();
 
     if (fieldValue(formData, '_honey')) {
-      this.#setStatus(generation, 'Message sent', false);
+      this.#setStatus(generation, 'Sent', false);
       return;
     }
 
@@ -191,7 +191,7 @@ export class Contact {
       });
       const result = await response.json();
       const rejected = !response.ok || result.success === 'false' || result.success === false;
-      this.#setStatus(generation, rejected ? failureMessage(result) : 'Message sent', rejected);
+      this.#setStatus(generation, rejected ? failureMessage(result) : 'Sent', rejected);
     } catch {
       this.#setStatus(generation, "Didn't send. Try again.", true);
     }
@@ -203,17 +203,27 @@ export class Contact {
     view.setAttribute('role', 'status');
     view.setAttribute('aria-busy', 'true');
 
-    const status = document.createElement('h2');
+    const heading = document.createElement('h2');
+    heading.className = 'contact-heading';
+    heading.textContent = 'Message sent';
+
+    const copy = document.createElement('div');
+    copy.className = 'contact-copy';
+    ['Thank you for writing.', "I'll read it and respond.", 'Send another note if you left something out.'].forEach(line => {
+      const paragraph = document.createElement('p');
+      paragraph.textContent = line;
+      copy.append(paragraph);
+    });
+
+    const progress = document.createElement('div');
+    progress.className = 'contact-progress';
+
+    const status = document.createElement('p');
     status.className = 'contact-status is-pending';
     const spinner = document.createElement('span');
     spinner.className = 'contact-spinner';
     spinner.setAttribute('aria-hidden', 'true');
     status.append(spinner);
-
-    const thanks = document.createElement('p');
-    thanks.className = 'contact-thanks';
-    thanks.hidden = true;
-    thanks.textContent = "Thank you. I'll respond.";
 
     const again = document.createElement('button');
     again.className = 'contact-again';
@@ -221,7 +231,8 @@ export class Contact {
     again.textContent = 'Send another';
     again.addEventListener('click', this.#again);
 
-    view.append(status, thanks, again);
+    progress.append(status, again);
+    view.append(heading, copy, progress);
     this.#element.querySelector('.contact-form').replaceWith(view);
   }
 
@@ -235,7 +246,8 @@ export class Contact {
     status.classList.remove('is-pending');
     status.classList.toggle('is-error', failed);
     status.textContent = text;
-    view.querySelector('.contact-thanks').hidden = failed;
+    view.querySelector('.contact-copy').hidden = failed;
+    if (failed) view.querySelector('.contact-heading').textContent = 'Not sent';
   }
 
   #again = () => {
