@@ -164,7 +164,7 @@ export class Contact {
     const message = fieldValue(formData, 'message');
 
     if (fieldValue(formData, '_honey')) {
-      this.#showSuccess(name);
+      this.#showSuccess(name, topic, message);
       return;
     }
 
@@ -201,7 +201,7 @@ export class Contact {
         return;
       }
 
-      this.#showSuccess(name);
+      this.#showSuccess(name, topic, message);
     } catch {
       button.disabled = false;
       error.hidden = false;
@@ -209,10 +209,32 @@ export class Contact {
     }
   };
 
-  #showSuccess(name) {
-    const note = document.createElement('p');
-    note.className = 'contact-success';
-    note.textContent = `Sent, ${name}.`;
-    this.#element.querySelector('.contact-form').replaceWith(note);
+  #showSuccess(name, topic, message) {
+    const sent = document.createElement('div');
+    sent.className = 'contact-form contact-success';
+    sent.setAttribute('role', 'status');
+
+    const heading = document.createElement('h2');
+    heading.className = 'contact-heading';
+    heading.textContent = `Sent, ${name}.`;
+
+    const lead = document.createElement('p');
+    lead.className = 'contact-lead';
+    lead.textContent = "It's in my inbox.";
+
+    const receipt = document.createElement('div');
+    receipt.className = 'contact-receipt';
+
+    const topicLine = document.createElement('p');
+    topicLine.className = 'contact-receipt-topic';
+    topicLine.textContent = topic;
+
+    const body = document.createElement('p');
+    body.className = 'contact-receipt-body';
+    body.textContent = message;
+
+    receipt.append(topicLine, body);
+    sent.append(heading, lead, receipt);
+    this.#element.querySelector('.contact-form').replaceWith(sent);
   }
 }
