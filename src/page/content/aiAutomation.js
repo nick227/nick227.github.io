@@ -1,7 +1,7 @@
 const agentOutputs = [
-  { kind: 'Text', endpoint: 'translate_to_spanish' },
-  { kind: 'HTML', endpoint: 'generate_html' },
-  { kind: 'Image', endpoint: 'icon_8bit' },
+  { kind: 'Text', endpoint: 'transform' },
+  { kind: 'HTML', endpoint: 'generate' },
+  { kind: 'Image', endpoint: 'render' },
 ];
 
 const aiResources = [
@@ -61,7 +61,7 @@ export const aiAutomation = {
           <h1>Automation</h1>
           <div class="row row-stack">
             <div class="col-50">
-              <p class="page-lead">Every interface is becoming a conversation.</p>
+              <p class="page-lead">Every interface is a conversation</p>
               <p>
               I believe most software is heading toward AI oversight.
               At Digital Harbor I built the platform to get us there.

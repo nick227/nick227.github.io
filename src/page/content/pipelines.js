@@ -27,7 +27,7 @@ const pipelineResources = [
   },
   {
     kind: 'Blog',
-    title: 'n8n is pretty cool, and why I hate it',
+    title: 'n8n is cool and why I hate it',
     description: 'Visual automation for solo projects, and why backups matter.',
     href: '#article/actually-n8n-is-pretty-cool-and-why-i-hate-it',
   },
@@ -58,13 +58,11 @@ export const pipelines = {
         <h1>Pipelines</h1>
         <div class="row row-stack">
           <div class="col-50">
-            <p class="page-lead">I build multilevel pipelines to transform and deliver data.</p>
+            <p class="page-lead">I build pipelines that solve problems at scale</p>
             <p>
             Data arrives from many places, in many shapes.
             A good pipeline can be taken apart and put together again.
-            At Cisco, Splunk agents on thousands of devices streamed through Kafka and a Scala analysis stage.
-            It all landed in the Elasticsearch layer I owned, which held two terabytes even on our development system.
-            I owned the schema, the APIs, and the front-end support engineers used to act on tickets.
+            At Cisco, Splunk agents on thousands of devices streamed through Kafka but every system no matter how small is a pipeline. My goal is make the parts we need to change quickly ephemeral and the foundation robust and reliable.
             </p>
 
             <h3 class="mt-6">Read it</h3>

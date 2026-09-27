@@ -10,7 +10,6 @@
 .home {
   display: grid;
   grid-template-rows: 1fr;
-  margin-bottom: 152px !important;
   background: var(--view-background, var(--color-bg-deep));
   color: var(--view-color, var(--color-txt-primary));
   transition:

@@ -61,6 +61,10 @@ ul {
   list-style: disc;
 }
 
+li {
+  margin-bottom: 0.5rem;
+}
+
 .align-right {
   justify-content: flex-end;
   display: flex;

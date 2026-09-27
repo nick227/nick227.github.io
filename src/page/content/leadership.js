@@ -15,30 +15,16 @@ export const leadership = {
       <h1>Leadership</h1>
         <div class="row">
           <div class="col-50">
-          <h3>Track record</h3>
-
-            <ul>
-              <li><h3>Digital Harbor — Team lead</h3>
-              <p>Led three product initiatives and was chosen for the company-wide leadership retreat.</p>
-              </li>
-
-              <li><h3>Cisco — Local and offshore teams</h3>
-              <p>Led teams in Austin and overseas, and ran hiring, interviews, and the team’s scrum.</p>
-              </li>
-
-              <li><h3>Digital Harbor — AI innovation calls</h3>
-              <p>Hosted weekly calls where we shared AI stories, watched demos, and talked through what mattered for our products.</p>
-              </li>
-            </ul>
             <p>
-            I lead by example and take on the hardest or most cross-cutting work myself.
-            Sometimes a team isn’t stuck on skill; it is waiting for someone to go first.
-            At Digital Harbor, two Angular products had to match, and nobody owned the shared library that would make that possible.
-            I started it, and the team built on it.
-            I break big goals into small pieces and make hard tradeoffs visible.
-            Ask the people who have worked with me, and they will tell you I have lots of opinions.
-            I share them openly, so the team always knows where I stand and can push back.
+            I lead by example and take on the hardest or cross-cutting work myself. I create environment of shared success and accountability through good communication. It starts with a foundation of reaching out and then showing up. You have to go into the trenches to earn people's trust. The stickiest issue is teams getting stuck in bad habits. Which could mean always responding off their back-foot and not being proactive to business needs. A well designed and running technical team should be so far out ahead of the business that they are able to offer options and pivot easily.
+            
             </p>
+            <h3 class="mt-6">Keys to success</h3>
+            <ul>
+              <li><strong>Communication:</strong> people relationships are the most valuable asset</li>
+              <li><strong>Collaboration:</strong> give people ownership of their own ideas and solutions</li>
+              <li><strong>Trust:</strong> earn it by being consistent and reliable</li>
+            </ul>
           </div>
           <div class="col-50 center">
             <div class="leadership-pace" aria-hidden="true">

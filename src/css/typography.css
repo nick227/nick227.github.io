@@ -6,6 +6,8 @@ body {
 
 .page-title,
 .site-title {
+  position: relative;
+  z-index: 1;
   font-size: clamp(5.2rem, 14vw, 17rem);
   font-weight: 700;
   letter-spacing: -0.07em;
@@ -20,7 +22,6 @@ body {
 .intro-copy > .link,
 .work-grid .link {
   font-size: 1rem;
-  font-weight: 700;
   line-height: 1.15;
 }
 

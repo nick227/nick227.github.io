@@ -17,7 +17,7 @@
 }
 
 .resume-header h2 {
-  font-size: clamp(2.6rem, 7vw, 4.5rem);
+  font-size: 6rem;
   letter-spacing: -0.05em;
   line-height: 0.95;
 }
@@ -36,7 +36,7 @@
 
 .resume-layout {
   display: grid;
-  grid-template-columns: minmax(0, 1.9fr) minmax(260px, 1fr);
+  grid-template-columns: 50% 49%;
   gap: 32px 56px;
   margin-top: 28px;
 }
@@ -230,24 +230,50 @@
   }
 }
 
-/* Intro countdown: drains over the 3s home timer, then the stage shows the resume. */
-.home-countdown {
-  width: 36px;
-  height: 36px;
-  transform: rotate(-90deg);
+/* Intro: cyan and red copies of the name converge. Overlap reads as the solid word. */
+.home-content {
+  isolation: isolate;
+  background: #fff;
 }
 
-.home-countdown circle {
-  fill: none;
-  stroke: currentColor;
-  stroke-width: 3;
-  stroke-dasharray: 100;
-  stroke-dashoffset: 0;
-  animation: home-countdown 3s linear forwards;
+.home-title__ink {
+  color: transparent;
 }
 
-@keyframes home-countdown {
+.home-title__eye {
+  position: absolute;
+  inset: 0;
+  mix-blend-mode: multiply;
+  user-select: none;
+  animation: home-register 1.7s var(--ease-expressive) forwards;
+}
+
+.home-title__eye--cyan {
+  color: #00ffff;
+  --eye: -1;
+}
+
+.home-title__eye--red {
+  color: #ff0000;
+  --eye: 1;
+}
+
+@keyframes home-register {
+  from {
+    transform: translateX(calc(var(--eye) * clamp(7px, 0.85vw, 12px)));
+  }
+
   to {
-    stroke-dashoffset: 100;
+    transform: translateX(0);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .home-title__ink {
+    color: inherit;
+  }
+
+  .home-title__eye {
+    display: none;
   }
 }

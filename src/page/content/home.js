@@ -3,7 +3,7 @@ const resumeSummary = 'Principal engineer building enterprise platforms and AI s
 const resumeImpact = [
   { value: '20 yrs', label: 'Enterprise platforms' },
   { value: '100+', label: 'AI endpoints' },
-  { value: '60+', label: 'TV stations' },
+  { value: '30+', label: 'Online projects' },
   { value: '10M+', label: 'Page views' },
 ];
 
@@ -11,10 +11,10 @@ const resumeJobList = [
   {
     company: 'Digital Harbor',
     logos: [{ name: 'Digital Harbor', mark: 'DH', color: '#0f4c81' }],
-    title: 'Team Lead & AI Architect',
+    title: 'Team Lead',
     dates: '2020 – 2025',
     summary:
-      'Team lead on three product initiatives and architect of the company’s move to AI. Built the agent platform behind 100+ AI endpoints. Added AI review to every GitLab check-in, AI search over company data, and a shared Angular library.',
+      'Team lead on multiple product initiatives including ui-style-library and Set-Forms. Champion of the company’s move to AI. Built agent platform behind 100+ AI endpoints.',
   },
   {
     company: 'Cisco Systems',
@@ -22,15 +22,15 @@ const resumeJobList = [
     title: 'Senior Engineer',
     dates: '2012 – 2020',
     summary:
-      'Took an enterprise alerting platform from internal launch to public release and a global innovation award. Owned its schema, APIs, and UI, fed by Splunk from thousands of devices. Led teams in Austin and offshore, and ran hiring and scrum.',
+      'Launched enterprise network management platform from internal to public release, earned global innovation award. Owned schema, APIs, and UI. Running multiple teams.',
   },
   {
     company: 'Nexstar Broadcasting',
     logos: [{ name: 'Nexstar', mark: 'N', color: '#d71920' }],
-    title: 'Web Platforms',
+    title: 'System Engineer',
     dates: '2005 – 2009',
     summary:
-      'Moved more than 60 local TV station websites onto one shared, multi-tenant platform, replacing dozens of separate sites. The network served over a million visitors a day and more than 10 million page views.',
+      'Launched more than 60 local TV station websites onto a shared, multi-tenant platform. The network served over a million views a day at peak traffic.',
   },
   {
     company: 'Impremedia · Microsoft · AT&T',
@@ -42,7 +42,7 @@ const resumeJobList = [
     title: 'Earlier roles',
     dates: '2001 – 2012',
     summary:
-      'Consolidated major newspaper publishers onto one digital content system at Impremedia, often as a team of two. Started in telecom operations at AT&T and tech support at Microsoft, earning CNA and Network+.',
+      'Consolidated major newspaper publishers onto one dms at Impremedia. Started in telecom operations at AT&T and Sprint, earning CNA and Network+.',
   },
 ];
 
@@ -51,10 +51,6 @@ const resumeSkills = [
   'AI agents & RAG',
   'LLM automation',
   'Multi-tenant platforms',
-  'Data pipelines',
-  'Angular · React',
-  'Node · APIs',
-  'Team leadership',
 ];
 
 export const home = {
@@ -62,13 +58,14 @@ export const home = {
   color: '#050505',
   screens: [
     {
-      timer: 3000,
+      timer: 2300,
       html: `
         <div class="stage-content home-content">
-          <h1 class="site-title">Nick Rios</h1>
-          <svg class="home-countdown mt-6" viewBox="0 0 36 36" role="img" aria-label="Resume opens shortly">
-            <circle cx="18" cy="18" r="16" pathLength="100"></circle>
-          </svg>
+          <h1 class="site-title home-title">
+            <span class="home-title__ink">Nick Rios</span>
+            <span class="home-title__eye home-title__eye--cyan" aria-hidden="true">Nick Rios</span>
+            <span class="home-title__eye home-title__eye--red" aria-hidden="true">Nick Rios</span>
+          </h1>
         </div>
       `,
     },
@@ -77,13 +74,13 @@ export const home = {
         <div class="resume-content">
           <header class="resume-header">
             <div>
-              <h2>Nick Rios</h2>
-              <p>${resumeSummary}</p>
+              <h2>Nicholas J. Rios</h2>
             </div>
             <p class="resume-contacts">
-              <a class="link" href="mailto:nicholas.jay.rios@gmail.com">nicholas.jay.rios@gmail.com</a>
-              <a class="link" href="https://www.linkedin.com/in/nick-rios" target="_blank" rel="noopener">LinkedIn</a>
-              <a class="link" href="https://github.com/nick227" target="_blank" rel="noopener">GitHub</a>
+              <a class="link" href="mailto:nicholas.jay.rios@gmail.com">email</a>
+              <a class="link" href="https://www.linkedin.com/in/nick-rios" target="_blank" rel="noopener">linkedIn</a>
+              <a class="link" href="https://github.com/nick227" target="_blank" rel="noopener">gitHub</a>
+              <a class="link resume-pdf" href="/nick-rios.pdf" target="_blank" download>resume</a>
             </p>
           </header>
 
@@ -106,11 +103,13 @@ export const home = {
             </section>
 
             <aside class="resume-aside">
+            
+            <iframe width="460" height="260" src="https://www.youtube.com/embed/fiF5p3SrKfs?si=OpmS970GRrYhSIZ0" title="YouTube video player" frameborder="0" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe>
+
               <ul class="resume-impact">
                 ${resumeImpact.map(item => `<li><strong>${item.value}</strong><span>${item.label}</span></li>`).join('')}
               </ul>
               <p class="resume-skills">${resumeSkills.map(skill => skill.replaceAll(' ', '&nbsp;')).join(' · ')}</p>
-              <a class="link resume-pdf" href="/nick-rios.pdf" target="_blank" download>Full resume (PDF)</a>
             </aside>
           </div>
         </div>
