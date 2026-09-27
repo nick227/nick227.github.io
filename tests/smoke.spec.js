@@ -9,7 +9,10 @@ test('Home resets a previously selected stage view', async ({ page }) => {
   await page.locator('.site-navigation a[href="#home"]').click();
 
   await expect(page.locator('body')).toHaveClass(/view-home/);
-  await expect(page.getByRole('heading', { name: 'Nick Rios' })).toBeVisible();
+
+  const homeTitle = page.locator('#home .home-title');
+  await expect(homeTitle).toBeVisible();
+  await expect(homeTitle).toHaveAccessibleName('Nick Rios');
 });
 
 test('an article opens in reading mode and restores the index', async ({ page }) => {
