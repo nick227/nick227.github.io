@@ -1,10 +1,10 @@
 export const contactEndpoint = 'https://formsubmit.co/ajax/nicholas.jay.rios@gmail.com';
 
 export const contactIntents = [
-  { id: 'hiring', label: 'Hiring', prompt: "I'm hiring." },
-  { id: 'collaborate', label: 'Collaborate', prompt: "I'm looking for a collaborator." },
-  { id: 'idea', label: 'An idea', prompt: 'I have an idea.' },
-  { id: 'questions', label: 'Questions', prompt: 'I have a question.' },
+  { id: 'hiring', label: 'I am hiring for a corporation', prompt: 'I am hiring for a corporation.' },
+  { id: 'collaborate', label: 'I am looking for a collaborator', prompt: 'I am looking for a collaborator.' },
+  { id: 'idea', label: 'I have a great idea', prompt: 'I have a great idea.' },
+  { id: 'questions', label: 'Questions or comments', prompt: 'Questions or comments.' },
 ];
 
 export const contactLinks = [
