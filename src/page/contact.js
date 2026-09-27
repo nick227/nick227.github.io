@@ -26,8 +26,8 @@ function sectionMarkup() {
       </aside>
       <form class="contact-form" method="POST" action="${contactEndpoint}">
         <header class="contact-intro">
-          <h2 class="contact-heading">Straight to me</h2>
-          <p class="contact-lead">Pick the line that fits, then leave your name and a message.</p>
+          <h2 class="contact-heading">Nick Rios</h2>
+          <p class="contact-lead">Hello and thanks for stopping by.</p>
         </header>
         <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="topic" value="">
@@ -50,6 +50,14 @@ function sectionMarkup() {
       </form>
     </div>
   `;
+}
+
+function failureMessage(result) {
+  const message = result && typeof result.message === 'string' ? result.message : '';
+  if (message.toLowerCase().includes('activation')) {
+    return 'Check nicholas.jay.rios@gmail.com for the FormSubmit activation email, open it, then send again.';
+  }
+  return message || "Didn't send. Try again.";
 }
 
 function fieldValue(formData, name) {
@@ -184,9 +192,13 @@ export class Contact {
         }),
       });
       const result = await response.json();
+      const rejected = !response.ok || result.success === 'false' || result.success === false;
 
-      if (!response.ok || result.success === 'false' || result.success === false) {
-        throw new Error('FormSubmit rejected the message');
+      if (rejected) {
+        button.disabled = false;
+        error.hidden = false;
+        error.textContent = failureMessage(result);
+        return;
       }
 
       this.#showSuccess(name);
