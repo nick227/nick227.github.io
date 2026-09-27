@@ -115,10 +115,11 @@ function renderBlog(articles) {
           </ol>
         </div>
         <aside class="blog-author" aria-label="Author">
-          <p class="blog-author-mark" aria-hidden="true">N</p>
+          <img class="blog-author-portrait" src="/avatar.png" alt="">
           <div class="blog-author-copy">
-            <p class="blog-author-name">nick<span>rios</span></p>
-            <p class="blog-author-role">Senior software engineer &amp; AI architect</p>
+            <p class="blog-author-name">Nick Rios</p>
+            <p class="blog-author-bio">Creative and experienced full-stack engineer with passion for building scalable and efficient systems.</p>
+            <p class="blog-author-place">Austin, TX</p>
           </div>
         </aside>
       </div>
