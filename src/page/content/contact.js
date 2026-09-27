@@ -8,7 +8,7 @@ export const contactIntents = [
 ];
 
 export const contactLinks = [
-  { label: 'Email', href: 'mailto:nicholas.jay.rios@gmail.com' },
+  { label: 'nicholas.jay.rios@gmail.com', href: 'mailto:nicholas.jay.rios@gmail.com' },
   { label: 'LinkedIn', href: 'https://www.linkedin.com/in/nick-rios' },
   { label: 'GitHub', href: 'https://github.com/nick227' },
   { label: 'YouTube', href: 'https://www.youtube.com/@nickjayrios' },

@@ -20,7 +20,10 @@ function sectionMarkup() {
 
   return `
     <div class="contact-panel">
-      <h2 class="contact-heading">Contact</h2>
+      <header class="contact-intro">
+        <h2 class="contact-heading">Say hello</h2>
+        <p class="contact-lead">Tell me what brought you here. I'll write back.</p>
+      </header>
       <form class="contact-form" method="POST" action="${contactEndpoint}">
         <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="topic" value="">
@@ -41,7 +44,10 @@ function sectionMarkup() {
           </div>
         </div>
       </form>
-      <div class="contact-links">${contactLinks.map(linkMarkup).join('')}</div>
+      <aside class="contact-aside">
+        <img class="contact-portrait" src="/avatar.png" alt="Nick Rios">
+        <div class="contact-links">${contactLinks.map(linkMarkup).join('')}</div>
+      </aside>
     </div>
   `;
 }
