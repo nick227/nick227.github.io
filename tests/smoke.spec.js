@@ -52,8 +52,11 @@ test('mobile layout keeps stage content and projects readable', async ({ page },
   await expect(page.locator('.stage-item ul').first()).toBeVisible();
 
   await page.goto('/#projects');
-  const firstProjectRow = page.locator('.project-item .row').first();
-  await expect(firstProjectRow).toHaveCSS('flex-direction', 'column');
+  await expect(page.locator('.project-card').first()).toBeVisible();
+  const columns = await page.locator('.project-list').evaluate(element => (
+    getComputedStyle(element).gridTemplateColumns
+  ));
+  expect(columns.trim().split(/\s+/)).toHaveLength(1);
   await expect(page.locator('body')).toHaveJSProperty(
     'scrollWidth',
     await page.locator('body').evaluate(element => element.clientWidth),

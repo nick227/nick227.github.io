@@ -1,6 +1,7 @@
 export const projectsData = [
   {
     title: "Enterprise AI Agent Platform",
+    kind: "agents",
     subText: "Natural-language platform powering 100+ AI agents",
     paragraph: "Teams used this enterprise platform to create more than 100 AI agents and tools. It combined natural-language interfaces with reusable integrations and a delivery model adopted by three engineering teams.",
     keywords: ["LLMs", "AI Agents", "Natural Language", "Enterprise Platform"],
@@ -10,6 +11,7 @@ export const projectsData = [
   },
   {
     title: "AI Code Review Agent",
+    kind: "agents",
     subText: "Automated GitLab reviews delivered to Microsoft Teams",
     paragraph: "Triggered on every repository push, this AI agent summarized branch changes, reviewed the code, and generated actionable recommendations and suggestions. It automatically posted each review to Microsoft Teams, keeping the entire team informed while creating a rich, easily accessible history of development across every branch.",
     keywords: ["AI Agents", "GitLab", "Microsoft Teams", "Code Review"],
@@ -18,6 +20,7 @@ export const projectsData = [
   },
   {
     title: "Cisco Single Pane of Glass",
+    kind: "platforms",
     subText: "Unified data-center operations and alerting dashboard",
     paragraph: "This award-winning platform gave data-center operators one reliable view of fleet health. It unified microservice data, search, graph relationships, predictive alerts, and legacy ticketing systems.",
     keywords: ["Elasticsearch", "Neo4j", "Microservices", "Predictive Alerts"],
@@ -26,6 +29,7 @@ export const projectsData = [
   },
   {
     title: "Next-Generation Social Forms",
+    kind: "platforms",
     subText: "Visual multi-tenant form building platform",
     paragraph: "A WYSIWYG editor for building polished, data-rich forms. Teams could combine custom components, reusable templates, smart inputs, API integrations, and collaborative authoring workflows.",
     keywords: ["Angular", "TypeScript", "WYSIWYG", "Multi-tenant"],
@@ -35,6 +39,7 @@ export const projectsData = [
   },
   {
     title: "Nexstar Shared Web Platform",
+    kind: "platforms",
     subText: "Shared platform for 60+ TV stations",
     paragraph: "This shared web and CMS platform powered more than 60 television station sites. It connected newsroom and media systems while reliably serving over one million visitors in a single day.",
     keywords: ["CMS", "Web Platform", "Media Publishing", "High Traffic"],
@@ -43,6 +48,7 @@ export const projectsData = [
   },
   {
     title: "Impremedia Digital Asset Pipeline",
+    kind: "media",
     subText: "Centralized media pipeline for publishing systems",
     paragraph: "A central asset pipeline serving more than 10 newspaper and magazine systems. PHP and Smarty applications managed content backed by MySQL and other SQL data stores.",
     keywords: ["Digital Assets", "PHP", "MySQL", "Data Pipelines"],
@@ -51,6 +57,7 @@ export const projectsData = [
   },
   {
     title: "Enterprise Angular Component Library",
+    kind: "tools",
     subText: "Shared UI foundation for engineering teams",
     paragraph: "A reusable Angular and TypeScript component library shared across the organization. It standardized interface patterns and helped multiple teams deliver products faster.",
     keywords: ["Angular", "TypeScript", "Design System", "Component Library"],
@@ -59,6 +66,7 @@ export const projectsData = [
   },
   {
     title: "Image and Media Services",
+    kind: "media",
     subText: "Unified APIs for enterprise media providers",
     paragraph: "REST services gave applications one consistent interface for Google, Shutterstock, and other media vendors. This simplified integration with external image and media capabilities.",
     keywords: ["REST APIs", "Media", "Google", "Systems Integration"],
@@ -67,6 +75,7 @@ export const projectsData = [
   },
   {
     title: "Scrum RAG Assistant",
+    kind: "agents",
     subText: "Conversational search across operational archives",
     paragraph: "This RAG system organized hundreds of pages of inconsistent scrum updates in Pinecone. Product teams could then ask plain-language questions about status, blockers, and project history.",
     keywords: ["RAG", "Pinecone", "Vector Search", "Data Ingestion"],
@@ -76,6 +85,7 @@ export const projectsData = [
   },
   {
     title: "Shop-Shop",
+    kind: "commerce",
     subText: "Type-safe local food delivery marketplace",
     paragraph: "A multi-role marketplace for discovering local restaurants and kitchens. It supports vendor operations, Stripe Connect payments, reliable order states, realtime tracking, delivery zones, and multiple delivery providers.",
     keywords: ["React", "Fastify", "TypeScript", "Stripe Connect"],
@@ -85,6 +95,7 @@ export const projectsData = [
   },
   {
     title: "Poker Champ",
+    kind: "products",
     subText: "Realtime multiplayer poker with competitive bots",
     paragraph: "A server-authoritative poker game with realtime play, tournaments, and competitive bots. Sessions survive reconnects, while transactional bankrolls keep every chip movement accurate.",
     keywords: ["React Native", "Colyseus", "WebSockets", "Multiplayer"],
@@ -94,6 +105,7 @@ export const projectsData = [
   },
   {
     title: "CodeSchooler",
+    kind: "products",
     subText: "Editor-first JavaScript learning platform",
     paragraph: "A hands-on coding platform with guided learning tracks and a CodeMirror workspace. It safely runs browser code, grades work on the server, offers progressive hints, and includes tools for publishing curriculum.",
     keywords: ["React", "TypeScript", "CodeMirror", "Code Education"],
@@ -102,6 +114,7 @@ export const projectsData = [
   },
   {
     title: "AgentPress",
+    kind: "agents",
     subText: "Multi-agent research and publishing pipeline",
     paragraph: "A pipeline builder that gathers research from YouTube, Reddit, and RSS feeds. Configurable AI agents process the findings asynchronously and publish finished content to WordPress.",
     keywords: ["AI Agents", "Research Pipelines", "Fastify", "WordPress"],
@@ -111,6 +124,7 @@ export const projectsData = [
   },
   {
     title: "AutoImage",
+    kind: "media",
     subText: "Multi-provider AI image generation platform",
     paragraph: "A multi-user platform for generating large, varied image collections across AI providers. Queued batches, R2 storage, credit billing, galleries, moderation, and queue monitoring support the complete workflow.",
     keywords: ["AI Images", "Cloudflare R2", "Prisma", "Job Queues"],
@@ -120,6 +134,7 @@ export const projectsData = [
   },
   {
     title: "Screenplay to Video",
+    kind: "media",
     subText: "AI pipeline from screenplay to video",
     paragraph: "This production pipeline turns a story into narration, visual prompts, keyframes, animated clips, and cloned-voice audio. Independent Python services handle generation while preserving visual continuity between scenes.",
     keywords: ["Generative Video", "FastAPI", "Voice Cloning", "Media Pipelines"],
@@ -129,6 +144,7 @@ export const projectsData = [
   },
   {
     title: "Playlisted",
+    kind: "media",
     subText: "Immersive music discovery and creator platform",
     paragraph: "A music platform for exploring charts, playlists, genres, and radio-style stations. Its immersive player combines music with background visuals, video controls, and optional subtitles.",
     keywords: ["Music Streaming", "Playlists", "Radio", "Media"],
@@ -138,6 +154,7 @@ export const projectsData = [
   },
   {
     title: "Auto Dealer Sales Portal",
+    kind: "commerce",
     subText: "Inventory syndication across 18 sales platforms",
     paragraph: "An operations portal that prepares dealer inventory for 18 advertising and vehicle marketplaces. It validates readiness, generates feeds, tracks each vehicle, stores proof, and reports movement benchmarks.",
     keywords: ["TypeScript", "Fastify", "Data Feeds", "Automotive"],
@@ -146,6 +163,7 @@ export const projectsData = [
   },
   {
     title: "SSOT Codegen",
+    kind: "tools",
     subText: "Schema-driven full-stack application generator",
     paragraph: "A monorepo and CLI that turn one Prisma schema into a working application foundation. It generates APIs, typed SDKs, policy-aware data access, components, layouts, and complete CRUD interfaces.",
     keywords: ["TypeScript", "Prisma", "Code Generation", "SDKs"],
@@ -154,6 +172,7 @@ export const projectsData = [
   },
   {
     title: "nick-webapp-factory",
+    kind: "tools",
     subText: "Reusable skill for full-stack MVPs",
     paragraph: "A portable AI skill for building consistent Node.js and React applications. It packages spec-driven architecture, generated SDKs, reusable templates, setup automation, and phased delivery checks.",
     keywords: ["Agent Skills", "OpenAPI", "React", "Code Generation"],
@@ -163,6 +182,7 @@ export const projectsData = [
   },
   {
     title: "Automated NgRx Builder",
+    kind: "tools",
     subText: "NgRx generator for large Angular teams",
     paragraph: "A generator that turns a feature definition into consistent NgRx actions, reducers, selectors, effects, and registration hooks. It removes repetitive work while enforcing shared project conventions.",
     keywords: ["Angular", "NgRx", "TypeScript", "Code Generation"],
@@ -172,6 +192,7 @@ export const projectsData = [
   },
   {
     title: "Alpha Engine",
+    kind: "agents",
     subText: "Research-to-prediction market intelligence engine",
     paragraph: "A daily research pipeline that turns market data into ranked opportunities and recorded predictions. A FastAPI service exposes recommendations, supporting evidence, outcomes, accuracy, and system health.",
     keywords: ["Python", "FastAPI", "Market Intelligence", "Explainable AI"],
@@ -180,6 +201,7 @@ export const projectsData = [
   },
   {
     title: "Internet Dating",
+    kind: "products",
     subText: "Personalized social dating platform",
     paragraph: "A dating platform with rich profiles, social posts, quizzes, compatibility scores, matching, and realtime messaging. Background jobs prepare personalized recommendations and analytics before users need them.",
     keywords: ["React", "WebSockets", "Recommendations", "Background Jobs"],
@@ -188,6 +210,7 @@ export const projectsData = [
   },
   {
     title: "StreamYolo",
+    kind: "products",
     subText: "Live streaming, tipping, and private sessions",
     paragraph: "Creators broadcast through LiveKit while viewers chat and tip in realtime. Private sessions are billed by the minute, and an append-only token ledger records every purchase and payment.",
     keywords: ["LiveKit", "React", "Socket.IO", "Payments"],
@@ -196,6 +219,7 @@ export const projectsData = [
   },
   {
     title: "Run for President",
+    kind: "products",
     subText: "Civic platform where everyone can run",
     paragraph: "A civic community where every member can campaign, publish, vote, join parties, debate, and message others. A projected activity feed keeps the social experience fast and organized.",
     keywords: ["React", "Fastify", "PostgreSQL", "Social Platform"],
@@ -204,6 +228,7 @@ export const projectsData = [
   },
   {
     title: "Statman",
+    kind: "products",
     subText: "Verifiable live statistics for any sport",
     paragraph: "A mobile-first platform for athlete profiles and live statistics across any sport. Event sourcing preserves each update, while source, verification, and dispute records make performance data trustworthy.",
     keywords: ["TypeScript", "Event Sourcing", "Sports Data", "Fastify"],
@@ -212,6 +237,7 @@ export const projectsData = [
   },
   {
     title: "TimeGems",
+    kind: "products",
     subText: "Work tracking with AI teammates",
     paragraph: "A focused team workspace built around a simple start, pause, and stop timer. Members add work notes while AI agents summarize and review developer activity across each tenant.",
     keywords: ["TypeScript", "React", "Multi-tenant", "AI Agents"],
@@ -220,6 +246,7 @@ export const projectsData = [
   },
   {
     title: "YakyakAI",
+    kind: "agents",
     subText: "Goal-driven continuous AI work sessions",
     paragraph: "A planner-and-worker system that expands one goal into focused, high-value prompts. It queues each task safely, streams results live, and plans deeper work cycles until the user stops.",
     keywords: ["OpenAI", "React", "Job Queues", "Server-Sent Events"],
@@ -228,6 +255,7 @@ export const projectsData = [
   },
   {
     title: "Flashcard Academy",
+    kind: "products",
     subText: "AI-assisted flashcard publishing and discovery",
     paragraph: "A public learning community where creators generate, edit, and publish reusable flashcard sets. Profiles, categories, search, views, and likes support discovery, while n8n automates batch content workflows.",
     keywords: ["AI", "Flashcards", "Content Discovery", "n8n"],
@@ -237,6 +265,7 @@ export const projectsData = [
   },
   {
     title: "WP Advertising",
+    kind: "commerce",
     subText: "Cooperative ads for independent WooCommerce stores",
     paragraph: "A cooperative ad network built as a WordPress plugin and shared TypeScript service. It rotates ads between stores, monitors site health, caches responses, and reliably records impressions and clicks.",
     keywords: ["WordPress", "WooCommerce", "TypeScript", "Advertising"],
@@ -246,6 +275,7 @@ export const projectsData = [
   },
   {
     title: "Audio Visual Layer",
+    kind: "media",
     subText: "Studio for audio-reactive visual scenes",
     paragraph: "A creative studio for turning music into layered, audio-reactive visuals. Users can import tracks, add motion effects, save versions, share scenes, and export animated compositions.",
     keywords: ["React", "Web Audio", "Canvas", "Creative Tools"],
@@ -254,6 +284,7 @@ export const projectsData = [
   },
   {
     title: "AI Music Studio",
+    kind: "media",
     subText: "Local AI music generation and training",
     paragraph: "A local Python workspace for generating songs from prompts and lyrics. It organizes reference datasets, prepares training jobs, renders polished audio with ACE-Step, and offers fast CPU previews.",
     keywords: ["Python", "ACE-Step", "Generative Music", "Model Training"],
@@ -262,6 +293,7 @@ export const projectsData = [
   },
   {
     title: "ScriptPal",
+    kind: "media",
     subText: "AI-assisted screenplay writing and revision",
     paragraph: "A screenplay editor that uses conversational AI to draft and revise scripts. It preserves structured scenes, outlines, document history, autosave, and the writer's control over generated text.",
     keywords: ["JavaScript", "OpenAI", "Screenwriting", "Document Editing"],
@@ -270,6 +302,7 @@ export const projectsData = [
   },
   {
     title: "GDrive to YouTube",
+    kind: "media",
     subText: "Google Drive to YouTube publishing pipeline",
     paragraph: "A full-stack manager that synchronizes media from Google Drive into an organized library. Background workers render selected assets and publish them to connected YouTube channels.",
     keywords: ["Google Drive", "YouTube API", "TypeScript", "Job Queues"],
@@ -278,6 +311,7 @@ export const projectsData = [
   },
   {
     title: "LTX Local Video Service",
+    kind: "media",
     subText: "Local GPU video generation service",
     paragraph: "A CLI and persistent FastAPI service for LTX text-to-video and image-to-video generation. It keeps models loaded, validates jobs, reports progress and GPU health, and exports finished MP4 clips.",
     keywords: ["Python", "FastAPI", "LTX-Video", "CUDA"],
@@ -287,6 +321,7 @@ export const projectsData = [
   },
   {
     title: "Resume Chat",
+    kind: "agents",
     subText: "Conversational voice interface for my résumé",
     paragraph: "An interactive way to explore my professional background through text or voice. OpenAI provides context-aware answers, WebSockets stream the conversation, and ElevenLabs powers voice interaction.",
     keywords: ["OpenAI", "WebSockets", "ElevenLabs", "Conversational UI"],
@@ -295,6 +330,7 @@ export const projectsData = [
   },
   {
     title: "Trading Platform",
+    kind: "platforms",
     subText: "Trading dashboard with automated bot execution",
     paragraph: "A full-stack trading system with a React dashboard, Fastify API, and background worker. It processes market data, runs automated strategies, and uses contract and browser tests to protect critical workflows.",
     keywords: ["React", "Fastify", "Trading Bots", "Market Data"],
@@ -303,6 +339,7 @@ export const projectsData = [
   },
   {
     title: "Murder Mystery Dev Builder",
+    kind: "tools",
     subText: "AI pipeline for solvable mystery games",
     paragraph: "A 23-stage pipeline that turns one premise into a complete social deduction game. It generates the world, characters, secrets, clues, puzzles, and evidence, then validates that the mystery is solvable.",
     keywords: ["AI Agents", "Structured Generation", "Validation", "Game Design"],
@@ -311,6 +348,7 @@ export const projectsData = [
   },
   {
     title: "Murder Mystery Dinner Game",
+    kind: "products",
     subText: "Host-led social deduction dinner game",
     paragraph: "A dinner-party game with private, character-specific dashboards for every player. Hosts advance each act while the system reveals the right clues, puzzles, and story details at the right time.",
     keywords: ["React", "Fastify", "State Machines", "Multiplayer Games"],
@@ -319,6 +357,7 @@ export const projectsData = [
   },
   {
     title: "Crunkbox",
+    kind: "products",
     subText: "Independent music community and promotion platform",
     paragraph: "A solo-built community for artist profiles, events, music discovery, and real-world promotion. It grew to feature 80 artists and fostered relationships with musicians, studios, and venues across Austin.",
     keywords: ["PHP", "MySQL", "Music Community", "Artist Promotion"],
@@ -328,6 +367,7 @@ export const projectsData = [
   },
   {
     title: "Drako Motors",
+    kind: "media",
     subText: "Cinematic website for electric hypercars",
     paragraph: "An immersive marketing site for Drako Motors and its high-performance electric vehicles. Full-bleed photography, cinematic video, and fluid scroll transitions put the cars at center stage.",
     keywords: ["Web Design", "Webflow", "Video", "Automotive"],
@@ -336,6 +376,7 @@ export const projectsData = [
   },
   {
     title: "Prompt Stacker",
+    kind: "tools",
     subText: "Desktop prompt queue automation",
     paragraph: "A Windows utility for running prompt queues through desktop AI applications. It captures controls, schedules prompts, saves settings, tracks progress, and supports pausing, skipping, retrying, or canceling long runs.",
     keywords: ["Python", "PyAutoGUI", "Desktop Automation", "AI Workflows"],
@@ -344,6 +385,7 @@ export const projectsData = [
   },
   {
     title: "GPT-2 Book Fine-Tuning Pipeline",
+    kind: "tools",
     subText: "Book-length GPT-2 fine-tuning pipeline",
     paragraph: "A Python pipeline that turns PDF books into fine-tuned GPT-2 models. It cleans and chunks the text, trains and stores the model, then provides configurable text generation.",
     keywords: ["Python", "GPT-2", "Fine-tuning", "NLP"],
@@ -352,6 +394,7 @@ export const projectsData = [
   },
   {
     title: "AI Multimedia Cost Calculator",
+    kind: "tools",
     subText: "Generative media cost comparison tool",
     paragraph: "An interactive calculator for comparing generative AI costs across providers. It models text, image, video, avatar, and voice pricing by quality, dimensions, duration, and pipeline setup.",
     keywords: ["JavaScript", "Cost Modeling", "Generative AI", "Data Visualization"],
@@ -360,6 +403,7 @@ export const projectsData = [
   },
   {
     title: "Smart Assurance",
+    kind: "platforms",
     subText: "Cisco operations and correlation control panel",
     paragraph: "A hackathon prototype built over Cisco's automation and event-correlation platform. It gave operators one control panel for inspecting system state and assurance signals.",
     keywords: ["JavaScript", "Operations", "Event Correlation", "Dashboards"],
@@ -368,6 +412,7 @@ export const projectsData = [
   },
   {
     title: "NoComment",
+    kind: "tools",
     subText: "Distraction-free reading Chrome extension",
     paragraph: "A lightweight browser extension that hides comment sections on popular websites. Readers can focus on the article or media without the surrounding discussion feed.",
     keywords: ["Chrome Extension", "JavaScript", "Browser APIs", "Content Filtering"],
@@ -376,6 +421,7 @@ export const projectsData = [
   },
   {
     title: "5kbr",
+    kind: "tools",
     subText: "Experimental one-handed keyboard interface",
     paragraph: "A browser-based experiment in one-handed typing. Its five-key control scheme uses chorded inputs and a purpose-built visual interface to make compact text entry possible.",
     keywords: ["JavaScript", "Accessibility", "Input Design", "Experimental UI"],
