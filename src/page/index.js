@@ -5,9 +5,10 @@ const navigationElement = document.body;
 const homeElement = document.querySelector('#home');
 const stageElement = document.querySelector('.stage');
 const projectsElement = document.querySelector('#projects');
+const contactElement = document.querySelector('#contact');
 const blogElement = document.querySelector('#blog');
 
-if (!homeElement || !stageElement || !projectsElement || !blogElement) {
+if (!homeElement || !stageElement || !projectsElement || !contactElement || !blogElement) {
   throw new Error('One or more required page elements were not found.');
 }
 
@@ -20,6 +21,7 @@ const page = new Page({
   homeElement,
   stageElement,
   projectsElement,
+  contactElement,
   blogElement,
   initialView: INITIAL_VIEW,
 });

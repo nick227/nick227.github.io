@@ -3,13 +3,14 @@ import { Navigation } from './navigation.js';
 import { validatePageData } from './validatePageData.js';
 import { Projects } from './projects.js';
 import { Blog } from './blog.js';
+import { Contact } from './contact.js';
 import { attachShowMore } from './showMore.js';
 
 /**
  * Application composition root for the portfolio page.
  *
- * Page owns the lifetime of navigation, the animated stage, projects, the
- * blog router, and body-level visual state. Feature-specific rendering stays
+ * Page owns the lifetime of navigation, the animated stage, projects, contact,
+ * the blog router, and body-level visual state. Feature-specific rendering stays
  * in those collaborators so this class remains focused on coordination.
  */
 export class Page {
@@ -20,6 +21,7 @@ export class Page {
   #body;
   #blogElement;
   #projectsElement;
+  #contactElement;
 
   // Long-lived collaborators created or mounted by this page instance.
   #stage;
@@ -37,6 +39,7 @@ export class Page {
     homeElement,
     stageElement,
     projectsElement,
+    contactElement,
     blogElement,
     initialView = 'home',
     bodyElement = document.body,
@@ -50,6 +53,7 @@ export class Page {
     this.#body = bodyElement;
     this.#homeElement = homeElement;
     this.#projectsElement = projectsElement;
+    this.#contactElement = contactElement;
     this.#blogElement = blogElement;
 
     this.#stage = new Stage(stageElement);
@@ -78,6 +82,7 @@ export class Page {
     this.#observePagePosition();
     this.setView(this.#initialView);
     this.#setupProjects();
+    this.#setupContact();
     this.#setupBlog();
   }
 
@@ -131,6 +136,11 @@ export class Page {
       <div class="project-list">${html}</div>
     `;
     attachShowMore(this.#projectsElement.querySelector('.project-list'));
+  }
+
+  #setupContact() {
+    const contact = new Contact(this.#contactElement);
+    contact.mount();
   }
 
   #setupBlog() {

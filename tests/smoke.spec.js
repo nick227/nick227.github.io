@@ -23,6 +23,7 @@ test('an article opens in reading mode and restores the index', async ({ page })
   await expect.poll(() => page.evaluate(() => window.scrollY)).toBeLessThan(2);
   await expect(page.locator('.page.home')).toBeHidden();
   await expect(page.locator('.page.projects')).toBeHidden();
+  await expect(page.locator('.page.contact')).toBeHidden();
 
   await page.getByRole('link', { name: 'All writing' }).click();
 
@@ -31,6 +32,7 @@ test('an article opens in reading mode and restores the index', async ({ page })
   await expect(page.locator('[data-blog-index-title]')).toBeFocused();
   await expect(page.locator('.page.home')).toBeVisible();
   await expect(page.locator('.page.projects')).toBeVisible();
+  await expect(page.locator('.page.contact')).toBeVisible();
 });
 
 test('mobile layout keeps stage content and projects readable', async ({ page }, testInfo) => {

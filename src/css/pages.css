@@ -161,7 +161,8 @@
 }
 
 body.is-blog-reading .page.home,
-body.is-blog-reading .page.projects {
+body.is-blog-reading .page.projects,
+body.is-blog-reading .page.contact {
   display: none;
 }
 

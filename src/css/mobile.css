@@ -73,3 +73,9 @@
     font-size: clamp(1.2rem, 4.8vw, 4.5rem);
   }
 }
+
+@media (max-width: 380px) {
+  .site-navigation {
+    gap: 8px;
+  }
+}
