@@ -193,7 +193,7 @@
 
 .contact-feedback {
   align-items: flex-start;
-  gap: 18px;
+  gap: 22px;
 }
 
 .contact-status {
@@ -206,22 +206,43 @@
   line-height: 1.4;
 }
 
+.contact-status:not(.is-pending, .is-error) {
+  flex-direction: column;
+  align-items: flex-start;
+  font-size: clamp(2.6rem, 5vw, 3.6rem);
+  font-weight: 700;
+  letter-spacing: -0.07em;
+  line-height: 0.92;
+}
+
+.contact-status:not(.is-pending, .is-error)::after {
+  display: block;
+  width: 2.75rem;
+  height: 3px;
+  margin-top: 18px;
+  background: #ff5a36;
+  content: "";
+}
+
+.contact-status.is-pending {
+  min-height: 3.4rem;
+}
+
 .contact-spinner {
   display: block;
-  width: 1.15rem;
-  height: 1.15rem;
+  width: 1.35rem;
+  height: 1.35rem;
   border: 2px solid color-mix(in srgb, currentColor 28%, transparent);
   border-top-color: currentColor;
   border-radius: 50%;
   animation: contact-spin 0.7s linear infinite;
 }
 
-.contact-feedback-message {
+.contact-thanks {
+  max-width: 18rem;
   margin: 0;
-  color: color-mix(in srgb, currentColor 86%, transparent);
-  font-size: 1.125rem;
-  line-height: 1.5;
-  white-space: pre-wrap;
+  font-size: 1.35rem;
+  line-height: 1.35;
 }
 
 .contact-again {

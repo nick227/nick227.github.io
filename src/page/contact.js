@@ -165,10 +165,10 @@ export class Contact {
     const message = fieldValue(formData, 'message');
 
     const generation = this.#generation;
-    this.#showFeedback(name, message);
+    this.#showFeedback();
 
     if (fieldValue(formData, '_honey')) {
-      this.#setStatus(generation, 'Sent', false);
+      this.#setStatus(generation, 'Message sent', false);
       return;
     }
 
@@ -191,32 +191,29 @@ export class Contact {
       });
       const result = await response.json();
       const rejected = !response.ok || result.success === 'false' || result.success === false;
-      this.#setStatus(generation, rejected ? failureMessage(result) : 'Sent', rejected);
+      this.#setStatus(generation, rejected ? failureMessage(result) : 'Message sent', rejected);
     } catch {
       this.#setStatus(generation, "Didn't send. Try again.", true);
     }
   };
 
-  #showFeedback(name, message) {
+  #showFeedback() {
     const view = document.createElement('div');
     view.className = 'contact-form contact-feedback';
     view.setAttribute('role', 'status');
     view.setAttribute('aria-busy', 'true');
 
-    const heading = document.createElement('h2');
-    heading.className = 'contact-heading';
-    heading.textContent = name;
-
-    const status = document.createElement('p');
+    const status = document.createElement('h2');
     status.className = 'contact-status is-pending';
     const spinner = document.createElement('span');
     spinner.className = 'contact-spinner';
     spinner.setAttribute('aria-hidden', 'true');
     status.append(spinner);
 
-    const body = document.createElement('p');
-    body.className = 'contact-feedback-message';
-    body.textContent = message;
+    const thanks = document.createElement('p');
+    thanks.className = 'contact-thanks';
+    thanks.hidden = true;
+    thanks.textContent = "Thank you. I'll respond.";
 
     const again = document.createElement('button');
     again.className = 'contact-again';
@@ -224,7 +221,7 @@ export class Contact {
     again.textContent = 'Send another';
     again.addEventListener('click', this.#again);
 
-    view.append(heading, status, body, again);
+    view.append(status, thanks, again);
     this.#element.querySelector('.contact-form').replaceWith(view);
   }
 
@@ -238,6 +235,7 @@ export class Contact {
     status.classList.remove('is-pending');
     status.classList.toggle('is-error', failed);
     status.textContent = text;
+    view.querySelector('.contact-thanks').hidden = failed;
   }
 
   #again = () => {
