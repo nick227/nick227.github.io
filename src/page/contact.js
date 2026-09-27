@@ -72,6 +72,7 @@ function prefersReducedMotion() {
 export class Contact {
   #element;
   #timer = 0;
+  #generation = 0;
 
   constructor(element) {
     this.#element = element;
@@ -163,16 +164,13 @@ export class Contact {
     const topic = fieldValue(formData, 'topic');
     const message = fieldValue(formData, 'message');
 
+    const generation = this.#generation;
+    this.#showFeedback(name, message);
+
     if (fieldValue(formData, '_honey')) {
-      this.#showSuccess(name, topic, message);
+      this.#setStatus(generation, 'Sent', false);
       return;
     }
-
-    const error = form.querySelector('.contact-error');
-    const button = form.querySelector('.contact-send');
-    error.hidden = true;
-    error.textContent = '';
-    button.disabled = true;
 
     try {
       const response = await fetch(contactEndpoint, {
@@ -193,48 +191,57 @@ export class Contact {
       });
       const result = await response.json();
       const rejected = !response.ok || result.success === 'false' || result.success === false;
-
-      if (rejected) {
-        button.disabled = false;
-        error.hidden = false;
-        error.textContent = failureMessage(result);
-        return;
-      }
-
-      this.#showSuccess(name, topic, message);
+      this.#setStatus(generation, rejected ? failureMessage(result) : 'Sent', rejected);
     } catch {
-      button.disabled = false;
-      error.hidden = false;
-      error.textContent = "Didn't send. Try again.";
+      this.#setStatus(generation, "Didn't send. Try again.", true);
     }
   };
 
-  #showSuccess(name, topic, message) {
-    const sent = document.createElement('div');
-    sent.className = 'contact-form contact-success';
-    sent.setAttribute('role', 'status');
+  #showFeedback(name, message) {
+    const view = document.createElement('div');
+    view.className = 'contact-form contact-feedback';
+    view.setAttribute('role', 'status');
+    view.setAttribute('aria-busy', 'true');
 
     const heading = document.createElement('h2');
     heading.className = 'contact-heading';
-    heading.textContent = `Sent, ${name}.`;
+    heading.textContent = name;
 
-    const lead = document.createElement('p');
-    lead.className = 'contact-lead';
-    lead.textContent = "It's in my inbox.";
-
-    const receipt = document.createElement('div');
-    receipt.className = 'contact-receipt';
-
-    const topicLine = document.createElement('p');
-    topicLine.className = 'contact-receipt-topic';
-    topicLine.textContent = topic;
+    const status = document.createElement('p');
+    status.className = 'contact-status is-pending';
+    const spinner = document.createElement('span');
+    spinner.className = 'contact-spinner';
+    spinner.setAttribute('aria-hidden', 'true');
+    status.append(spinner);
 
     const body = document.createElement('p');
-    body.className = 'contact-receipt-body';
+    body.className = 'contact-feedback-message';
     body.textContent = message;
 
-    receipt.append(topicLine, body);
-    sent.append(heading, lead, receipt);
-    this.#element.querySelector('.contact-form').replaceWith(sent);
+    const again = document.createElement('button');
+    again.className = 'contact-again';
+    again.type = 'button';
+    again.textContent = 'Send another';
+    again.addEventListener('click', this.#again);
+
+    view.append(heading, status, body, again);
+    this.#element.querySelector('.contact-form').replaceWith(view);
   }
+
+  #setStatus(generation, text, failed) {
+    if (generation !== this.#generation) return;
+    const view = this.#element.querySelector('.contact-feedback');
+    const status = view && view.querySelector('.contact-status');
+    if (!status) return;
+
+    view.setAttribute('aria-busy', 'false');
+    status.classList.remove('is-pending');
+    status.classList.toggle('is-error', failed);
+    status.textContent = text;
+  }
+
+  #again = () => {
+    this.#generation += 1;
+    this.mount();
+  };
 }
