@@ -1,16 +1,18 @@
 import { expect, test } from '@playwright/test';
 
-test('Home resets a previously selected stage view', async ({ page }) => {
+test('Home keeps the name above the practice essays', async ({ page }) => {
   await page.goto('/');
-  await page.getByRole('button', { name: 'Architecture' }).click();
-
-  await expect(page.locator('body')).toHaveClass(/view-architecture/);
-
-  await page.locator('.site-navigation a[href="#home"]').click();
-
-  await expect(page.locator('body')).toHaveClass(/view-home/);
 
   const homeTitle = page.locator('#home .home-title');
+  await expect(homeTitle).toBeVisible();
+  await expect(homeTitle).toHaveAccessibleName('Nick Rios');
+  await expect(page.locator('body')).toHaveClass(/view-home/);
+
+  const essay = page.getByRole('heading', { name: 'Read it, run it' });
+  await essay.scrollIntoViewIfNeeded();
+  await expect(essay).toBeVisible();
+
+  await page.locator('.site-navigation a[href="#home"]').click();
   await expect(homeTitle).toBeVisible();
   await expect(homeTitle).toHaveAccessibleName('Nick Rios');
 });
@@ -49,10 +51,10 @@ test('mobile layout keeps stage content and projects readable', async ({ page },
   ));
   expect(titleSize).toBeLessThanOrEqual(viewportWidth * 0.48);
 
-  await page.getByRole('button', { name: 'Architecture' }).click();
-  await expect(page.getByRole('heading', { name: 'Read it, run it' }))
-    .toBeVisible({ timeout: 10000 });
-  await expect(page.locator('.stage-item ul').first()).toBeVisible();
+  const essay = page.getByRole('heading', { name: 'Read it, run it' });
+  await essay.scrollIntoViewIfNeeded();
+  await expect(essay).toBeVisible();
+  await expect(page.locator('#architecture ul').first()).toBeVisible();
 
   await page.goto('/#projects');
   await expect(page.locator('.featured').first()).toBeVisible();

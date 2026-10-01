@@ -21,17 +21,6 @@ export class BlogCatalog {
   find(slug) {
     return this.#articleLookup.get(slug) ?? null;
   }
-
-  nextAfter(slug) {
-    if (!this.#articles.length) return null;
-
-    const currentIndex = this.#articles.findIndex(
-      article => article.slug === slug,
-    );
-    if (currentIndex < 0) return null;
-
-    return this.#articles[(currentIndex + 1) % this.#articles.length];
-  }
 }
 
 function validateArticles(articles) {

@@ -175,11 +175,32 @@ body.is-blog-reading .section-footer::before {
 }
 
 .intro,
-.reel {
+.practice {
   display: flex;
   flex-direction: column;
-  gap: 10px;
   width: 100%;
+}
+
+.intro {
+  gap: 12px;
+}
+
+.practice {
+  gap: 72px;
+}
+
+.block {
+  display: flex;
+  flex-direction: column;
+  gap: 16px;
+}
+
+.block-copy h1 {
+  display: none;
+}
+
+.column .row {
+  gap: 28px;
 }
 
 h1.home-title {

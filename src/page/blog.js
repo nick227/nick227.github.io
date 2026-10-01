@@ -64,7 +64,6 @@ export class Blog {
     document.body.classList.add(READING_MODE_CLASS);
     this.#view.showArticle({
       article,
-      nextArticle: this.#catalog.nextAfter(slug),
       scroll,
     });
     document.title = `${article.title} | Nick Rios`;

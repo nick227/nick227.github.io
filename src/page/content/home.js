@@ -29,13 +29,13 @@ const careerJobs = [
   },
 ];
 
-const practiceTopics = [
-  ['architecture', 'Architecture', 'Systems that scale'],
-  ['ai-automation', 'AI Automation', 'Powerful workflows'],
-  ['web-platforms', 'Web Frameworks', 'Modern performance'],
-  ['pipeline-systems', 'Pipeline Systems', 'High-quality systems'],
-  ['creative-design', 'Creative Design', 'Visual clarity'],
-  ['leadership', 'Leadership', 'Intentional execution'],
+const practiceViews = [
+  'architecture',
+  'ai-automation',
+  'web-platforms',
+  'pipeline-systems',
+  'creative-design',
+  'leadership',
 ];
 
 function jobMarkup(job) {
@@ -61,65 +61,27 @@ export function careerMarkup() {
   `;
 }
 
-export function practiceMarkup() {
-  const topics = practiceTopics.map(([view, name, line]) => `
-    <li><button class="link" type="button" data-view="${view}" data-line="${line}">${name}</button></li>
-  `).join('');
+function practiceSection(view, screens) {
+  const opener = screens.find(screen => screen.timer != null);
+  const copy = [...screens].reverse().find(screen => screen.timer == null);
 
-  return `<ul class="practice-list">${topics}</ul>`;
+  return `
+    <section class="block" id="${view}">
+      ${opener ? `<div class="block-mark">${opener.html}</div>` : ''}
+      <div class="block-copy">${copy.html}</div>
+    </section>
+  `;
 }
 
-export function bindPlayer(root) {
-  const caption = root.querySelector('.player-caption');
-  const list = root.querySelector('.practice-list');
-  if (!caption || !list) return;
+export function homeFlow(pageData) {
+  const practice = practiceViews
+    .map(view => practiceSection(view, pageData[view].screens))
+    .join('');
 
-  const currentLine = () => {
-    const current = list.querySelector('[aria-current="true"]');
-    return current ? current.dataset.line : '';
-  };
-
-  const show = line => {
-    caption.textContent = line;
-  };
-
-  list.addEventListener('pointerover', event => {
-    const button = event.target.closest('[data-view]');
-    if (!button || !list.contains(button)) return;
-    show(button.dataset.line);
-  });
-
-  list.addEventListener('pointerleave', () => {
-    show(currentLine());
-  });
-
-  list.addEventListener('focusin', event => {
-    const button = event.target.closest('[data-view]');
-    if (!button) return;
-    show(button.dataset.line);
-  });
-
-  list.addEventListener('focusout', event => {
-    if (list.contains(event.relatedTarget)) return;
-    show(currentLine());
-  });
-}
-
-export function syncPlayer(root, view) {
-  const caption = root.querySelector('.player-caption');
-  let line = '';
-
-  root.querySelectorAll('#practice [data-view]').forEach(button => {
-    const selected = button.dataset.view === view;
-    if (selected) {
-      button.setAttribute('aria-current', 'true');
-      line = button.dataset.line;
-    } else {
-      button.removeAttribute('aria-current');
-    }
-  });
-
-  if (caption) caption.textContent = line;
+  return `
+    <section class="block" id="career" aria-label="Career">${careerMarkup()}</section>
+    ${practice}
+  `;
 }
 
 export const home = {

@@ -37,40 +37,38 @@
   line-height: 1.45;
 }
 
-.stage h1 {
-  display: none;
-}
-
-.stage h1.page-title {
+.block-mark h1.page-title {
   display: block;
   font-size: clamp(1.75rem, 3vw, 2.25rem);
   letter-spacing: -0.045em;
   line-height: 1;
 }
 
-.stage .cube {
+.block-mark .cube {
   --size: 88px;
 }
 
-.stage .cube-wrap {
+.block-mark .cube-wrap {
   height: 120px;
+  justify-content: flex-start;
 }
 
-.stage .chevron {
+.block-mark .chevron {
   height: 140px;
 }
 
-.stage .chevron-flow {
+.block-mark .chevron-flow {
   width: 100%;
   height: 140px;
   max-height: 140px;
+  margin: 0;
 }
 
-.stage .pipe-border {
+.block-mark .pipe-border {
   height: 160px;
 }
 
-.stage .stage-opening {
+.block-mark .stage-opening {
   min-height: 0;
-  padding: 8px 0 16px;
+  padding: 8px 0 0;
 }

@@ -3,12 +3,11 @@ import { Page } from './page.js';
 
 const navigationElement = document.body;
 const homeElement = document.querySelector('#home');
-const stageElement = document.querySelector('.stage');
 const projectsElement = document.querySelector('#projects');
 const contactElement = document.querySelector('#contact');
 const blogElement = document.querySelector('#blog');
 
-if (!homeElement || !stageElement || !projectsElement || !contactElement || !blogElement) {
+if (!homeElement || !projectsElement || !contactElement || !blogElement) {
   throw new Error('One or more required page elements were not found.');
 }
 
@@ -19,7 +18,6 @@ const page = new Page({
   pageData,
   navigationElement,
   homeElement,
-  stageElement,
   projectsElement,
   contactElement,
   blogElement,

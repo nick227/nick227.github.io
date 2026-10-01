@@ -8,8 +8,6 @@ const SELECTORS = {
   readerTitle: '[data-blog-reader-title]',
   readerMeta: '[data-blog-reader-meta]',
   readerBody: '[data-blog-reader-body]',
-  nextLink: '[data-blog-reader-next]',
-  nextTitle: '[data-blog-reader-next-title]',
 };
 
 const EMPTY_ARTICLE = '<p>This essay is currently being prepared.</p>';
@@ -39,7 +37,7 @@ export class BlogView {
     }
   }
 
-  showArticle({ article, nextArticle, scroll = false }) {
+  showArticle({ article, scroll = false }) {
     this.#requireMount();
 
     this.#elements.title.textContent = article.title;
@@ -47,7 +45,6 @@ export class BlogView {
     // Article documents are trusted, local HTML imported at build time.
     this.#elements.body.innerHTML = article.document?.trim() || EMPTY_ARTICLE;
 
-    this.#renderNextArticle(nextArticle);
     this.#elements.index.hidden = true;
     this.#elements.reader.hidden = false;
 
@@ -57,14 +54,6 @@ export class BlogView {
     }
 
     this.#elements.title.focus({ preventScroll: true });
-  }
-
-  #renderNextArticle(article) {
-    this.#elements.nextLink.hidden = !article;
-    if (!article) return;
-
-    this.#elements.nextLink.href = articleHref(article.slug);
-    this.#elements.nextTitle.textContent = article.title;
   }
 
   #scrollAndFocus(element) {
@@ -86,8 +75,6 @@ export class BlogView {
       title: this.#container.querySelector(SELECTORS.readerTitle),
       meta: this.#container.querySelector(SELECTORS.readerMeta),
       body: this.#container.querySelector(SELECTORS.readerBody),
-      nextLink: this.#container.querySelector(SELECTORS.nextLink),
-      nextTitle: this.#container.querySelector(SELECTORS.nextTitle),
     };
 
     if (Object.values(elements).some(element => !element)) {
@@ -133,10 +120,6 @@ function renderBlog(articles) {
         <p class="blog-reader-meta" data-blog-reader-meta></p>
       </header>
       <div class="blog-reader-body" data-blog-reader-body></div>
-      <a class="blog-reader-next" data-blog-reader-next href="#blog">
-        <span>Next article <span aria-hidden="true">→</span></span>
-        <strong data-blog-reader-next-title></strong>
-      </a>
     </article>`;
 }
 

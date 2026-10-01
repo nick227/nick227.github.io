@@ -1,5 +1,4 @@
-import { bindPlayer, practiceMarkup, syncPlayer } from './content/home.js';
-import { Stage } from './stage.js';
+import { homeFlow } from './content/home.js';
 import { Navigation } from './navigation.js';
 import { validatePageData } from './validatePageData.js';
 import { Projects } from './projects.js';
@@ -25,7 +24,6 @@ export class Page {
   #contactElement;
 
   // Long-lived collaborators created or mounted by this page instance.
-  #stage;
   #navigation;
   #blog;
 
@@ -38,7 +36,6 @@ export class Page {
     pageData,
     navigationElement,
     homeElement,
-    stageElement,
     projectsElement,
     contactElement,
     blogElement,
@@ -57,7 +54,6 @@ export class Page {
     this.#contactElement = contactElement;
     this.#blogElement = blogElement;
 
-    this.#stage = new Stage(stageElement);
     this.#navigation = new Navigation(
       navigationElement,
       this.setView,
@@ -97,7 +93,6 @@ export class Page {
     this.#pagePositionObserver = null;
     this.#body.classList.remove('is-below-home');
     this.#blog?.unmount();
-    this.#stage.clear();
     this.#removeViewTheme();
 
     this.#started = false;
@@ -115,23 +110,11 @@ export class Page {
     }
 
     this.#setViewTheme(view);
-
-    // Stage.play cancels any sequence already in progress. Keeping the error
-    // boundary here prevents rendering failures from becoming unhandled
-    // promise rejections at the navigation event boundary.
-    this.#stage.play(data.screens).catch(error => {
-      console.error(
-        `Unable to play page view "${view}".`,
-        error,
-      );
-    });
-    syncPlayer(this.#homeElement, view);
   };
 
   #setupHomeWidgets() {
     const practice = this.#homeElement.querySelector('#practice');
-    practice.innerHTML = practiceMarkup();
-    bindPlayer(this.#homeElement);
+    practice.innerHTML = homeFlow(this.#pageData);
   }
 
   #setupProjects() {
