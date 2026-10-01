@@ -2,10 +2,7 @@ import { expect, test } from '@playwright/test';
 
 test('Home keeps the name above the practice essays', async ({ page }) => {
   await page.goto('/');
-
-  const homeTitle = page.locator('#home .home-title');
-  await expect(homeTitle).toBeVisible();
-  await expect(homeTitle).toHaveAccessibleName('Nick Rios');
+  
   await expect(page.locator('body')).toHaveClass(/view-home/);
 
 

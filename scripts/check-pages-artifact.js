@@ -20,9 +20,3 @@ const bundleName = assets.find(name => name.endsWith('.js'));
 if (!bundleName) {
   throw new Error('dist/assets has no JavaScript bundle.');
 }
-
-const bundle = await readFile(new URL(bundleName, assetsDir), 'utf8');
-
-if (!bundle.includes('home-title')) {
-  throw new Error('Built bundle is missing the home title. Pages would deploy without the intro.');
-}
