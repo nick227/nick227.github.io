@@ -11,22 +11,6 @@ export const pipelines = {
   color: '#050505',
     screens: [
     {
-      timer: 600,
-      html: `
-        <div class="stage-content">
-          <div class="pipe-border pipeline-opening">
-            <span class="pipe pipe-top"></span>
-            <span class="pipe pipe-right"></span>
-            <span class="pipe pipe-bottom"></span>
-            <span class="pipe pipe-left"></span>
-            <div class="pipe-border__content">
-              <h1 class="page-title">Pipelines</h1>
-            </div>
-          </div>
-        </div>
-      `,
-    },
-    {
       html: `
         <h1>Pipelines</h1>
         <p class="page-lead">I build pipelines that solve problems at scale</p>

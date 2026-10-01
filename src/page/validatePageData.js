@@ -78,19 +78,6 @@ export const validatePageData = data => {
           `Screen ${index} in page view "${view}" requires html.`,
         );
       }
-
-      if (
-        screen.timer !== undefined &&
-        screen.timer !== null &&
-        (
-          !Number.isFinite(screen.timer) ||
-          screen.timer < 0
-        )
-      ) {
-        throw new TypeError(
-          `Screen ${index} in page view "${view}" timer must be a non-negative number when provided.`,
-        );
-      }
     });
   }
 };

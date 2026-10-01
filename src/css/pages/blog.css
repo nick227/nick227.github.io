@@ -152,6 +152,7 @@ body.is-blog-reading .page.blog {
   }
 }
 
+.blog-index[hidden],
 .blog-reader[hidden] {
   display: none !important;
 }

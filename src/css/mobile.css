@@ -14,13 +14,31 @@
     grid-column: 1;
   }
 
-  .practice-list {
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+  .screen,
+  .blog-reader,
+  .contact-split {
+    padding-inline: 20px;
   }
 
   .contact-split {
     grid-template-columns: minmax(0, 1fr);
-    width: min(640px, calc(100% - 2 * var(--page-gutter)));
+    width: 100%;
+    margin-inline: 0;
+  }
+  
+  .section-header,
+  .column {
+    position: relative;
+    width: 100%;
+    margin: 0 auto;
+    padding: 0 20px;
+    left: 0;
+    right: 0;
+    transform: none;
+  }
+
+  .figure .cube {
+    --size: 150px;
   }
 }
 
@@ -35,15 +53,6 @@
 
   .section-footer p {
     line-height: 1.45;
-  }
-
-  .grow-text {
-    font-size: clamp(1.5rem, 4.5vw, 2.5rem);
-    animation: none !important;
-  }
-
-  .creative-finale__content h2 {
-    font-size: clamp(1.2rem, 4.8vw, 4.5rem);
   }
 }
 

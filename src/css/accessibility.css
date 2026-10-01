@@ -20,14 +20,10 @@
   body,
   .home,
   .site-navigation a::after,
-  .site-navigation button::after,
-  .practice-list .link::after {
+  .site-navigation button::after {
     transition: none;
   }
 
-  .stage-item,
-  .stage-item.stage-item-out,
-  .grow-text,
   .block,
   .screen,
   .boot::before {

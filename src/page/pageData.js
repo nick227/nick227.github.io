@@ -5,7 +5,6 @@
   - color: The text color for the page view.
   - screens: An array of screen objects, each containing:
     - html: The HTML content for the screen
-    - timer: (Optional) The duration in milliseconds to display the screen
 */
 
 import { architecture } from "./content/architecture.js";

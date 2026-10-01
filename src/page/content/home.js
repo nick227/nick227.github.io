@@ -61,16 +61,10 @@ export function careerMarkup() {
   `;
 }
 
-function practiceCopy(screens) {
-  for (let i = screens.length - 1; i >= 0; i--) {
-    if (screens[i].timer == null) return screens[i];
-  }
-}
-
 function practiceSection(view, screens) {
   return `
     <section class="block" id="${view}">
-      <div class="block-copy">${practiceCopy(screens).html}</div>
+      <div class="block-copy">${screens[0].html}</div>
     </section>
   `;
 }
@@ -93,11 +87,7 @@ export const home = {
   color: '#050505',
   screens: [
     {
-      html: `
-        <div class="stage-content stage-start">
-          ${careerHtml}
-        </div>
-      `,
+      html: careerHtml,
     },
   ],
 };

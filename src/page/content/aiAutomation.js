@@ -4,39 +4,10 @@ const agentOutputs = [
   { kind: 'Image', endpoint: 'render' },
 ];
 
-const aiResources = [
-  {
-    kind: 'Live app',
-    title: 'Storyboarder',
-    description: 'Turns a written script into a storyboard and video.',
-    href: 'https://storyboard-to-video.up.railway.app/',
-  },
-];
-
 export const aiAutomation = {
     backgroundColor: '#ffffff',
     color: '#050505',
     screens: [
-      {
-        timer: 600,
-        html: `
-          <div class="stage-content">
-            <h1 class="page-title">Automation</h1>
-            <div class="chevron-flow" aria-hidden="true">
-              <div class="chevron-flow__track">
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-              </div>
-            </div>
-          </div>
-        `,
-      },
       {
         html: `
           <h1>Automation</h1>
@@ -50,34 +21,8 @@ export const aiAutomation = {
           An AI reviewer also summarized every GitLab check-in for the whole team.
           Not everything shipped. Our 2024 AI page editor wasn't accurate enough for production.
           </p>
-          <div class="figure" aria-hidden="true">
-            <div class="chevron-flow">
-              <div class="chevron-flow__track">
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-                <span class="chevron"></span>
-              </div>
-            </div>
-          </div>
-          <div class="row row-stack">
-            <div class="col-50">
-              <h3>Try it</h3>
-              <ul class="resource-cards">
-                ${aiResources.map(resource => `
-                  <li>
-                    <a class="is-external" href="${resource.href}" target="_blank" rel="noopener noreferrer">
-                      <span class="resource-cards__kind">${resource.kind}</span>
-                      <strong>${resource.title}</strong>
-                      <span>${resource.description}</span>
-                    </a>
-                  </li>
-                `).join('')}
-              </ul>
-            </div>
-            <div class="col-50 center">
+          <div class="stack">
+            <div class="center">
               <div class="ai-agent" aria-label="An agent takes a prompt and returns text, HTML, or an image" role="img">
                 <p class="ai-agent__prompt"><span>prompt</span></p>
                 <span class="ai-agent__rail"></span>

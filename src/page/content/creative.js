@@ -3,14 +3,6 @@ export const creative = {
   color: '#050505',
   screens: [
     {
-      timer: 600,
-      html: `
-        <div class="stage-content stage-opening creative-opening">
-          <h1 class="page-title">Design<span>.</span></h1>
-        </div>
-      `,
-    },
-    {
       html: `
         <h1>Design</h1>
         <p>

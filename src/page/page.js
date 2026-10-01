@@ -9,7 +9,7 @@ import { attachShowMore } from './showMore.js';
 /**
  * Application composition root for the portfolio page.
  *
- * Page owns the lifetime of navigation, the animated stage, projects, contact,
+ * Page owns the lifetime of navigation, projects, contact,
  * the blog router, and body-level visual state. Feature-specific rendering stays
  * in those collaborators so this class remains focused on coordination.
  */

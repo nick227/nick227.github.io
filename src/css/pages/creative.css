@@ -1,14 +1,3 @@
-/* Creative design slideshow */
-
-.creative-opening .page-title {
-  font-size: clamp(5rem, 15vw, 14rem);
-}
-
-.creative-opening .page-title span {
-  opacity: 0;
-  animation: creative-dot-in 180ms ease 1900ms forwards;
-}
-
 /* Right column: three rings drift apart and converge on one focal point, looping.
    Offsets are sized so every ring stays inside the square container. */
 .creative-orbit {
@@ -65,63 +54,6 @@
   animation: creative-orbit-focus 6s ease-in-out infinite;
 }
 
-.creative-principle {
-  --stage-label-space: clamp(28px, 5vw, 58px);
-}
-
-.creative-principle h2 {
-  max-width: 1080px;
-  font-size: clamp(3rem, 7.9vw, 7.3rem);
-  font-weight: 400;
-  letter-spacing: -0.075em;
-  line-height: 0.88;
-}
-
-.creative-principle h2 strong {
-  display: block;
-  margin-left: clamp(5%, 11vw, 16%);
-  font-weight: 700;
-}
-
-.creative-principle__note {
-  margin-top: clamp(36px, 6vw, 68px);
-  line-height: 1.4;
-}
-
-.creative-finale__content {
-  --stage-label-space: 18px;
-}
-
-.creative-finale__content h2 {
-  font-size: clamp(2.2rem, 4.8vw, 4.5rem);
-  font-weight: 700;
-  letter-spacing: -0.055em;
-  line-height: 0.98;
-}
-
-.creative-finale__content > p:not(.stage-label) {
-  max-width: 640px;
-  margin-top: 26px;
-  font-size: clamp(0.95rem, 1.4vw, 1.08rem);
-  line-height: 1.55;
-}
-
-.creative-finale__content ul {
-  max-width: 620px;
-  padding-left: 1.2rem;
-  margin: 24px 0 0;
-}
-
-.creative-finale__content li {
-  padding-left: 6px;
-  font-size: clamp(0.9rem, 1.3vw, 1rem);
-  line-height: 1.45;
-}
-
-.creative-finale__content li + li {
-  margin-top: 8px;
-}
-
 @keyframes creative-orbit-converge {
   0%,
   100% {
@@ -156,38 +88,13 @@
   }
 }
 
-@keyframes creative-dot-in {
-  to { opacity: 1; }
-}
-
 @media (max-width: 720px) {
   .creative-orbit__ring {
     border-width: 2px;
   }
-
-  .creative-principle h2 strong {
-    margin-left: 0;
-  }
-
-  .creative-principle__note {
-    margin-top: 32px;
-  }
-
-  .creative-finale__content > p:not(.stage-label) {
-    margin-top: 20px;
-  }
-
-  .creative-finale__content ul {
-    margin-top: 18px;
-  }
 }
 
 @media (prefers-reduced-motion: reduce) {
-  .creative-opening .page-title span {
-    opacity: 1;
-    animation: none;
-  }
-
   .creative-orbit > span {
     animation: none;
   }

@@ -3,14 +3,6 @@ export const leadership = {
   color: '#050505',
   screens: [
     {
-      timer: 800,
-      html: `
-        <div class="stage-content">
-          <h1 class="page-title">Leadership</h1>
-        </div>
-      `,
-    },
-    {
       html: `
       <h1>Leadership</h1>
       <p>
