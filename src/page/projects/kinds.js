@@ -6,7 +6,7 @@ function plate(markup) {
 
 const mark = '<circle class="plate-ring" r="8" stroke-width="1.5"/><circle class="plate-mark" r="3"/>';
 
-export const PROJECT_KINDS = {
+const PROJECT_KINDS = {
   agents: {
     id: 'agents',
     label: 'Agents',

@@ -52,7 +52,7 @@ function jobMarkup(job) {
   `;
 }
 
-export function careerMarkup() {
+function careerMarkup() {
   const jobs = careerJobs.map(jobMarkup).join('');
 
   return `
