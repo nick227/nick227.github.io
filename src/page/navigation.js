@@ -18,22 +18,17 @@ export class Navigation {
     });
   }
 
-  stop() {
-    this.#abortController?.abort();
-    this.#abortController = null;
-  }
-
   #handleClick = event => {
-    if (!(event.target instanceof Element)) return;
-
-    const trigger = event.target.closest('[data-view]');
-
-    if (!trigger || !this.#element.contains(trigger)) return;
-
-    const view = trigger.dataset.view;
-
-    if (view) {
-      this.#onViewSelect(view);
-    }
+    const view = selectedView(event, this.#element);
+    if (view) this.#onViewSelect(view);
   };
+}
+
+function selectedView(event, root) {
+  if (!(event.target instanceof Element)) return '';
+
+  const trigger = event.target.closest('[data-view]');
+  if (!trigger || !root.contains(trigger)) return '';
+
+  return trigger.dataset.view;
 }

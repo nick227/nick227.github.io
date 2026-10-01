@@ -5,6 +5,11 @@ import { BlogView } from './view.js';
 
 const READING_MODE_CLASS = 'is-blog-reading';
 
+function indexShouldScroll(scroll, slug) {
+  if (!scroll) return false;
+  return window.location.hash === '#blog' || Boolean(slug);
+}
+
 /** Coordinates article data, URL state, and the blog view. */
 export class Blog {
   #catalog;
@@ -13,7 +18,8 @@ export class Blog {
   #mounted = false;
 
   constructor(articles = blogList) {
-    this.#catalog = new BlogCatalog(articles);
+    const catalog = new BlogCatalog(articles);
+    this.#catalog = catalog;
   }
 
   mount(container) {
@@ -22,8 +28,10 @@ export class Blog {
       throw new Error('Blog requires a container element.');
     }
 
-    this.#view = new BlogView(container);
-    this.#view.mount(this.#catalog.all());
+    const view = new BlogView(container);
+    const catalog = this.#catalog;
+    view.mount(catalog.all());
+    this.#view = view;
     this.#originalDocumentTitle = document.title;
 
     window.addEventListener('hashchange', this.#handleRouteChange);
@@ -33,36 +41,25 @@ export class Blog {
     });
   }
 
-  unmount() {
-    if (!this.#mounted) return;
-
-    window.removeEventListener('hashchange', this.#handleRouteChange);
-    document.body.classList.remove(READING_MODE_CLASS);
-    document.title = this.#originalDocumentTitle;
-    this.#view = null;
-    this.#mounted = false;
-  }
-
   #handleRouteChange = () => {
     this.#renderCurrentRoute({ scroll: true });
   };
 
   #renderCurrentRoute({ scroll }) {
+    const view = this.#view;
+    const catalog = this.#catalog;
     const slug = articleSlugFromHash(window.location.hash);
-    const article = slug ? this.#catalog.find(slug) : null;
+    const article = slug ? catalog.find(slug) : null;
 
     if (!article) {
-      const shouldScrollToIndex = (
-        scroll && (window.location.hash === '#blog' || Boolean(slug))
-      );
       document.body.classList.remove(READING_MODE_CLASS);
-      this.#view.showIndex({ scroll: shouldScrollToIndex });
+      view.showIndex({ scroll: indexShouldScroll(scroll, slug) });
       document.title = this.#originalDocumentTitle;
       return;
     }
 
     document.body.classList.add(READING_MODE_CLASS);
-    this.#view.showArticle({
+    view.showArticle({
       article,
       scroll,
     });

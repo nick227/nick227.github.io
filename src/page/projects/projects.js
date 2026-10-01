@@ -34,34 +34,49 @@ export class Projects {
   }
 
   #actions(project) {
-    const links = [];
-
-    if (project.link) {
-      const sameAsCode = project.github && project.link === project.github;
-      links.push({
-        label: sameAsCode ? 'Code' : 'Open',
-        href: project.link,
-        external: true,
-      });
-    }
-
-    if (project.github && project.github !== project.link) {
-      links.push({ label: 'Code', href: project.github, external: true });
-    }
-
-    if (project.blog) {
-      links.push({
-        label: 'Notes',
-        href: articleHref(project.blog.replace(/\.html$/, '')),
-        external: false,
-      });
-    }
-
+    const links = projectLinks(project);
     if (!links.length) return '';
 
-    return `<ul class="text-links">${links.map(link => {
-      const attrs = link.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-      return `<li><a class="link" href="${link.href}"${attrs}>${link.label}</a></li>`;
-    }).join('')}</ul>`;
+    return `<ul class="text-links">${links.map(linkMarkup).join('')}</ul>`;
   }
+}
+
+function projectLinks(project) {
+  const links = [];
+  pushOpen(links, project);
+  pushCode(links, project);
+  pushNotes(links, project);
+  return links;
+}
+
+function pushOpen(links, project) {
+  if (!project.link) return;
+
+  const sameAsCode = project.github && project.link === project.github;
+  links.push({
+    label: sameAsCode ? 'Code' : 'Open',
+    href: project.link,
+    external: true,
+  });
+}
+
+function pushCode(links, project) {
+  if (project.github && project.github !== project.link) {
+    links.push({ label: 'Code', href: project.github, external: true });
+  }
+}
+
+function pushNotes(links, project) {
+  if (!project.blog) return;
+
+  links.push({
+    label: 'Notes',
+    href: articleHref(project.blog.replace(/\.html$/, '')),
+    external: false,
+  });
+}
+
+function linkMarkup(link) {
+  const attrs = link.external ? ' target="_blank" rel="noopener noreferrer"' : '';
+  return `<li><a class="link" href="${link.href}"${attrs}>${link.label}</a></li>`;
 }

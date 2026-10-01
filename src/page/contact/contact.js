@@ -52,12 +52,62 @@ function sectionMarkup() {
   `;
 }
 
+function resultMessage(result) {
+  if (!result || typeof result.message !== 'string') return '';
+  return result.message;
+}
+
 function failureMessage(result) {
-  const message = result && typeof result.message === 'string' ? result.message : '';
+  const message = resultMessage(result);
   if (message.toLowerCase().includes('activation')) {
     return 'Check nicholas.jay.rios@gmail.com for the FormSubmit activation email, open it, then send again.';
   }
-  return message || "Didn't send. Try again.";
+  if (!message) return "Didn't send. Try again.";
+  return message;
+}
+
+function shouldReplaceMessage(value, previous) {
+  return value === '' || value === previous;
+}
+
+function feedbackStatus(root) {
+  const view = root.querySelector('.contact-feedback');
+  if (!view) return null;
+
+  const status = view.querySelector('.contact-status');
+  if (!status) return null;
+
+  return { view, status };
+}
+
+async function postContact(formData) {
+  const name = fieldValue(formData, 'name');
+  const topic = fieldValue(formData, 'topic');
+  const message = fieldValue(formData, 'message');
+  const response = await fetch(contactEndpoint, {
+    method: 'POST',
+    headers: {
+      'Content-Type': 'application/json',
+      Accept: 'application/json',
+    },
+    body: JSON.stringify({
+      name,
+      topic,
+      message,
+      _subject: `${name} — ${topic}`,
+      _template: 'box',
+      _captcha: 'false',
+      _honey: '',
+    }),
+  });
+  const result = await response.json();
+  const failed = sendFailed(response, result);
+  return { text: failed ? failureMessage(result) : 'Sent', failed };
+}
+
+function sendFailed(response, result) {
+  if (!response.ok) return true;
+  return result.success === 'false' || result.success === false;
 }
 
 function fieldValue(formData, name) {
@@ -100,7 +150,7 @@ export class Contact {
     const message = panel.querySelector('[name=message]');
     const previous = panel.dataset.prompt ?? '';
 
-    if (message.value === '' || message.value === previous) {
+    if (shouldReplaceMessage(message.value, previous)) {
       message.value = intent.prompt;
     }
 
@@ -160,10 +210,6 @@ export class Contact {
     if (!(form instanceof HTMLFormElement) || !form.reportValidity()) return;
 
     const formData = new FormData(form);
-    const name = fieldValue(formData, 'name');
-    const topic = fieldValue(formData, 'topic');
-    const message = fieldValue(formData, 'message');
-
     const generation = this.#generation;
     this.#showFeedback();
 
@@ -172,26 +218,13 @@ export class Contact {
       return;
     }
 
+    await this.#send(formData, generation);
+  };
+
+  async #send(formData, generation) {
     try {
-      const response = await fetch(contactEndpoint, {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-          Accept: 'application/json',
-        },
-        body: JSON.stringify({
-          name,
-          topic,
-          message,
-          _subject: `${name} — ${topic}`,
-          _template: 'box',
-          _captcha: 'false',
-          _honey: '',
-        }),
-      });
-      const result = await response.json();
-      const rejected = !response.ok || result.success === 'false' || result.success === false;
-      this.#setStatus(generation, rejected ? failureMessage(result) : 'Sent', rejected);
+      const result = await postContact(formData);
+      this.#setStatus(generation, result.text, result.failed);
     } catch {
       this.#setStatus(generation, "Didn't send. Try again.", true);
     }
@@ -238,16 +271,16 @@ export class Contact {
 
   #setStatus(generation, text, failed) {
     if (generation !== this.#generation) return;
-    const view = this.#element.querySelector('.contact-feedback');
-    const status = view && view.querySelector('.contact-status');
-    if (!status) return;
 
-    view.setAttribute('aria-busy', 'false');
-    status.classList.remove('is-pending');
-    status.classList.toggle('is-error', failed);
-    status.textContent = text;
-    view.querySelector('.contact-copy').hidden = failed;
-    if (failed) view.querySelector('.contact-heading').textContent = 'Not sent';
+    const feedback = feedbackStatus(this.#element);
+    if (!feedback) return;
+
+    feedback.view.setAttribute('aria-busy', 'false');
+    feedback.status.classList.remove('is-pending');
+    feedback.status.classList.toggle('is-error', failed);
+    feedback.status.textContent = text;
+    feedback.view.querySelector('.contact-copy').hidden = failed;
+    if (failed) feedback.view.querySelector('.contact-heading').textContent = 'Not sent';
   }
 
   #again = () => {

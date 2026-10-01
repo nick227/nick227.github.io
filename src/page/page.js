@@ -25,9 +25,8 @@ export class Page {
 
   // Long-lived collaborators created or mounted by this page instance.
   #navigation;
-  #blog;
 
-  // Runtime state used to make start/stop safe to call more than once.
+  // Runtime state used to make start safe to call more than once.
   #activeView = null;
   #started = false;
   #pagePositionObserver = null;
@@ -54,10 +53,11 @@ export class Page {
     this.#contactElement = contactElement;
     this.#blogElement = blogElement;
 
-    this.#navigation = new Navigation(
+    const navigation = new Navigation(
       navigationElement,
       this.setView,
     );
+    this.#navigation = navigation;
   }
 
   /** Starts every page-owned feature. This method is intentionally idempotent. */
@@ -71,9 +71,9 @@ export class Page {
     }
 
     // setView ignores calls before startup. Mark the page active before
-    // selecting the initial view, while enabling navigation first so the
-    // lifecycle can be mirrored predictably in stop().
-    this.#navigation.start();
+    // selecting the initial view.
+    const navigation = this.#navigation;
+    navigation.start();
     this.#started = true;
 
     this.#observePagePosition();
@@ -82,20 +82,6 @@ export class Page {
     this.#setupProjects();
     this.#setupContact();
     this.#setupBlog();
-  }
-
-  /** Releases listeners, observers, animations, and body-level state. */
-  stop() {
-    if (!this.#started) return;
-
-    this.#navigation.stop();
-    this.#pagePositionObserver?.disconnect();
-    this.#pagePositionObserver = null;
-    this.#body.classList.remove('is-below-home');
-    this.#blog?.unmount();
-    this.#removeViewTheme();
-
-    this.#started = false;
   }
 
   // Arrow syntax preserves Page as `this` when Navigation invokes the method.
@@ -138,10 +124,8 @@ export class Page {
   }
 
   #setupBlog() {
-    // Blog mounts a hashchange listener, so its lifetime must remain paired
-    // with the unmount call in stop().
-    this.#blog = new Blog();
-    this.#blog.mount(this.#blogElement);
+    const blog = new Blog();
+    blog.mount(this.#blogElement);
   }
 
   #observePagePosition() {

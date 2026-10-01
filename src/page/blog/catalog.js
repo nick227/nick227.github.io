@@ -20,19 +20,27 @@ export class BlogCatalog {
   }
 }
 
+function articleSlug(article, index) {
+  const slug = article && article.slug;
+  if (typeof slug !== 'string' || !slug.trim()) {
+    throw new TypeError(`Blog article at index ${index} requires a slug.`);
+  }
+  return slug;
+}
+
+function requireTitle(article, slug) {
+  if (typeof article.title !== 'string' || !article.title.trim()) {
+    throw new TypeError(`Blog article "${slug}" requires a title.`);
+  }
+}
+
 function indexArticles(articles) {
   const lookup = new Map();
 
   for (let index = 0; index < articles.length; index++) {
     const article = articles[index];
-    const slug = article && article.slug;
-
-    if (typeof slug !== 'string' || !slug.trim()) {
-      throw new TypeError(`Blog article at index ${index} requires a slug.`);
-    }
-    if (typeof article.title !== 'string' || !article.title.trim()) {
-      throw new TypeError(`Blog article "${slug}" requires a title.`);
-    }
+    const slug = articleSlug(article, index);
+    requireTitle(article, slug);
     if (lookup.has(slug)) {
       throw new Error(`Duplicate blog article slug: "${slug}".`);
     }
