@@ -108,16 +108,7 @@
 
 /* PROJECTS */
 
-.projects-heading {
-  margin-bottom: 24px;
-  font-size: clamp(2.5rem, 7vw, 5rem);
-  letter-spacing: -0.05em;
-  line-height: 0.9;
-}
-
 .page.projects {
-  max-width: 100%;
-  margin: 0 auto;
   color: var(--color-txt-primary);
 }
 
@@ -139,33 +130,20 @@
 }
 
 .resource-cards {
-  display: grid;
-  grid-template-columns: repeat(2, 1fr);
-  gap: 12px;
-  margin: 14px 0 0;
+  display: flex;
+  flex-direction: column;
+  margin: var(--space-2) 0 0;
   padding: 0;
+  border-top: var(--rule-width) solid var(--rule-color);
   list-style: none;
 }
 
 .resource-cards a {
   display: flex;
-  height: 100%;
   flex-direction: column;
   gap: 6px;
-  padding: 14px 16px;
-  border: 1px solid var(--rule-subtle);
-  border-radius: 12px;
-  transition:
-    background-color 160ms ease,
-    color 160ms ease,
-    transform 160ms var(--ease-expressive);
-}
-
-.resource-cards a:hover,
-.resource-cards a:focus-visible {
-  background: var(--view-color);
-  color: var(--view-background);
-  transform: translateY(-2px);
+  padding: var(--space-2) 0;
+  border-bottom: var(--rule-width) solid var(--rule-color);
 }
 
 .resource-cards strong {
@@ -198,7 +176,4 @@
     width: 100%;
   }
 
-  .resource-cards {
-    grid-template-columns: 1fr;
-  }
 }

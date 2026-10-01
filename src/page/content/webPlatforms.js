@@ -1,15 +1,7 @@
 export const webPlatforms = {
-  backgroundColor: '#111111',
-  color: '#ffffff',
+  backgroundColor: '#ffffff',
+  color: '#050505',
   screens: [
-    {
-      timer: 200,
-      html: `
-          <div class="stage-content">
-          <h1 class="page-title">Frameworks</h1>
-        </div>
-      `,
-    },
     {
       html: `
         <h1>Frameworks</h1>

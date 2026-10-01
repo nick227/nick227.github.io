@@ -1,15 +1,7 @@
 export const creative = {
-  backgroundColor: '#ff8fc7',
-  color: '#25101b',
+  backgroundColor: '#ffffff',
+  color: '#050505',
   screens: [
-    {
-      timer: 600,
-      html: `
-        <div class="stage-content stage-opening creative-opening">
-            <h1 class="page-title">Design<span>.</span></h1>
-        </div>
-      `,
-    },
     {
       html: `
         <div class="row">

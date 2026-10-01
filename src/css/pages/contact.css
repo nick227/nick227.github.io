@@ -1,11 +1,7 @@
 .page.contact {
   display: flex;
   flex-direction: column;
-  justify-content: safe center;
-  width: 100%;
-  margin-inline: 0;
-  background: #171412;
-  color: #f4efe6;
+  color: var(--color-txt-primary);
 }
 
 .contact-panel {
@@ -61,35 +57,28 @@
 .contact-intents {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  padding: 0;
+  border-top: var(--rule-width) solid var(--rule-color);
+  margin: 0;
 }
 
 .contact-intent {
   display: flex;
   width: 100%;
-  min-height: 52px;
+  min-height: 44px;
   align-items: center;
-  padding: 12px 14px;
-  border: 1px solid color-mix(in srgb, currentColor 34%, transparent);
-  border-radius: 2px;
-  background: #2a2420;
+  padding: var(--space-2) 0;
+  border: 0;
+  border-bottom: var(--rule-width) solid var(--rule-color);
+  background: none;
   color: inherit;
   font-size: 1rem;
-  font-weight: 500;
-  letter-spacing: -0.02em;
+  font-weight: 700;
   line-height: 1.3;
   text-align: left;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
   cursor: pointer;
-  transition:
-    opacity 240ms var(--ease-expressive),
-    background-color 180ms ease,
-    border-color 180ms ease,
-    color 180ms ease;
-}
-
-.contact-intent:hover {
-  border-color: color-mix(in srgb, currentColor 72%, transparent);
-  background: #3a322c;
 }
 
 .contact-intent:focus-visible {
@@ -98,10 +87,7 @@
 }
 
 .contact-intent.is-selected {
-  border-color: #f4efe6;
-  background: #f4efe6;
-  color: #171412;
-  font-weight: 700;
+  border-bottom-color: currentColor;
 }
 
 .contact-intent.is-leaving {
@@ -180,9 +166,9 @@
 
 .contact-field input:-webkit-autofill,
 .contact-field textarea:-webkit-autofill {
-  caret-color: #f4efe6;
-  -webkit-text-fill-color: #f4efe6;
-  box-shadow: 0 0 0 1000px #171412 inset;
+  caret-color: var(--color-txt-primary);
+  -webkit-text-fill-color: var(--color-txt-primary);
+  box-shadow: 0 0 0 1000px var(--color-bg-deep) inset;
 }
 
 .contact-error,
@@ -201,7 +187,7 @@
   width: 2.75rem;
   height: 3px;
   margin-top: 18px;
-  background: #ff5a36;
+  background: currentColor;
   content: "";
 }
 
@@ -246,14 +232,18 @@
   animation: contact-spin 0.7s linear infinite;
 }
 
-.contact-again {
+.contact-again,
+.contact-send,
+.contact-change {
   min-height: 44px;
-  padding: 0 16px;
+  padding: 0;
   border: 0;
-  border-radius: 2px;
-  background: #f4efe6;
-  color: #171412;
+  background: none;
+  color: inherit;
   font-weight: 700;
+  text-decoration: underline;
+  text-underline-offset: 0.25em;
+  text-decoration-thickness: 0.1em;
   cursor: pointer;
 }
 
@@ -273,34 +263,6 @@
   gap: 16px;
 }
 
-.contact-change,
-.contact-send {
-  min-height: 44px;
-  border: 0;
-  cursor: pointer;
-}
-
-.contact-change {
-  padding: 0;
-  background: none;
-  color: color-mix(in srgb, currentColor 78%, transparent);
-  font-weight: 500;
-}
-
-.contact-send {
-  padding: 0 16px;
-  border-radius: 2px;
-  background: #f4efe6;
-  color: #171412;
-  font-weight: 700;
-}
-
-.contact-send:focus-visible,
-.contact-change:focus-visible {
-  outline: 2px solid currentColor;
-  outline-offset: 3px;
-}
-
 .contact-send:disabled {
   opacity: 0.45;
   cursor: wait;
@@ -308,8 +270,10 @@
 
 .contact-portrait {
   display: block;
-  width: min(100%, 240px);
-  height: auto;
+  width: 160px;
+  aspect-ratio: 1;
+  border: var(--rule-width) solid var(--rule-color);
+  object-fit: cover;
 }
 
 .contact-links {
@@ -347,10 +311,6 @@
     order: 2;
     flex: 1 1 0;
     width: auto;
-  }
-
-  .contact-portrait {
-    width: 100%;
   }
 }
 

@@ -87,8 +87,8 @@
   flex-direction: column;
   gap: 4px;
   padding: 14px 8px;
-  border: 1px solid var(--rule-subtle);
-  border-radius: 12px;
+  border: var(--rule-width) solid var(--rule-color);
+  border-radius: 0;
   text-align: center;
   animation: ai-output calc(var(--agent-beat) * 3) ease infinite;
   animation-delay: calc(var(--output) * var(--agent-beat) + var(--agent-beat) * 0.8);
@@ -130,8 +130,8 @@
 
   5%,
   28% {
-    background: var(--view-color);
-    color: var(--view-background);
+    background: transparent;
+    color: inherit;
   }
 }
 

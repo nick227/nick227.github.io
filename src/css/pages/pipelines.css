@@ -228,8 +228,8 @@
   flex-direction: column;
   gap: 2px;
   padding: 12px 16px;
-  border: 1px solid var(--rule-subtle);
-  border-radius: 12px;
+  border: var(--rule-width) solid var(--rule-color);
+  border-radius: 0;
 }
 
 /* Short pipe joint from the tube to each stage. */
@@ -255,13 +255,14 @@
 }
 
 .pipe-flow__stages .is-owned {
-  border-color: var(--view-color);
-  background: var(--view-color);
-  color: var(--view-background);
+  border-color: currentColor;
+  background: transparent;
+  color: inherit;
+  font-weight: 700;
 }
 
 .pipe-flow__stages .is-owned::before {
-  background: var(--view-color);
+  background: currentColor;
 }
 
 @keyframes pipe-packet {

@@ -1,3 +1,4 @@
+import { careerMarkup } from './content/home.js';
 import { Stage } from './stage.js';
 import { Navigation } from './navigation.js';
 import { validatePageData } from './validatePageData.js';
@@ -81,6 +82,7 @@ export class Page {
 
     this.#observePagePosition();
     this.setView(this.#initialView);
+    this.#setupCareer();
     this.#setupProjects();
     this.#setupContact();
     this.#setupBlog();
@@ -112,7 +114,7 @@ export class Page {
       return;
     }
 
-    this.#setViewTheme(view, data);
+    this.#setViewTheme(view);
 
     // Stage.play cancels any sequence already in progress. Keeping the error
     // boundary here prevents rendering failures from becoming unhandled
@@ -125,17 +127,22 @@ export class Page {
     });
   };
 
+  #setupCareer() {
+    const career = this.#homeElement.querySelector('#career');
+    career.innerHTML = careerMarkup();
+  }
+
   #setupProjects() {
     const project = new Projects();
-    const html = project.getProjects();
 
     // Project data is locally authored and Projects returns trusted markup.
-    // Keep the section heading here because Page owns the section container.
     this.#projectsElement.innerHTML = `
-      <h2 class="projects-heading">Projects</h2>
-      <div class="project-list">${html}</div>
+      <h2 class="section-heading">Projects</h2>
+      <div class="featured-list">${project.getFeatured()}</div>
+      <h2 class="section-heading">Archive</h2>
+      <ol class="archive-list">${project.getArchive()}</ol>
     `;
-    attachShowMore(this.#projectsElement.querySelector('.project-list'));
+    attachShowMore(this.#projectsElement.querySelector('.archive-list'));
   }
 
   #setupContact() {
@@ -168,39 +175,17 @@ export class Page {
     this.#pagePositionObserver.observe(this.#homeElement);
   }
 
-  #setViewTheme(view, data) {
-    // A view class supports view-specific selectors. Custom properties carry
-    // the home-section colors used by the stage and the fixed shell.
+  #setViewTheme(view) {
     this.#removeViewTheme();
 
     this.#body.classList.add(`view-${view}`);
-    this.#body.style.setProperty(
-      '--view-background',
-      data.backgroundColor,
-    );
-    this.#body.style.setProperty(
-      '--view-color',
-      data.color,
-    );
-
     this.#activeView = view;
   }
 
   #removeViewTheme() {
     if (!this.#activeView) return;
 
-    // Remove both halves of the theme contract so a stopped Page cannot leak
-    // its last selected view into a later mount.
-    this.#body.classList.remove(
-      `view-${this.#activeView}`,
-    );
-    this.#body.style.removeProperty(
-      '--view-background',
-    );
-    this.#body.style.removeProperty(
-      '--view-color',
-    );
-
+    this.#body.classList.remove(`view-${this.#activeView}`);
     this.#activeView = null;
   }
 }

@@ -33,29 +33,9 @@ const aiResources = [
 ];
 
 export const aiAutomation = {
-    backgroundColor: '#dfff00',
-    color: '#101010',
+    backgroundColor: '#ffffff',
+    color: '#050505',
     screens: [
-      {
-        timer: 600,
-        html: `
-          <div class="stage-content">
-            <h1 class="page-title stage-layer">Automation</h1>
-                <div class="chevron-flow" aria-hidden="true">
-                  <div class="chevron-flow__track">
-                    <span class="chevron"></span>
-                    <span class="chevron"></span>
-                    <span class="chevron"></span>
-                    <span class="chevron"></span>
-                    <span class="chevron"></span>
-                    <span class="chevron"></span>
-                    <span class="chevron"></span>
-                    <span class="chevron"></span>
-                  </div>
-                </div>
-          </div>
-        `,
-      },
       {
         html: `
           <h1>Automation</h1>

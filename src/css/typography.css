@@ -4,19 +4,30 @@ body {
   -webkit-font-smoothing: antialiased;
 }
 
+h1,
 .page-title,
-.site-title {
-  position: relative;
-  z-index: 1;
-  font-size: clamp(5.2rem, 14vw, 17rem);
+.site-title,
+.section-heading,
+.projects-heading,
+.blog-heading,
+.contact-heading {
   font-weight: 700;
-  letter-spacing: -0.07em;
-  line-height: 0.82;
-  white-space: nowrap;
+  letter-spacing: -0.045em;
+  line-height: 0.95;
 }
 
-.page-title {
-  font-size: 13em;
+h1,
+.page-title,
+.site-title {
+  font-size: clamp(2.5rem, 6vw, 4.25rem);
+}
+
+.section-heading,
+.projects-heading,
+.blog-heading,
+.contact-heading {
+  margin-bottom: var(--space-3);
+  font-size: clamp(1.75rem, 4vw, 2.5rem);
 }
 
 .intro-copy > .link,
@@ -28,12 +39,7 @@ body {
 .intro-copy p,
 .work-grid p {
   color: var(--color-txt-secondary);
-  color: color-mix(
-    in srgb,
-    var(--view-color, var(--color-txt-primary)) 58%,
-    var(--view-background, var(--color-bg-deep))
-  );
   font-size: 1rem;
   font-weight: 400;
-  line-height: 1.18;
+  line-height: 1.45;
 }

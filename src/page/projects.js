@@ -9,26 +9,41 @@ export class Projects {
     this.#projects = projectsData;
   }
 
-  getProjects() {
-    return this.#projects.map(project => this.#card(project)).join('');
+  getFeatured() {
+    return this.#projects
+      .filter(project => project.featured)
+      .map(project => this.#featured(project))
+      .join('');
   }
 
-  #card(project) {
+  getArchive() {
+    return this.#projects
+      .filter(project => !project.featured)
+      .map(project => this.#archive(project))
+      .join('');
+  }
+
+  #featured(project) {
     const kind = projectKind(project.kind);
 
-    return `<article class="project-card" data-kind="${kind.id}">
-      <div class="project-face">
-        <div class="project-plate">${kind.plate}</div>
-        <p class="project-kind">${kind.label}</p>
-      </div>
-      <div class="project-body">
-        <h3>${project.title}</h3>
-        <p class="project-sub">${project.subText}</p>
-        <p class="project-copy">${project.paragraph}</p>
-        <ul class="project-keywords">${project.keywords.map(keyword => `<li>${keyword}</li>`).join('')}</ul>
-        ${this.#actions(project)}
-      </div>
+    return `<article class="featured">
+      <p class="meta">${kind.label}</p>
+      <h3>${project.title}</h3>
+      <p class="featured-lead">${project.subText}</p>
+      <p class="featured-copy">${project.paragraph}</p>
+      ${this.#actions(project)}
     </article>`;
+  }
+
+  #archive(project) {
+    const kind = projectKind(project.kind);
+
+    return `<li class="archive-row">
+      <span class="archive-name">${project.title}</span>
+      <span class="meta">${kind.label}</span>
+      <span class="archive-desc">${project.subText}</span>
+      ${this.#actions(project)}
+    </li>`;
   }
 
   #actions(project) {
@@ -57,9 +72,9 @@ export class Projects {
 
     if (!links.length) return '';
 
-    return `<ul class="project-actions">${links.map(link => {
+    return `<ul class="text-links">${links.map(link => {
       const attrs = link.external ? ' target="_blank" rel="noopener noreferrer"' : '';
-      return `<li><a href="${link.href}"${attrs}>${link.label}</a></li>`;
+      return `<li><a class="link" href="${link.href}"${attrs}>${link.label}</a></li>`;
     }).join('')}</ul>`;
   }
 }

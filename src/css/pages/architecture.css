@@ -23,8 +23,8 @@
   flex-direction: column;
   gap: 2px;
   padding: 14px 18px;
-  border: 1px solid var(--rule-subtle);
-  border-radius: 12px;
+  border: var(--rule-width) solid var(--rule-color);
+  border-radius: 0;
 }
 
 .arch-spine li::before {
@@ -35,7 +35,7 @@
   height: 10px;
   border: 2px solid currentColor;
   border-radius: 50%;
-  background: var(--view-background, #1746d1);
+  background: var(--color-bg-deep);
   content: "";
   transform: translateY(-50%);
 }
@@ -67,8 +67,8 @@
 
   6%,
   14% {
-    background: var(--view-color, #ffffff);
-    color: var(--view-background, #1746d1);
+    background: transparent;
+    color: inherit;
   }
 }
 

@@ -2,6 +2,7 @@ export const projectsData = [
   {
     title: "Enterprise AI Agent Platform",
     kind: "agents",
+    featured: true,
     subText: "Natural-language platform powering 100+ AI agents",
     paragraph: "Teams used this enterprise platform to create more than 100 AI agents and tools. It combined natural-language interfaces with reusable integrations and a delivery model adopted by three engineering teams.",
     keywords: ["LLMs", "AI Agents", "Natural Language", "Enterprise Platform"],
@@ -21,6 +22,7 @@ export const projectsData = [
   {
     title: "Cisco Single Pane of Glass",
     kind: "platforms",
+    featured: true,
     subText: "Unified data-center operations and alerting dashboard",
     paragraph: "This award-winning platform gave data-center operators one reliable view of fleet health. It unified microservice data, search, graph relationships, predictive alerts, and legacy ticketing systems.",
     keywords: ["Elasticsearch", "Neo4j", "Microservices", "Predictive Alerts"],
@@ -40,6 +42,7 @@ export const projectsData = [
   {
     title: "Nexstar Shared Web Platform",
     kind: "platforms",
+    featured: true,
     subText: "Shared platform for 60+ TV stations",
     paragraph: "This shared web and CMS platform powered more than 60 television station sites. It connected newsroom and media systems while reliably serving over one million visitors in a single day.",
     keywords: ["CMS", "Web Platform", "Media Publishing", "High Traffic"],
@@ -96,6 +99,7 @@ export const projectsData = [
   {
     title: "Poker Champ",
     kind: "products",
+    featured: true,
     subText: "Realtime multiplayer poker with competitive bots",
     paragraph: "A server-authoritative poker game with realtime play, tournaments, and competitive bots. Sessions survive reconnects, while transactional bankrolls keep every chip movement accurate.",
     keywords: ["React Native", "Colyseus", "WebSockets", "Multiplayer"],
@@ -125,6 +129,7 @@ export const projectsData = [
   {
     title: "AutoImage",
     kind: "media",
+    featured: true,
     subText: "Multi-provider AI image generation platform",
     paragraph: "A multi-user platform for generating large, varied image collections across AI providers. Queued batches, R2 storage, credit billing, galleries, moderation, and queue monitoring support the complete workflow.",
     keywords: ["AI Images", "Cloudflare R2", "Prisma", "Job Queues"],
@@ -135,6 +140,7 @@ export const projectsData = [
   {
     title: "Screenplay to Video",
     kind: "media",
+    featured: true,
     subText: "AI pipeline from screenplay to video",
     paragraph: "This production pipeline turns a story into narration, visual prompts, keyframes, animated clips, and cloned-voice audio. Independent Python services handle generation while preserving visual continuity between scenes.",
     keywords: ["Generative Video", "FastAPI", "Voice Cloning", "Media Pipelines"],

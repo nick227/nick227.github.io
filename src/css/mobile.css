@@ -2,25 +2,13 @@
 
 @media (max-width: 1050px) {
   .section-body {
-    grid-template-rows: minmax(330px, 52vh) auto;
-    padding-top: 30px;
+    padding-top: 0;
   }
-
-  .site-subtext {
-    grid-template-columns: 1fr;
-    gap: 55px;
-  }
-
 }
 
 @media (max-width: 620px) {
   :root {
     --header-space: 92px;
-  }
-
-  .page-title,
-  .site-title {
-    font-size: 4.5em;
   }
 
   .home {
@@ -32,32 +20,22 @@
   }
 
   .section-body {
-    display: block;
+    display: flex;
     padding-top: 0;
   }
 
   .site-main {
-    min-height: 54svh;
     overflow: hidden;
   }
 
-  .site-title {
-    font-size: clamp(5.5rem, 46vw, 17rem);
-    line-height: 0.86;
-    white-space: normal;
-  }
-
   .site-subtext {
-    display: block;
+    display: flex;
     padding-bottom: 0;
   }
 
-  .intro-copy {
-    display: none;
-  }
-
-  .work-grid {
-    gap: 22px 26px;
+  .work-grid article {
+    grid-template-columns: 1fr;
+    gap: 4px;
   }
 
   .section-footer p {

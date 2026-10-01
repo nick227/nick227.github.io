@@ -34,25 +34,9 @@ const architectureResources = [
 ];
 
 export const architecture = {
-    backgroundColor: '#1746d1',
-    color: '#ffffff',
+    backgroundColor: '#ffffff',
+    color: '#050505',
     screens: [
-      {
-        timer: 600,
-        html: `<div class="stage-content">
-            <h1 class="page-title stage-layer">Architecture</h1>
-              <div class="cube-wrap">
-                <div class="cube">
-                  <div class="cube__face cube__face--front"></div>
-                  <div class="cube__face cube__face--back"></div>
-                  <div class="cube__face cube__face--left"></div>
-                  <div class="cube__face cube__face--right"></div>
-                  <div class="cube__face cube__face--top"></div>
-                  <div class="cube__face cube__face--bottom"></div>
-                </div>
-              </div>
-          </div>`
-      },
       {
         html: `
           <h1>Architecture</h1>
