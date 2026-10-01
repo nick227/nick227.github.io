@@ -58,7 +58,7 @@ body.is-blog-reading .page.blog {
   margin: 0;
 }
 
-.blog-row {
+.feed-row {
   display: grid;
   grid-template-columns: minmax(0, 1fr) auto;
   column-gap: 16px;
@@ -145,7 +145,7 @@ body.is-blog-reading .page.blog {
 }
 
 @media (hover: hover) {
-  .blog-row:hover .blog-row-title {
+  .feed-row:hover .blog-row-title {
     text-decoration: underline;
     text-decoration-thickness: 1px;
     text-underline-offset: 0.14em;
@@ -365,7 +365,7 @@ body.is-blog-reading .page.blog {
     margin-bottom: 18px;
   }
 
-  .blog-row {
+  .feed-row {
     column-gap: 12px;
     padding: 11px 0;
   }

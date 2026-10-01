@@ -1,14 +1,4 @@
-import { careerMarkup, practiceMarkup } from './content/home.js';
-
-const VIEW_TITLES = {
-  home: 'Nick Rios',
-  architecture: 'Architecture',
-  'ai-automation': 'Automation',
-  'web-platforms': 'Frameworks',
-  'pipeline-systems': 'Pipelines',
-  'creative-design': 'Design',
-  leadership: 'Leadership',
-};
+import { bindPlayer, practiceMarkup, syncPlayer } from './content/home.js';
 import { Stage } from './stage.js';
 import { Navigation } from './navigation.js';
 import { validatePageData } from './validatePageData.js';
@@ -135,13 +125,13 @@ export class Page {
         error,
       );
     });
+    syncPlayer(this.#homeElement, view);
   };
 
   #setupHomeWidgets() {
-    const career = this.#homeElement.querySelector('#career');
     const practice = this.#homeElement.querySelector('#practice');
-    career.innerHTML = careerMarkup();
     practice.innerHTML = practiceMarkup();
+    bindPlayer(this.#homeElement);
   }
 
   #setupProjects() {
@@ -151,16 +141,12 @@ export class Page {
     this.#projectsElement.innerHTML = `
       <section class="screen">
         <h2 class="screen-title">Projects</h2>
-        <div class="screen-body featured-list">${project.getFeatured()}</div>
-      </section>
-      <section class="screen">
-        <h2 class="screen-title">Archive</h2>
         <div class="screen-body">
-          <ol class="archive-list">${project.getArchive()}</ol>
+          <ol class="blog-list">${project.getFeatured()}${project.getArchive()}</ol>
         </div>
       </section>
     `;
-    attachShowMore(this.#projectsElement.querySelector('.archive-list'));
+    attachShowMore(this.#projectsElement.querySelector('.blog-list'));
   }
 
   #setupContact() {
@@ -198,9 +184,6 @@ export class Page {
 
     this.#body.classList.add(`view-${view}`);
     this.#activeView = view;
-
-    const title = this.#homeElement.querySelector('#screen-title');
-    if (title) title.textContent = VIEW_TITLES[view] ?? view;
   }
 
   #removeViewTheme() {

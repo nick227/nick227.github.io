@@ -24,24 +24,20 @@ export class Projects {
   }
 
   #featured(project) {
-    const kind = projectKind(project.kind);
-
-    return `<article class="featured">
-      <p class="meta">${kind.label}</p>
-      <h3>${project.title}</h3>
-      <p class="featured-lead">${project.subText}</p>
-      <p class="featured-copy">${project.paragraph}</p>
-      ${this.#actions(project)}
-    </article>`;
+    return this.#row(project, 'featured');
   }
 
   #archive(project) {
+    return this.#row(project, 'archive-row');
+  }
+
+  #row(project, role) {
     const kind = projectKind(project.kind);
 
-    return `<li class="archive-row">
-      <span class="archive-name">${project.title}</span>
-      <span class="meta">${kind.label}</span>
-      <span class="archive-desc">${project.subText}</span>
+    return `<li class="${role} feed-row">
+      <span class="blog-row-title">${project.title}</span>
+      <span class="blog-row-time">${kind.label}</span>
+      <span class="blog-row-dek">${project.subText}</span>
       ${this.#actions(project)}
     </li>`;
   }

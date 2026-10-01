@@ -9,19 +9,20 @@ export class Stage {
   }
 
   async play(screens) {
-    this.clear();
-
+    this.#abortController?.abort();
     this.#abortController = new AbortController();
     const { signal } = this.#abortController;
 
     try {
+      await this.#exitCurrent(signal);
+      if (signal.aborted) return;
+
       for (const screen of screens) {
         if (signal.aborted) return;
 
         const screenElement = this.#renderScreen(screen.html);
 
-        // No timer means this screen remains until the stage is cleared
-        // or another sequence begins.
+        // No timer means this screen remains until the next block replaces it.
         if (screen.timer == null) return;
 
         await this.#wait(screen.timer, signal);
@@ -45,6 +46,21 @@ export class Stage {
     this.#abortController?.abort();
     this.#abortController = null;
     this.#container.replaceChildren();
+  }
+
+  async #exitCurrent(signal) {
+    const items = [...this.#container.children];
+    const active = items.filter(item => !item.classList.contains('stage-item-out'));
+
+    items
+      .filter(item => item.classList.contains('stage-item-out'))
+      .forEach(item => item.remove());
+
+    if (!active.length) return;
+
+    await Promise.all(active.map(item => this.#exitScreen(item, signal)));
+    if (signal.aborted) return;
+    active.forEach(item => item.remove());
   }
 
   #renderScreen(html) {

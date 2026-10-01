@@ -37,6 +37,26 @@ export const aiAutomation = {
     color: '#050505',
     screens: [
       {
+        timer: 600,
+        html: `
+          <div class="stage-content">
+            <h1 class="page-title">Automation</h1>
+            <div class="chevron-flow" aria-hidden="true">
+              <div class="chevron-flow__track">
+                <span class="chevron"></span>
+                <span class="chevron"></span>
+                <span class="chevron"></span>
+                <span class="chevron"></span>
+                <span class="chevron"></span>
+                <span class="chevron"></span>
+                <span class="chevron"></span>
+                <span class="chevron"></span>
+              </div>
+            </div>
+          </div>
+        `,
+      },
+      {
         html: `
           <h1>Automation</h1>
           <div class="row row-stack">

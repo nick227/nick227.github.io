@@ -29,18 +29,6 @@ const careerJobs = [
   },
 ];
 
-const videoFrame = `
-  <div class="media-frame">
-    <iframe
-      src="https://www.youtube.com/embed/fiF5p3SrKfs?si=OpmS970GRrYhSIZ0"
-      title="Nick Rios on YouTube"
-      allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share"
-      referrerpolicy="strict-origin-when-cross-origin"
-      allowfullscreen
-    ></iframe>
-  </div>
-`;
-
 const practiceTopics = [
   ['architecture', 'Architecture', 'Systems that scale'],
   ['ai-automation', 'AI Automation', 'Powerful workflows'],
@@ -74,14 +62,64 @@ export function careerMarkup() {
 }
 
 export function practiceMarkup() {
-  const topics = practiceTopics.map(([view, name]) => `
-    <li><button class="link" type="button" data-view="${view}">${name}</button></li>
+  const topics = practiceTopics.map(([view, name, line]) => `
+    <li><button class="link" type="button" data-view="${view}" data-line="${line}">${name}</button></li>
   `).join('');
 
-  return `
-    <h2 class="label">Practice <a class="link" href="#blog">Writing</a> <a class="link" href="#contact">Contact</a></h2>
-    <ul class="practice-list">${topics}</ul>
-  `;
+  return `<ul class="practice-list">${topics}</ul>`;
+}
+
+export function bindPlayer(root) {
+  const caption = root.querySelector('.player-caption');
+  const list = root.querySelector('.practice-list');
+  if (!caption || !list) return;
+
+  const currentLine = () => {
+    const current = list.querySelector('[aria-current="true"]');
+    return current ? current.dataset.line : '';
+  };
+
+  const show = line => {
+    caption.textContent = line;
+  };
+
+  list.addEventListener('pointerover', event => {
+    const button = event.target.closest('[data-view]');
+    if (!button || !list.contains(button)) return;
+    show(button.dataset.line);
+  });
+
+  list.addEventListener('pointerleave', () => {
+    show(currentLine());
+  });
+
+  list.addEventListener('focusin', event => {
+    const button = event.target.closest('[data-view]');
+    if (!button) return;
+    show(button.dataset.line);
+  });
+
+  list.addEventListener('focusout', event => {
+    if (list.contains(event.relatedTarget)) return;
+    show(currentLine());
+  });
+}
+
+export function syncPlayer(root, view) {
+  const caption = root.querySelector('.player-caption');
+  let line = '';
+
+  root.querySelectorAll('#practice [data-view]').forEach(button => {
+    const selected = button.dataset.view === view;
+    if (selected) {
+      button.setAttribute('aria-current', 'true');
+      line = button.dataset.line;
+    } else {
+      button.removeAttribute('aria-current');
+    }
+  });
+
+  if (caption) caption.textContent = line;
 }
 
 export const home = {
@@ -90,8 +128,8 @@ export const home = {
   screens: [
     {
       html: `
-        <div class="stage-content">
-          ${videoFrame}
+        <div class="stage-content stage-start">
+          ${careerMarkup()}
         </div>
       `,
     },

@@ -19,13 +19,13 @@ function sectionMarkup() {
   `).join('');
 
   return `
-    <div class="screen">
-      <div class="screen-lead">
-        <h2 class="screen-title contact-heading">Contact</h2>
+    <div class="screen contact-split">
+      <h2 class="screen-title contact-heading">Contact</h2>
+      <div class="contact-aside">
         <img class="contact-portrait" src="/avatar.png" alt="Nick Rios">
         <div class="contact-links">${contactLinks.map(linkMarkup).join('')}</div>
       </div>
-      <form class="contact-form screen-body" method="POST" action="${contactEndpoint}">
+      <form class="contact-form contact-panel" method="POST" action="${contactEndpoint}">
         <header class="contact-intro">
           <p class="contact-lead">Hello and thanks for stopping by.</p>
         </header>

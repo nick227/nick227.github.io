@@ -148,7 +148,7 @@ function renderBlogRow(article) {
 
   return `
     <li>
-      <a class="blog-row" href="${articleHref(article.slug)}">
+      <a class="blog-row feed-row" href="${articleHref(article.slug)}">
         <span class="blog-row-title">${escapeHtml(article.title)}</span>
         <span class="blog-row-time">${preview.minutes} min</span>
         ${dek}

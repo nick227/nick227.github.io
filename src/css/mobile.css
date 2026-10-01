@@ -4,6 +4,24 @@
   .site-main {
     overflow: visible;
   }
+
+  .page.projects .feed-row,
+  .archive-row {
+    grid-template-columns: minmax(0, 1fr);
+  }
+
+  .page.projects .feed-row .blog-row-time {
+    grid-column: 1;
+  }
+
+  .practice-list {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+  }
+
+  .contact-split {
+    grid-template-columns: minmax(0, 1fr);
+    width: min(640px, calc(100% - 2 * var(--page-gutter)));
+  }
 }
 
 @media (max-width: 620px) {

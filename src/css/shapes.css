@@ -25,7 +25,7 @@
 .cube__face {
   position: absolute;
   inset: 0;
-  border: 1px solid rgba(255, 255, 255, 0.9);
+  border: 1px solid currentColor;
 }
 
 .cube__face--front {

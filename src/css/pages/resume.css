@@ -1,7 +1,7 @@
 .career-list {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 12px;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -10,7 +10,7 @@
 .career-job {
   display: flex;
   flex-direction: column;
-  gap: 10px;
+  margin: 0;
 }
 
 .career-job summary {
@@ -39,4 +39,38 @@
 
 .stage h1 {
   display: none;
+}
+
+.stage h1.page-title {
+  display: block;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  letter-spacing: -0.045em;
+  line-height: 1;
+}
+
+.stage .cube {
+  --size: 88px;
+}
+
+.stage .cube-wrap {
+  height: 120px;
+}
+
+.stage .chevron {
+  height: 140px;
+}
+
+.stage .chevron-flow {
+  width: 100%;
+  height: 140px;
+  max-height: 140px;
+}
+
+.stage .pipe-border {
+  height: 160px;
+}
+
+.stage .stage-opening {
+  min-height: 0;
+  padding: 8px 0 16px;
 }

@@ -3,60 +3,15 @@
   padding: 0;
 }
 
-.featured-list {
-  display: flex;
-  flex-direction: column;
-  gap: 28px;
-}
-
-.featured {
-  display: flex;
-  flex-direction: column;
-  gap: 12px;
-}
-
-.featured h3 {
-  font-size: 1.15rem;
-  font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.2;
-}
-
-.featured-lead {
-  font-size: 1rem;
-  line-height: 1.35;
-}
-
-.featured-copy {
-  max-width: 62ch;
-  color: var(--color-txt-secondary);
-  font-size: 1.125rem;
-}
-
-.archive-list {
-  display: flex;
-  flex-direction: column;
-  gap: clamp(32px, 4vh, 56px);
-  padding: 0;
+.feed-row .text-links {
+  grid-column: 1;
   margin: 0;
-  list-style: none;
+  padding: 0;
 }
 
-.archive-row {
-  display: flex;
-  flex-direction: column;
-  gap: 6px;
-}
-
-.archive-name {
-  font-size: 1rem;
-  font-weight: 700;
-  letter-spacing: -0.04em;
-  line-height: 1.1;
-}
-
-.archive-desc {
-  color: var(--color-txt-secondary);
+.feed-row .text-links .link {
+  font-size: 0.75rem;
+  font-weight: 500;
 }
 
 .meta {
