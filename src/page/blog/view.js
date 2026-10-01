@@ -1,4 +1,4 @@
-import { articleHref } from './blogRoutes.js';
+import { articleHref } from './routes.js';
 import { attachShowMore } from '../showMore.js';
 
 const SELECTORS = {

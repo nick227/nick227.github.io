@@ -1,4 +1,4 @@
-export const creative = {
+export const creativeDesign = {
   backgroundColor: '#ffffff',
   color: '#050505',
   screens: [

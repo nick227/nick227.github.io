@@ -6,7 +6,7 @@ const pipelineStages = [
   { label: 'Support UI', note: '30 engineers acting on tickets' },
 ];
 
-export const pipelines = {
+export const pipelineSystems = {
   backgroundColor: '#ffffff',
   color: '#050505',
     screens: [

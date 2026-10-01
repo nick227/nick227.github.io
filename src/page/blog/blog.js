@@ -1,7 +1,7 @@
-import { blogList } from '../blog/index.js';
-import { BlogCatalog } from './blog/blogCatalog.js';
-import { articleSlugFromHash } from './blog/blogRoutes.js';
-import { BlogView } from './blog/blogView.js';
+import { blogList } from '../../blog/index.js';
+import { BlogCatalog } from './catalog.js';
+import { articleSlugFromHash } from './routes.js';
+import { BlogView } from './view.js';
 
 const READING_MODE_CLASS = 'is-blog-reading';
 

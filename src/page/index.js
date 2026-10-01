@@ -1,4 +1,4 @@
-import { pageData } from './pageData.js';
+import { pageData } from './data/pageData.js';
 import { Page } from './page.js';
 
 const navigationElement = document.body;

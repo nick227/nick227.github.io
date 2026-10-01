@@ -1,6 +1,6 @@
-import { articleHref } from './blog/blogRoutes.js';
-import { projectKind } from './projectKinds.js';
-import { projectsData } from './projectsData.js';
+import { articleHref } from '../blog/routes.js';
+import { projectKind } from './kinds.js';
+import { projectsData } from './data.js';
 
 export class Projects {
   #projects;

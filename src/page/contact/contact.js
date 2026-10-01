@@ -1,4 +1,4 @@
-import { contactEndpoint, contactIntents, contactLinks } from './content/contact.js';
+import { contactEndpoint, contactIntents, contactLinks } from './data.js';
 
 const MOTION_MS = 280;
 

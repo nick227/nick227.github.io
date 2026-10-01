@@ -1,9 +1,9 @@
 import { homeFlow } from './content/home.js';
 import { Navigation } from './navigation.js';
-import { validatePageData } from './validatePageData.js';
-import { Projects } from './projects.js';
-import { Blog } from './blog.js';
-import { Contact } from './contact.js';
+import { validatePageData } from './data/validate.js';
+import { Projects } from './projects/projects.js';
+import { Blog } from './blog/blog.js';
+import { Contact } from './contact/contact.js';
 import { attachShowMore } from './showMore.js';
 
 /**
