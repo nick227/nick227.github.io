@@ -17,8 +17,9 @@
 .contact-form {
   display: flex;
   flex-direction: column;
+  align-items: flex-start;
   order: 1;
-  width: 100%;
+  width: min(760px, 100%);
   min-width: 0;
   gap: 22px;
 }
@@ -299,13 +300,13 @@
     gap: clamp(32px, 4vw, 64px);
   }
 
-  .contact-aside {
+  .contact-panel .contact-aside {
     order: 1;
     flex: 0 0 380px;
     width: 380px;
   }
 
-  .contact-form {
+  .contact-panel .contact-form {
     order: 2;
     flex: 1 1 0;
     width: auto;
