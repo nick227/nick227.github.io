@@ -270,7 +270,7 @@
 
 .contact-split {
   display: grid;
-  grid-template-columns: 220px minmax(0, 1fr);
+  grid-template-columns: 1fr 1fr;
   align-items: start;
   justify-items: start;
   width: min(640px, 100%);

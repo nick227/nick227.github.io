@@ -26,9 +26,6 @@ function sectionMarkup() {
         <div class="contact-links">${contactLinks.map(linkMarkup).join('')}</div>
       </div>
       <form class="contact-form contact-panel" method="POST" action="${contactEndpoint}">
-        <header class="contact-intro">
-          <p class="contact-lead">Hello and thanks for stopping by.</p>
-        </header>
         <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
         <input type="hidden" name="topic" value="">
         <div class="contact-intents">${intents}</div>

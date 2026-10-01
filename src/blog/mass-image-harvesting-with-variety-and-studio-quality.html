@@ -1,14 +1,12 @@
 <p>
-  This article is about AutoImage, the image-batch system I have rebuilt since
-  2022: controlled prompt variation, fail-fast queues, provider switching, and
-  organized review so studio-quality harvests stay usable at volume.
+  This article is about AutoImage, the image-batch system I started in
+  2022 to give myself bulk ai image generation.
 </p>
 
 <p>
-  You will get the prompt-builder approach, how I protect tokens on bulk runs,
-  what changed across providers since DALL-E 2, and where the public tool stands
-  now.
+<a href="https://autoimage.up.railway.app/" target="_blank">https://autoimage.up.railway.app</a>
 </p>
+
 
 <h2>The prompt builder is the best part</h2>
 
@@ -53,8 +51,7 @@
 
 <p>
   In this project, tokens and API requests represent real spending. A bulk run
-  can become expensive if a failed request keeps retrying or one user fills the
-  entire queue. I put generation work behind a queue that controls concurrency,
+  can gt expensive if something fails. I put everybody's generation work behind a simple but robust queue that controls concurrency,
   priority, and per-user rate limits. A single user cannot consume all available
   provider capacity, and a large batch cannot send every request at once.
 </p>
@@ -62,23 +59,10 @@
 <p>
   “Fail fast” does not mean that every error is abandoned immediately. The
   system first separates temporary failures from requests that are unlikely to
-  succeed:
-</p>
-
-<ul>
-  <li>
-    Network errors, rate limits, timeouts, and temporary server errors can be
-    retried.
-  </li>
-  <li>
-    Retries use exponential backoff, starting at 500 milliseconds and doubling
-    with a small amount of random jitter.
-  </li>
-  <li>
-    Invalid client requests and content-policy failures stop immediately rather
+  succeed. Network errors, rate limits, timeouts, and temporary server errors can be
+    retried. Invalid client requests and content-policy failures stop immediately rather
     than spending more tokens on the same work.
-  </li>
-</ul>
+</p>
 
 <p>
   Every queue event is logged. Because many batches run unattended, the logs
@@ -89,12 +73,10 @@
   of the batch or repeatedly hitting a paid endpoint.
 </p>
 
-<h2>About my system design</h2>
+<h2>Generator platforms</h2>
 
 <p>
-  A provider response is only the middle of the generation process. Before an
-  image appears in a user's feed, AutoImage has to validate the request, protect
-  the user's balance, store the file, and leave a reliable accounting record.
+  The back end is currently connected to dezgo, OpenAI, Grok and Google. The best value is definitely FLUX. It's also the only usable model on dezgo at the time of this writing. Stable diffusion is huge drop-off in quality. In my opinion overall quality goes to Gemini.
 </p>
 
 <ol>
