@@ -248,7 +248,7 @@ body.is-blog-reading .section-footer::before {
 }
 
 .figure .cube {
-  --size: 300px;
+  --size: 255px;
   animation: cube-face 8s ease-in-out infinite;
 }
 
