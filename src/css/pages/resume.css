@@ -1,7 +1,7 @@
 .career-list {
   display: flex;
   flex-direction: column;
-  gap: clamp(28px, 4vh, 48px);
+  gap: 16px;
   padding: 0;
   margin: 0;
   list-style: none;
@@ -13,22 +13,28 @@
   gap: 10px;
 }
 
-.career-job__heading {
+.career-job summary {
   display: flex;
   flex-direction: column;
-  align-items: flex-start;
-  gap: 6px;
+  gap: 2px;
+  cursor: pointer;
+  list-style: none;
 }
 
-.career-job h3 {
-  font-size: clamp(1.35rem, 1.8vw, 1.75rem);
-  letter-spacing: -0.04em;
-  line-height: 1.1;
+.career-job summary::-webkit-details-marker {
+  display: none;
 }
 
-.career-job p:last-child {
-  font-size: 1.125rem;
-  line-height: 1.5;
+.career-job__name {
+  font-size: 1rem;
+  font-weight: 700;
+  letter-spacing: -0.03em;
+}
+
+.career-job p {
+  margin-top: 8px;
+  font-size: 1rem;
+  line-height: 1.45;
 }
 
 .stage h1 {

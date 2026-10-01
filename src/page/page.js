@@ -1,5 +1,4 @@
 import { careerMarkup, practiceMarkup } from './content/home.js';
-import { mountDeck } from './deck.js';
 
 const VIEW_TITLES = {
   home: 'Nick Rios',
@@ -39,7 +38,6 @@ export class Page {
   #stage;
   #navigation;
   #blog;
-  #deck;
 
   // Runtime state used to make start/stop safe to call more than once.
   #activeView = null;
@@ -109,8 +107,6 @@ export class Page {
     this.#pagePositionObserver = null;
     this.#body.classList.remove('is-below-home');
     this.#blog?.unmount();
-    this.#deck?.disconnect();
-    this.#deck = null;
     this.#stage.clear();
     this.#removeViewTheme();
 
@@ -128,9 +124,7 @@ export class Page {
       return;
     }
 
-    const hadView = this.#activeView;
     this.#setViewTheme(view);
-    if (hadView) this.#deck?.show(0);
 
     // Stage.play cancels any sequence already in progress. Keeping the error
     // boundary here prevents rendering failures from becoming unhandled
@@ -148,7 +142,6 @@ export class Page {
     const practice = this.#homeElement.querySelector('#practice');
     career.innerHTML = careerMarkup();
     practice.innerHTML = practiceMarkup();
-    this.#deck = mountDeck(this.#homeElement.querySelector('#deck'));
   }
 
   #setupProjects() {

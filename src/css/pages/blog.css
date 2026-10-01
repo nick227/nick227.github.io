@@ -71,7 +71,7 @@ body.is-blog-reading .page.blog {
 .blog-row-title {
   min-width: 0;
   font-family: var(--font-sans);
-  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-size: 1.05rem;
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1.15;
@@ -102,7 +102,7 @@ body.is-blog-reading .page.blog {
 
 .blog-author-portrait {
   display: block;
-  width: 160px;
+  width: 64px;
   height: auto;
   aspect-ratio: 1;
   border: 0;
@@ -199,7 +199,7 @@ body.is-blog-reading .page.blog {
 
 .blog-reader-header h1 {
   margin: 12px 0 20px;
-  font-size: clamp(3.4rem, 7vw, 6.75rem);
+  font-size: clamp(1.5rem, 3vw, 2rem);
   overflow-wrap: anywhere;
   text-wrap: balance;
 }

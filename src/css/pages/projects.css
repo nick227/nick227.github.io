@@ -6,7 +6,7 @@
 .featured-list {
   display: flex;
   flex-direction: column;
-  gap: clamp(56px, 8vh, 104px);
+  gap: 28px;
 }
 
 .featured {
@@ -16,14 +16,14 @@
 }
 
 .featured h3 {
-  font-size: clamp(2.2rem, 4vw, 3.6rem);
+  font-size: 1.15rem;
   font-weight: 700;
-  letter-spacing: -0.05em;
-  line-height: 0.95;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
 }
 
 .featured-lead {
-  font-size: clamp(1.15rem, 1.6vw, 1.4rem);
+  font-size: 1rem;
   line-height: 1.35;
 }
 
@@ -49,7 +49,7 @@
 }
 
 .archive-name {
-  font-size: clamp(1.35rem, 2vw, 1.85rem);
+  font-size: 1rem;
   font-weight: 700;
   letter-spacing: -0.04em;
   line-height: 1.1;
@@ -69,4 +69,5 @@
 
 .screen > .screen-title {
   text-align: left;
+  text-transform: uppercase;
 }

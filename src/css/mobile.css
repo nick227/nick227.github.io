@@ -1,10 +1,6 @@
 /* Site shell breakpoints. Slideshow breakpoints stay with their page module. */
 
 @media (max-width: 800px) {
-  .widget .media-frame {
-    width: 100%;
-  }
-
   .site-main {
     overflow: visible;
   }

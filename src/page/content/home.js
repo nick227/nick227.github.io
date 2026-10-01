@@ -53,11 +53,13 @@ const practiceTopics = [
 function jobMarkup(job) {
   return `
     <li class="career-job">
-      <div class="career-job__heading">
-        <h3>${job.company}</h3>
-        <p class="meta">${job.title} · ${job.dates}</p>
-      </div>
-      <p>${job.summary}</p>
+      <details>
+        <summary>
+          <span class="career-job__name">${job.company}</span>
+          <span class="meta">${job.title} · ${job.dates}</span>
+        </summary>
+        <p>${job.summary}</p>
+      </details>
     </li>
   `;
 }
@@ -66,28 +68,19 @@ export function careerMarkup() {
   const jobs = careerJobs.map(jobMarkup).join('');
 
   return `
-    <h2 class="widget-title">Career</h2>
-    <a class="link" href="/nick-rios.pdf" download>Résumé</a>
+    <h2 class="label">Career <a class="link" href="/nick-rios.pdf" download>Résumé</a></h2>
     <ol class="career-list">${jobs}</ol>
   `;
 }
 
 export function practiceMarkup() {
-  const topics = practiceTopics.map(([view, name, line]) => `
-    <li>
-      <button class="link" type="button" data-view="${view}">${name}</button>
-      <p>${line}</p>
-    </li>
+  const topics = practiceTopics.map(([view, name]) => `
+    <li><button class="link" type="button" data-view="${view}">${name}</button></li>
   `).join('');
 
   return `
-    <h2 class="widget-title">Practice</h2>
-    <p class="widget-note">Senior software engineer. Proven record of quality technology delivery. I deliver intelligent systems for enterprise. World-class collaborator and team builder.</p>
+    <h2 class="label">Practice <a class="link" href="#blog">Writing</a> <a class="link" href="#contact">Contact</a></h2>
     <ul class="practice-list">${topics}</ul>
-    <div class="text-links">
-      <a class="link" href="#blog">Writing</a>
-      <a class="link" href="#contact">Contact</a>
-    </div>
   `;
 }
 
