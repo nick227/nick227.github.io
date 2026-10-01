@@ -106,14 +106,9 @@ export class BlogView {
 
 function renderBlog(articles) {
   return `
-    <section class="blog-index" data-blog-index>
-      <h2 class="blog-heading" data-blog-index-title tabindex="-1">Blog</h2>
-      <div class="blog-layout">
-        <div class="blog-feed">
-          <ol class="blog-list">
-            ${articles.map(renderBlogRow).join('')}
-          </ol>
-        </div>
+    <section class="blog-index screen" data-blog-index>
+      <div class="screen-lead">
+        <h2 class="screen-title blog-heading" data-blog-index-title tabindex="-1">Blog</h2>
         <aside class="blog-author" aria-label="Author">
           <img class="blog-author-portrait" src="/avatar.png" alt="">
           <div class="blog-author-copy">
@@ -122,6 +117,11 @@ function renderBlog(articles) {
             <p class="blog-author-place">Austin, TX</p>
           </div>
         </aside>
+      </div>
+      <div class="blog-feed screen-body">
+        <ol class="blog-list">
+          ${articles.map(renderBlogRow).join('')}
+        </ol>
       </div>
     </section>
 

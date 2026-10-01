@@ -1,4 +1,14 @@
 import { careerMarkup } from './content/home.js';
+
+const VIEW_TITLES = {
+  home: 'Nick Rios',
+  architecture: 'Architecture',
+  'ai-automation': 'Automation',
+  'web-platforms': 'Frameworks',
+  'pipeline-systems': 'Pipelines',
+  'creative-design': 'Design',
+  leadership: 'Leadership',
+};
 import { Stage } from './stage.js';
 import { Navigation } from './navigation.js';
 import { validatePageData } from './validatePageData.js';
@@ -137,10 +147,16 @@ export class Page {
 
     // Project data is locally authored and Projects returns trusted markup.
     this.#projectsElement.innerHTML = `
-      <h2 class="section-heading">Projects</h2>
-      <div class="featured-list">${project.getFeatured()}</div>
-      <h2 class="section-heading">Archive</h2>
-      <ol class="archive-list">${project.getArchive()}</ol>
+      <section class="screen">
+        <h2 class="screen-title">Projects</h2>
+        <div class="screen-body featured-list">${project.getFeatured()}</div>
+      </section>
+      <section class="screen">
+        <h2 class="screen-title">Archive</h2>
+        <div class="screen-body">
+          <ol class="archive-list">${project.getArchive()}</ol>
+        </div>
+      </section>
     `;
     attachShowMore(this.#projectsElement.querySelector('.archive-list'));
   }
@@ -180,6 +196,9 @@ export class Page {
 
     this.#body.classList.add(`view-${view}`);
     this.#activeView = view;
+
+    const title = this.#homeElement.querySelector('#screen-title');
+    if (title) title.textContent = VIEW_TITLES[view] ?? view;
   }
 
   #removeViewTheme() {

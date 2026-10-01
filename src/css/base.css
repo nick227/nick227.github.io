@@ -71,10 +71,12 @@ li {
 
 .row {
   display: flex;
+  flex-direction: column;
+  gap: clamp(48px, 6vh, 96px);
 }
 
 .col-50 {
-  width: 50%;
+  width: 100%;
   position: relative;
 }
 

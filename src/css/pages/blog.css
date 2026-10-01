@@ -1,8 +1,9 @@
 /* Medium-style essay index on a full-bleed reading sheet. */
 
 .page.blog {
-  width: min(100%, calc(var(--width-content) + 2 * var(--page-gutter)));
-  padding-bottom: var(--footer-space);
+  width: 100%;
+  margin: 0;
+  padding: 0;
   background: var(--color-bg-deep);
   color: var(--color-txt-primary);
 }
@@ -18,8 +19,7 @@ body.is-blog-reading .page.blog {
 }
 
 .blog-index {
-  width: min(100%, var(--width-content));
-  margin-inline: auto;
+  width: 100%;
 }
 
 .blog-heading {
@@ -39,25 +39,22 @@ body.is-blog-reading .page.blog {
 }
 
 .blog-author {
-  position: sticky;
-  top: calc(var(--header-space) + 12px);
   display: flex;
   flex-direction: column;
   gap: 12px;
-  padding-top: 14px;
-  border-top: var(--rule-width) solid var(--rule-color);
 }
 
 .blog-list {
+  display: flex;
+  flex-direction: column;
+  gap: clamp(28px, 4vh, 48px);
   padding: 0;
-  border-top: var(--rule-width) solid var(--rule-color);
   margin: 0;
   list-style: none;
 }
 
 .blog-list li {
   margin: 0;
-  border-bottom: var(--rule-width) solid var(--rule-color);
 }
 
 .blog-row {
@@ -73,10 +70,10 @@ body.is-blog-reading .page.blog {
 .blog-row-title {
   min-width: 0;
   font-family: var(--font-sans);
-  font-size: 1.05rem;
+  font-size: clamp(1.35rem, 2vw, 1.85rem);
   font-weight: 700;
-  letter-spacing: -0.03em;
-  line-height: 1.25;
+  letter-spacing: -0.04em;
+  line-height: 1.15;
   overflow-wrap: break-word;
 }
 
@@ -107,7 +104,7 @@ body.is-blog-reading .page.blog {
   width: 160px;
   height: auto;
   aspect-ratio: 1;
-  border: var(--rule-width) solid var(--rule-color);
+  border: 0;
   border-radius: 0;
 }
 
@@ -155,8 +152,11 @@ body.is-blog-reading .page.blog {
 }
 
 .blog-reader {
-  width: min(100%, var(--width-reading-wide));
-  margin: 0 auto;
+  width: 100%;
+  padding:
+    calc(var(--header-space) + clamp(28px, 5vh, 72px))
+    var(--page-gutter)
+    clamp(56px, 8vh, 120px);
 }
 
 .blog-reader-back,
@@ -187,6 +187,7 @@ body.is-blog-reading .page.blog {
 
 .blog-reader-header h1 {
   margin: 12px 0 20px;
+  font-size: clamp(3.4rem, 7vw, 6.75rem);
   overflow-wrap: anywhere;
   text-wrap: balance;
 }
@@ -335,9 +336,8 @@ body.is-blog-reading .page.blog {
     align-items: flex-start;
     gap: 12px;
     width: 100%;
-    padding: 0 0 14px;
-    border-top: 0;
-    border-bottom: var(--rule-width) solid var(--rule-color);
+    padding: 0;
+    border: 0;
   }
 
   .blog-row-time {
@@ -347,7 +347,7 @@ body.is-blog-reading .page.blog {
 
 @media (max-width: 620px) {
   .page.blog {
-    margin-top: 52px;
+    margin-top: 0;
   }
 
   .blog-heading {

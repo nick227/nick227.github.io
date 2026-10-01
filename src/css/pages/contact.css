@@ -1,6 +1,7 @@
 .page.contact {
-  display: flex;
-  flex-direction: column;
+  display: block;
+  width: 100%;
+  padding: 0;
   color: var(--color-txt-primary);
 }
 
@@ -37,17 +38,15 @@
 }
 
 .contact-heading {
-  font-size: clamp(2.2rem, 4vw, 3rem);
   font-weight: 700;
-  letter-spacing: -0.07em;
-  line-height: 0.92;
+  letter-spacing: -0.06em;
+  line-height: 0.88;
 }
 
 .contact-lead {
-  max-width: 28rem;
-  color: color-mix(in srgb, currentColor 82%, transparent);
-  font-size: 1.05rem;
-  line-height: 1.45;
+  max-width: 36rem;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
+  line-height: 1.35;
 }
 
 .contact-honey {
@@ -57,27 +56,27 @@
 .contact-intents {
   display: flex;
   flex-direction: column;
+  gap: clamp(20px, 3vh, 36px);
   padding: 0;
-  border-top: var(--rule-width) solid var(--rule-color);
-  margin: 0;
+  margin: var(--space-4) 0 0;
 }
 
 .contact-intent {
   display: flex;
-  width: 100%;
+  width: fit-content;
   min-height: 44px;
   align-items: center;
-  padding: var(--space-2) 0;
+  padding: 0;
   border: 0;
-  border-bottom: var(--rule-width) solid var(--rule-color);
   background: none;
   color: inherit;
-  font-size: 1rem;
+  font-size: clamp(1.35rem, 2vw, 1.8rem);
   font-weight: 700;
-  line-height: 1.3;
+  letter-spacing: -0.03em;
+  line-height: 1.2;
   text-align: left;
   text-decoration: underline;
-  text-underline-offset: 0.25em;
+  text-underline-offset: 0.2em;
   cursor: pointer;
 }
 
@@ -270,9 +269,8 @@
 
 .contact-portrait {
   display: block;
-  width: 160px;
+  width: min(100%, 280px);
   aspect-ratio: 1;
-  border: var(--rule-width) solid var(--rule-color);
   object-fit: cover;
 }
 

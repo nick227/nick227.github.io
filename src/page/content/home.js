@@ -53,9 +53,11 @@ export function careerMarkup() {
   `).join('');
 
   return `
-    <h2 class="section-heading">Career</h2>
-    <p class="career-resume"><a class="link" href="/nick-rios.pdf" download>Résumé</a></p>
-    <ol class="career-list">${jobs}</ol>
+    <div class="screen-lead">
+      <h2 class="screen-title">Career</h2>
+      <p class="career-resume"><a class="link" href="/nick-rios.pdf" download>Résumé</a></p>
+    </div>
+    <ol class="screen-body career-list">${jobs}</ol>
   `;
 }
 
@@ -67,7 +69,6 @@ export const home = {
       html: `
         <div class="stage-content stage-start">
           ${videoFrame}
-          <h1 class="site-title home-title">Nick Rios</h1>
         </div>
       `,
     },

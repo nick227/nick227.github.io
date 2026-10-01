@@ -15,13 +15,13 @@
   --letter-spacing-stage-label: 0.12em;
 
   /* Layout Rhythm */
-  --width-content: 1128px;
-  --width-reading: 760px;
+  --width-content: 100%;
+  --width-reading: 68ch;
   --width-reading-wide: 860px;
   --width-note: 580px;
-  --page-gutter: clamp(22px, 4.5vw, 72px);
+  --page-gutter: clamp(28px, 4vw, 72px);
   --header-top: 20px;
-  --header-space: 68px;
+  --header-space: 72px;
   --footer-bottom: 0px;
   --footer-space: 76px;
   --stage-opening-height: 410px;
