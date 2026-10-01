@@ -41,8 +41,17 @@ const videoFrame = `
   </div>
 `;
 
-export function careerMarkup() {
-  const jobs = careerJobs.map(job => `
+const practiceTopics = [
+  ['architecture', 'Architecture', 'Systems that scale'],
+  ['ai-automation', 'AI Automation', 'Powerful workflows'],
+  ['web-platforms', 'Web Frameworks', 'Modern performance'],
+  ['pipeline-systems', 'Pipeline Systems', 'High-quality systems'],
+  ['creative-design', 'Creative Design', 'Visual clarity'],
+  ['leadership', 'Leadership', 'Intentional execution'],
+];
+
+function jobMarkup(job) {
+  return `
     <li class="career-job">
       <div class="career-job__heading">
         <h3>${job.company}</h3>
@@ -50,14 +59,35 @@ export function careerMarkup() {
       </div>
       <p>${job.summary}</p>
     </li>
+  `;
+}
+
+export function careerMarkup() {
+  const jobs = careerJobs.map(jobMarkup).join('');
+
+  return `
+    <h2 class="widget-title">Career</h2>
+    <a class="link" href="/nick-rios.pdf" download>Résumé</a>
+    <ol class="career-list">${jobs}</ol>
+  `;
+}
+
+export function practiceMarkup() {
+  const topics = practiceTopics.map(([view, name, line]) => `
+    <li>
+      <button class="link" type="button" data-view="${view}">${name}</button>
+      <p>${line}</p>
+    </li>
   `).join('');
 
   return `
-    <div class="screen-lead">
-      <h2 class="screen-title">Career</h2>
-      <p class="career-resume"><a class="link" href="/nick-rios.pdf" download>Résumé</a></p>
+    <h2 class="widget-title">Practice</h2>
+    <p class="widget-note">Senior software engineer. Proven record of quality technology delivery. I deliver intelligent systems for enterprise. World-class collaborator and team builder.</p>
+    <ul class="practice-list">${topics}</ul>
+    <div class="text-links">
+      <a class="link" href="#blog">Writing</a>
+      <a class="link" href="#contact">Contact</a>
     </div>
-    <ol class="screen-body career-list">${jobs}</ol>
   `;
 }
 
@@ -67,7 +97,7 @@ export const home = {
   screens: [
     {
       html: `
-        <div class="stage-content stage-start">
+        <div class="stage-content">
           ${videoFrame}
         </div>
       `,

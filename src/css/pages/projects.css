@@ -68,6 +68,5 @@
 }
 
 .screen > .screen-title {
-  position: sticky;
-  top: calc(var(--header-space) + 24px);
+  text-align: center;
 }

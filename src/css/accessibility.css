@@ -24,6 +24,10 @@
     transition: none;
   }
 
+  .deck {
+    scroll-behavior: auto;
+  }
+
   .stage-item,
   .stage-item.stage-item-out,
   .grow-text {
