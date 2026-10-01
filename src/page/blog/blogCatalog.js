@@ -7,15 +7,12 @@ export class BlogCatalog {
       throw new TypeError('BlogCatalog requires an array of articles.');
     }
 
-    validateArticles(articles);
-    this.#articles = [...articles];
-    this.#articleLookup = new Map(
-      this.#articles.map(article => [article.slug, article]),
-    );
+    this.#articles = articles;
+    this.#articleLookup = indexArticles(articles);
   }
 
   all() {
-    return [...this.#articles];
+    return this.#articles;
   }
 
   find(slug) {
@@ -23,20 +20,25 @@ export class BlogCatalog {
   }
 }
 
-function validateArticles(articles) {
-  const slugs = new Set();
+function indexArticles(articles) {
+  const lookup = new Map();
 
-  articles.forEach((article, index) => {
-    if (!article || typeof article.slug !== 'string' || !article.slug.trim()) {
+  for (let index = 0; index < articles.length; index++) {
+    const article = articles[index];
+    const slug = article && article.slug;
+
+    if (typeof slug !== 'string' || !slug.trim()) {
       throw new TypeError(`Blog article at index ${index} requires a slug.`);
     }
     if (typeof article.title !== 'string' || !article.title.trim()) {
-      throw new TypeError(`Blog article "${article.slug}" requires a title.`);
+      throw new TypeError(`Blog article "${slug}" requires a title.`);
     }
-    if (slugs.has(article.slug)) {
-      throw new Error(`Duplicate blog article slug: "${article.slug}".`);
+    if (lookup.has(slug)) {
+      throw new Error(`Duplicate blog article slug: "${slug}".`);
     }
 
-    slugs.add(article.slug);
-  });
+    lookup.set(slug, article);
+  }
+
+  return lookup;
 }

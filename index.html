@@ -22,15 +22,119 @@
     html,
     body {
       width: 100%;
-      height: 100%;
       background: white;
-      color: black;
+      color: #050505;
+      font-family: Outfit, Arial, sans-serif;
+    }
+
+    .section-header {
+      position: fixed;
+      z-index: 100;
+      top: 20px;
+      right: clamp(28px, 4vw, 72px);
+      left: clamp(28px, 4vw, 72px);
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 0 33%;
+    }
+
+    .site-branding,
+    .site-navigation a {
+      display: inline-flex;
+      min-height: 44px;
+      align-items: center;
+      color: inherit;
+      font: inherit;
+      text-decoration: none;
+    }
+
+    .site-navigation {
+      display: flex;
+      align-items: center;
+      gap: clamp(25px, 3.7vw, 43px);
+    }
+
+    .column {
+      width: min(640px, calc(100% - 2 * clamp(28px, 4vw, 72px)));
+      margin-inline: auto;
+      padding: 100px 0 0;
+    }
+
+    .media-frame {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #f2f2f2;
+    }
+
+    .media-frame iframe {
+      display: block;
+      width: 100%;
+      height: 100%;
+      border: 0;
+      opacity: 0;
+    }
+
+    .media-frame.is-ready iframe {
+      opacity: 1;
+      transition: opacity 160ms ease;
+    }
+
+    .boot {
+      position: absolute;
+      inset: 0;
+      display: grid;
+      place-items: center;
+    }
+
+    .media-frame.is-ready .boot {
+      display: none;
+    }
+
+    .boot::before {
+      width: 16px;
+      height: 16px;
+      border: 2px solid #e4e4e4;
+      border-top-color: #8a8a8a;
+      border-radius: 50%;
+      content: "";
+      animation: boot-spin 0.7s linear infinite;
+    }
+
+    @keyframes boot-spin {
+      to { transform: rotate(1turn); }
+    }
+
+    @media (max-width: 800px) {
+      .section-header,
+      .column {
+        position: relative;
+        top: 0;
+        right: 0;
+        left: 0;
+        width: 100%;
+        margin-inline: auto;
+        padding: 0 20px;
+      }
+
+      .column {
+        padding-top: 28px;
+      }
+    }
+
+    @media (prefers-reduced-motion: reduce) {
+      .boot::before { animation: none; }
+      .media-frame.is-ready iframe { transition: none; }
     }
   </style>
 
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  <link rel="preconnect" href="https://www.youtube.com">
+  <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet" media="print" onload="this.media='all'">
+  <noscript>
+    <link href="https://fonts.googleapis.com/css2?family=Outfit:wght@300;400;500;700;900&display=swap" rel="stylesheet">
+  </noscript>
 
   <!-- Root Stylesheet Imports CSS Modules -->
   <link rel="stylesheet" href="index.css">
@@ -49,7 +153,8 @@
     <div class="column">
       <div class="intro">
         <h1 class="home-title site-title" id="screen-title">Nick Rios</h1>
-        <div class="media-frame">
+        <div class="media-frame" id="intro-frame">
+          <div class="boot" role="status" aria-label="Loading video"></div>
           <iframe
             src="https://www.youtube.com/embed/fiF5p3SrKfs?si=OpmS970GRrYhSIZ0"
             title="Nick Rios on YouTube"
@@ -58,6 +163,15 @@
             allowfullscreen
           ></iframe>
         </div>
+        <script>
+          (function () {
+            var frame = document.getElementById('intro-frame');
+            var video = frame.querySelector('iframe');
+            var reveal = function () { frame.classList.add('is-ready'); };
+            video.addEventListener('load', reveal, { once: true });
+            video.addEventListener('error', reveal, { once: true });
+          })();
+        </script>
       </div>
       <div class="practice" id="practice"></div>
     </div>

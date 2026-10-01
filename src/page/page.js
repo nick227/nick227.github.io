@@ -125,7 +125,7 @@ export class Page {
       <section class="screen">
         <h2 class="screen-title">Projects</h2>
         <div class="screen-body">
-          <ol class="blog-list">${project.getFeatured()}${project.getArchive()}</ol>
+          <ol class="blog-list">${project.markup()}</ol>
         </div>
       </section>
     `;

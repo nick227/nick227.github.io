@@ -27,9 +27,16 @@
 
   .stage-item,
   .stage-item.stage-item-out,
-  .grow-text {
+  .grow-text,
+  .block,
+  .screen,
+  .boot::before {
     opacity: 1;
     animation: none;
     transform: none;
+  }
+
+  .media-frame.is-ready iframe {
+    transition: none;
   }
 }

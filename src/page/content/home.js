@@ -61,15 +61,21 @@ export function careerMarkup() {
   `;
 }
 
-function practiceSection(view, screens) {
-  const copy = [...screens].reverse().find(screen => screen.timer == null);
+function practiceCopy(screens) {
+  for (let i = screens.length - 1; i >= 0; i--) {
+    if (screens[i].timer == null) return screens[i];
+  }
+}
 
+function practiceSection(view, screens) {
   return `
     <section class="block" id="${view}">
-      <div class="block-copy">${copy.html}</div>
+      <div class="block-copy">${practiceCopy(screens).html}</div>
     </section>
   `;
 }
+
+const careerHtml = careerMarkup();
 
 export function homeFlow(pageData) {
   const practice = practiceViews
@@ -77,7 +83,7 @@ export function homeFlow(pageData) {
     .join('');
 
   return `
-    <section class="block" id="career" aria-label="Career">${careerMarkup()}</section>
+    <section class="block" id="career" aria-label="Career">${careerHtml}</section>
     ${practice}
   `;
 }
@@ -89,7 +95,7 @@ export const home = {
     {
       html: `
         <div class="stage-content stage-start">
-          ${careerMarkup()}
+          ${careerHtml}
         </div>
       `,
     },

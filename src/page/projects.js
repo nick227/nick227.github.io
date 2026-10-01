@@ -9,26 +9,17 @@ export class Projects {
     this.#projects = projectsData;
   }
 
-  getFeatured() {
-    return this.#projects
-      .filter(project => project.featured)
-      .map(project => this.#featured(project))
-      .join('');
-  }
+  markup() {
+    const featured = [];
+    const archive = [];
 
-  getArchive() {
-    return this.#projects
-      .filter(project => !project.featured)
-      .map(project => this.#archive(project))
-      .join('');
-  }
+    for (const project of this.#projects) {
+      const row = this.#row(project, project.featured ? 'featured' : 'archive-row');
+      if (project.featured) featured.push(row);
+      else archive.push(row);
+    }
 
-  #featured(project) {
-    return this.#row(project, 'featured');
-  }
-
-  #archive(project) {
-    return this.#row(project, 'archive-row');
+    return featured.join('') + archive.join('');
   }
 
   #row(project, role) {
