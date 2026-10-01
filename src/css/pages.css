@@ -164,6 +164,18 @@
   opacity: 1;
 }
 
+.resource-cards a.is-external .resource-cards__kind::after {
+  content: " · External";
+  font-weight: 500;
+  letter-spacing: 0;
+  text-transform: none;
+}
+
+.text-links a[target="_blank"]::after,
+.contact-links a[target="_blank"]::after {
+  content: " ↗";
+}
+
 @media (max-width: 620px) {
   .row-stack {
     flex-direction: column;

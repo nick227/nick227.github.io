@@ -2,7 +2,7 @@
 
 .pipeline-opening .pipe-border__content {
   display: flex;
-  min-height: 400px;
+  min-height: 0;
   flex-direction: column;
   align-items: center;
   justify-content: center;

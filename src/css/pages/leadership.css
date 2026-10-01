@@ -143,15 +143,17 @@
 
 @keyframes leadership-set-pace {
   0% {
+    left: 0;
     opacity: 0;
-    transform: translateX(0) scale(0.45);
+    transform: scale(0.45);
   }
 
   16% { opacity: 1; }
 
   100% {
+    left: calc(100% - 15px);
     opacity: 0.85;
-    transform: translateX(calc(100vw - 15px)) scale(1);
+    transform: scale(1);
   }
 }
 

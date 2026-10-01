@@ -130,8 +130,8 @@
 
   5%,
   28% {
-    background: transparent;
-    color: inherit;
+    background: currentColor;
+    color: var(--color-bg-deep);
   }
 }
 

@@ -159,7 +159,9 @@ export class Page {
       { threshold: 0 },
     );
 
-    this.#pagePositionObserver.observe(this.#homeElement);
+    this.#pagePositionObserver.observe(
+      this.#homeElement.querySelector('.intro') ?? this.#homeElement,
+    );
   }
 
   #setViewTheme(view) {

@@ -270,13 +270,13 @@
 
 .contact-split {
   display: grid;
-  grid-template-columns: minmax(0, 200px) minmax(0, 1fr);
+  grid-template-columns: 220px minmax(0, 1fr);
   align-items: start;
   justify-items: start;
-  width: min(880px, calc(100% - 2 * var(--page-gutter)));
+  width: min(640px, 100%);
   margin-inline: auto;
-  padding: 28px 0 48px;
-  column-gap: 64px;
+  padding: 36px 0 8px;
+  column-gap: 36px;
   row-gap: 16px;
 }
 
@@ -293,7 +293,7 @@
 
 .contact-portrait {
   display: block;
-  width: min(180px, 100%);
+  width: 100%;
   aspect-ratio: 1;
   object-fit: cover;
 }
@@ -311,7 +311,6 @@
 }
 
 .contact-links a {
-  overflow-wrap: anywhere;
   text-decoration: underline;
   text-underline-offset: 0.2em;
 }

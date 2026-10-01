@@ -22,8 +22,8 @@
   position: absolute;
   inset: 0;
   border: 1px solid currentColor;
-  opacity: 0;
-  animation: framework-assemble 1600ms var(--ease-expressive) both;
+  opacity: 0.25;
+  animation: framework-assemble 5s ease-in-out infinite;
 }
 
 .framework-scaffold span:nth-child(1) { animation-delay: 80ms; }
@@ -166,14 +166,16 @@
 }
 
 @keyframes framework-assemble {
-  from {
-    opacity: 0;
-    transform: translate(var(--frame-x, 0%), var(--frame-y, 0%)) scale(0.76);
+  0%,
+  100% {
+    opacity: 0.25;
+    transform: translate(var(--frame-x, 0%), var(--frame-y, 0%)) scale(0.88);
   }
 
-  to {
-    opacity: 0.34;
-    transform: translate(var(--frame-x, 0%), var(--frame-y, 0%)) scale(1);
+  45%,
+  55% {
+    opacity: 0.85;
+    transform: translate(0, 0) scale(1);
   }
 }
 

@@ -186,17 +186,140 @@ body.is-blog-reading .section-footer::before {
 }
 
 .practice {
-  gap: 72px;
+  gap: 56px;
 }
 
 .block {
   display: flex;
   flex-direction: column;
-  gap: 16px;
+  gap: 0;
+  scroll-margin-top: var(--header-space);
+}
+
+.block-copy {
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  gap: 20px;
 }
 
 .block-copy h1 {
-  display: none;
+  display: block;
+  margin: 0;
+  font-size: clamp(1.75rem, 3vw, 2.25rem);
+  font-weight: 700;
+  letter-spacing: -0.045em;
+  line-height: 1;
+  text-transform: none;
+}
+
+.block-copy p,
+.block-copy h3,
+.block-copy ul,
+.block-copy ol {
+  margin: 0;
+}
+
+.block-copy .page-lead {
+  font-size: 1.125rem;
+  font-weight: 700;
+  letter-spacing: -0.02em;
+  line-height: 1.35;
+}
+
+.block-copy .resource-cards {
+  gap: 16px;
+  margin: 0;
+}
+
+.figure {
+  position: relative;
+  width: min(100%, 420px);
+  height: 420px;
+  overflow: hidden;
+  flex: none;
+}
+
+.figure-cube {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  perspective: 1200px;
+}
+
+.figure .cube {
+  --size: 300px;
+  animation: cube-face 8s ease-in-out infinite;
+}
+
+@keyframes cube-face {
+  0%,
+  100% { transform: rotateX(-16deg) rotateY(-32deg); }
+  50% { transform: rotateX(-16deg) rotateY(32deg); }
+}
+
+.figure .chevron-flow {
+  --chevron-width: 8rem;
+  --chevron-height: 100%;
+  --chevron-gap: 1.25rem;
+  --speed: 6s;
+
+  width: 100%;
+  height: 100%;
+  max-height: none;
+  margin: 0;
+  animation: none;
+}
+
+.figure .chevron-flow__track {
+  height: 100%;
+  align-items: stretch;
+}
+
+.figure .chevron {
+  height: 100%;
+  opacity: 0.85;
+}
+
+.figure .creative-orbit {
+  width: 100%;
+  height: 100%;
+  aspect-ratio: auto;
+}
+
+.figure .framework-scaffold {
+  position: absolute;
+  inset: 14%;
+  width: auto;
+  height: auto;
+  transform: none;
+}
+
+.figure .leadership-pace {
+  width: 100%;
+  height: 100%;
+  margin: 0;
+  padding: 0 4px;
+  align-content: center;
+  gap: 52px;
+}
+
+.figure .pipe-flow {
+  width: 100%;
+  height: 100%;
+  align-content: center;
+}
+
+.figure .pipe-flow__stages {
+  gap: 10px;
+}
+
+.figure .pipe-flow__stages li {
+  padding: 8px 12px;
+}
+
+.block-copy .ai-agent {
+  width: min(100%, 420px);
 }
 
 .column .row {

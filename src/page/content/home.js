@@ -41,7 +41,7 @@ const practiceViews = [
 function jobMarkup(job) {
   return `
     <li class="career-job">
-      <details>
+      <details open>
         <summary>
           <span class="career-job__name">${job.company}</span>
           <span class="meta">${job.title} · ${job.dates}</span>
@@ -62,12 +62,10 @@ export function careerMarkup() {
 }
 
 function practiceSection(view, screens) {
-  const opener = screens.find(screen => screen.timer != null);
   const copy = [...screens].reverse().find(screen => screen.timer == null);
 
   return `
     <section class="block" id="${view}">
-      ${opener ? `<div class="block-mark">${opener.html}</div>` : ''}
       <div class="block-copy">${copy.html}</div>
     </section>
   `;

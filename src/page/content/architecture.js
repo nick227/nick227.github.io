@@ -56,22 +56,31 @@ export const architecture = {
       {
         html: `
           <h1>Architecture</h1>
+          <p>
+          I build systems from the data model up.
+          The model is defined once, in Prisma schema.
+          Everything routine is generated from it: validators, routes, the OpenAPI contract, a typed client SDK, and query hooks.
+          When the model changes, every layer changes with it.
+          Most teams overbuild, and hand-maintained glue code is where the bugs live.
+          Removing that code removes a whole class of errors.
+          </p>
+          <div class="figure figure-cube" aria-hidden="true">
+            <div class="cube">
+              <div class="cube__face cube__face--front"></div>
+              <div class="cube__face cube__face--back"></div>
+              <div class="cube__face cube__face--left"></div>
+              <div class="cube__face cube__face--right"></div>
+              <div class="cube__face cube__face--top"></div>
+              <div class="cube__face cube__face--bottom"></div>
+            </div>
+          </div>
           <div class="row row-stack">
             <div class="col-50">
-              <p>
-              I build systems from the data model up.
-              The model is defined once, in Prisma schema.
-              Everything routine is generated from it: validators, routes, the OpenAPI contract, a typed client SDK, and query hooks.
-              When the model changes, every layer changes with it.
-              Most teams overbuild, and hand-maintained glue code is where the bugs live.
-              Removing that code removes a whole class of errors.
-              </p>
-
-              <h3 class="mt-6">Read it, run it</h3>
+              <h3>Read it, run it</h3>
               <ul class="resource-cards">
                 ${architectureResources.map(resource => `
                   <li>
-                    <a href="${resource.href}" target="_blank" rel="noopener">
+                    <a class="is-external" href="${resource.href}" target="_blank" rel="noopener noreferrer">
                       <span class="resource-cards__kind">${resource.kind}</span>
                       <strong>${resource.title}</strong>
                       <span>${resource.description}</span>
