@@ -9,11 +9,9 @@ export const webPlatforms = {
         Frameworks change, but the core ideas carry over.
         I have built interfaces for 20 years, across Angular, React, Vite, NestJS, LoopBack, Feathers, Django, Next.js, and PHP.
         Today I reach for React first.
-        Its state handling is less verbose than Angular’s, and JSX asks you to learn very few framework-specific ideas.
-        It keeps web code close to React Native, and it is the framework AI tools write best.
-        The poker site taught me the most about testing.
-        Real-time games break in ways normal apps don’t, so it got more testing than anything else I have built.
+        Its state handling is less verbose than Angular, and the ecosystem is more mature.
         </p>
+        <p>I've also used the popular back-end frameworks like NestJS, LoopBack, and feathers.js. My opinion is we don't need them. The web server should never become a monolith. It's not a busines intelligence tool, it's a network delivery system. Systememic consistency is a good thing.</p>
         <div class="figure" aria-hidden="true">
           <div class="framework-scaffold">
             <span></span>

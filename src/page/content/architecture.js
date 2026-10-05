@@ -42,11 +42,11 @@ export const architecture = {
           <h1>Architecture</h1>
           <p>
           I build systems from the data model up.
-          The model is defined once, in Prisma schema.
-          Everything routine is generated from it: validators, routes, the OpenAPI contract, a typed client SDK, and query hooks.
+          The model is defined once, in schema.
+          Everything routine is generated from the DTO: validators, routes, the OpenAPI contract, a typed client SDK, even query hooks.
           When the model changes, every layer changes with it.
-          Most teams overbuild, and hand-maintained glue code is where the bugs live.
-          Removing that code removes a whole class of errors.
+          Most teams overbuild, and hand-maintained glue code is where bugs thrive.
+          Never building that code removes a whole class of problems.
           </p>
           <div class="figure figure-cube" aria-hidden="true">
             <div class="cube">

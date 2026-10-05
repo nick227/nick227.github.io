@@ -48,10 +48,10 @@ body.is-blog-reading .page.blog {
 .blog-list {
   display: flex;
   flex-direction: column;
-  gap: clamp(28px, 4vh, 48px);
   padding: 0;
   margin: 0;
   list-style: none;
+  justify-content: flex-start;
 }
 
 .blog-list li {

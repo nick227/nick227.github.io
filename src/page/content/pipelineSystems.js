@@ -3,7 +3,7 @@ const pipelineStages = [
   { label: 'Kafka', note: 'Event stream' },
   { label: 'Akka / Scala', note: 'Analysis' },
   { label: 'Elasticsearch', note: 'My layer: schema, APIs, search', owned: true },
-  { label: 'Support UI', note: '30 engineers acting on tickets' },
+  { label: 'Support UI', note: 'Busy engineers acting on tickets' },
 ];
 
 export const pipelineSystems = {

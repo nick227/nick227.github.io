@@ -20,8 +20,8 @@ export const leadership = {
       <h3>Keys to success</h3>
       <ul>
         <li><strong>Communication:</strong> people relationships are the most valuable asset</li>
-        <li><strong>Collaboration:</strong> give people ownership of their own ideas and solutions</li>
-        <li><strong>Trust:</strong> earn it by being consistent and reliable</li>
+        <li><strong>Collaboration:</strong> give people ownership of their ideas and solutions</li>
+        <li><strong>Trust:</strong> earn it by showing up, being consistent and reliable</li>
       </ul>
       `,
     },

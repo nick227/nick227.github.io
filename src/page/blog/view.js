@@ -97,10 +97,10 @@ function renderBlog(articles) {
       <div class="screen-lead">
         <h2 class="screen-title blog-heading" data-blog-index-title tabindex="-1">Blog</h2>
         <aside class="blog-author" aria-label="Author">
-          <img class="blog-author-portrait" src="/avatar.png" alt="">
+          <img class="blog-author-portrait" src="/0_rWPC1ulPd_EJvuN1.png" alt="">
           <div class="blog-author-copy">
             <p class="blog-author-name">Nick Rios</p>
-            <p class="blog-author-bio">Creative and experienced full-stack engineer with passion for building scalable and efficient systems.</p>
+            <p class="blog-author-bio">Creative and experienced full-stack engineer with passion for building scalable systems.</p>
             <p class="blog-author-place">Austin, TX</p>
           </div>
         </aside>
