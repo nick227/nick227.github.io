@@ -182,15 +182,6 @@
   gap: 20px;
 }
 
-.contact-feedback .contact-heading::after {
-  display: block;
-  width: 2.75rem;
-  height: 3px;
-  margin-top: 18px;
-  background: currentColor;
-  content: "";
-}
-
 .contact-copy {
   display: flex;
   flex-direction: column;

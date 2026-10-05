@@ -26,7 +26,8 @@ h1,
 .projects-heading,
 .blog-heading,
 .contact-heading {
-  margin-bottom: var(--space-3);
-  font-size: clamp(1.75rem, 4vw, 2.5rem);
+  font-size: 30px;
+  text-transform: uppercase;
+  border-bottom: 1px solid currentColor;
 }
 

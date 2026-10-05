@@ -239,7 +239,7 @@ export class Contact {
 
     const copy = document.createElement('div');
     copy.className = 'contact-copy';
-    ['You message has been sent thank you for reaching out. I look forward to reading it and talking with your soon.'].forEach(line => {
+    ['You message has been sent. Thanks for reaching out! I look forward to speaking with you soon.'].forEach(line => {
       const paragraph = document.createElement('p');
       paragraph.textContent = line;
       copy.append(paragraph);
