@@ -90,7 +90,6 @@ body.is-blog-reading .section-footer::before {
 }
 
 .site-branding {
-  display: inline-flex;
   min-height: 44px;
   align-items: center;
   font-size: 10.125rem;
@@ -100,7 +99,7 @@ body.is-blog-reading .section-footer::before {
 
 @media (max-width: 640px) {
   .site-branding {
-    font-size: 6.125rem;
+    font-size: 3.125rem;
     margin-bottom: 20px;
   }
 }
