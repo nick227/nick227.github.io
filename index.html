@@ -27,18 +27,6 @@
       font-family: Outfit, Arial, sans-serif;
     }
 
-    .section-header {
-      position: fixed;
-      z-index: 100;
-      top: 20px;
-      right: 0;
-      left: 0;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      padding-inline: max(28px, calc((100% - 640px) / 2));
-    }
-
     .site-branding,
     .site-navigation a {
       display: inline-flex;
@@ -105,24 +93,6 @@
       to { transform: rotate(1turn); }
     }
 
-    @media (max-width: 800px) {
-      .section-header,
-      .column {
-        position: relative;
-        top: 0;
-        right: 0;
-        left: 0;
-        width: 100%;
-        margin-inline: auto;
-        padding: 0 20px;
-        transform: none;
-      }
-
-      .column {
-        padding-top: 28px;
-      }
-    }
-
     @media (prefers-reduced-motion: reduce) {
       .boot::before { animation: none; }
       .media-frame.is-ready iframe { transition: none; }
@@ -142,12 +112,10 @@
 </head>
 
 <body>
-  <header class="section section-header">
-    <a class="site-branding" href="#home" data-view="home" aria-label="Nick Rios, home">nick<span>rios</span></a>
-  </header>
 
-  <main>
-  <div class="page home" id="home"></div>
+  <h1 class="section-header">
+    <a class="site-branding" href="#home" data-view="home" aria-label="Nick Rios, home">nick<span>rios</span></a>
+  </h1>
 
   <div class="page contact" id="contact"></div>
 
@@ -156,10 +124,11 @@
   <div class="page projects hidden" id="projects"></div>
 
   <div class="practice hidden" id="practice"></div>
+
+  <div class="page home" id="home"></div>
   
 
   <div class="page blog hidden" id="blog"></div>
-  </main>
 
   <footer class="section section-footer" id="footer">
       <div class="social-links" aria-label="Social links">

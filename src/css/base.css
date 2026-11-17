@@ -26,6 +26,10 @@ body {
   background: var(--color-bg-deep);
   margin: 0;
   padding: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
 }
 
 a {

@@ -17,7 +17,7 @@
   .screen,
   .blog-reader,
   .contact-split {
-    padding-inline: 20px;
+    padding: 0 20px;
   }
 
   .contact-split {
@@ -26,7 +26,6 @@
     margin-inline: 0;
   }
   
-  .section-header,
   .column,
   .career,
   .practice {
@@ -47,10 +46,6 @@
 @media (max-width: 620px) {
   :root {
     --header-space: 92px;
-  }
-
-  .section-header {
-    align-items: flex-start;
   }
 
   .section-footer p {

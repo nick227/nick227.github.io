@@ -45,18 +45,16 @@ h1.home-title,
 
 
 .section-header {
-  position: fixed;
-  z-index: 100;
-  top: var(--header-top);
-  right: 0;
-  left: 0;
   display: flex;
-  width: auto;
-  align-items: center;
-  justify-content: space-between;
-  margin-inline: 0;
-  padding-inline: max(var(--page-gutter), calc((100% - 640px) / 2));
+  align-items: flex-start;
+  justify-content: center;
+  flex-direction: column;
   color: var(--color-txt-primary);
+  width: 100%;
+  padding-top: 12px;
+  padding-left: 20px;
+  width: min(640px, 100%);
+  margin: 0 auto;
 }
 
 .section-header::before,
