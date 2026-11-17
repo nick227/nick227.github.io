@@ -20,7 +20,6 @@ function sectionMarkup() {
 
   return `
     <div class="screen contact-split">
-      <h2 class="screen-title contact-heading">Contact</h2>
       <div class="contact-aside">
         <img class="contact-portrait" src="/phone.jpg" alt="Nick Rios">
         <div class="contact-links">${contactLinks.map(linkMarkup).join('')}</div>

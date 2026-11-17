@@ -26,7 +26,7 @@ const careerJobs = [
     dates: '2001 – 2012',
     summary:
       'Consolidated major newspaper publishers onto one dms at Impremedia. Started in telecom operations at AT&T and Sprint, earning CNA and Network+.',
-  },
+  },  
 ];
 
 const practiceViews = [
@@ -71,15 +71,14 @@ function practiceSection(view, screens) {
 
 const careerHtml = careerMarkup();
 
+export function careerSection() {
+  return `<section class="block" id="career" aria-label="Career">${careerHtml}</section>`;
+}
+
 export function homeFlow(pageData) {
-  const practice = practiceViews
+  return practiceViews
     .map(view => practiceSection(view, pageData[view].screens))
     .join('');
-
-  return `
-    <section class="block" id="career" aria-label="Career">${careerHtml}</section>
-    ${practice}
-  `;
 }
 
 export const home = {

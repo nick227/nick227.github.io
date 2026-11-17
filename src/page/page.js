@@ -1,4 +1,4 @@
-import { homeFlow } from './content/home.js';
+import { careerSection, homeFlow } from './content/home.js';
 import { Navigation } from './navigation.js';
 import { validatePageData } from './data/validate.js';
 import { Projects } from './projects/projects.js';
@@ -99,7 +99,9 @@ export class Page {
   };
 
   #setupHomeWidgets() {
-    const practice = this.#homeElement.querySelector('#practice');
+    const career = this.#body.querySelector('#career-container');
+    const practice = this.#body.querySelector('#practice');
+    career.innerHTML = careerSection();
     practice.innerHTML = homeFlow(this.#pageData);
   }
 

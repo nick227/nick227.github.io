@@ -136,3 +136,9 @@ li {
 .absolute {
   position: absolute !important;
 }
+
+.stack {
+  display: flex;
+  flex-direction: column;
+  gap: 0.5rem;
+}
