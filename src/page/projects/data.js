@@ -205,6 +205,16 @@ export const projectsData = [
     link: "https://wp-advertising-admin-production.up.railway.app/",
     github: "https://github.com/nick227/wp-advertising-server",
   },
+  {
+    title: "Hatsyshirtsy E-Commerce Platform",
+    kind: "commerce",
+    featured: true,
+    subText: "AI generated t-shirt design platform",
+    paragraph: "Creative project testing AI generated designs for t-shirts and other products. Started before everyone started disliking AI generated content.",
+    keywords: ["Wordpress", "E-Commerce", "AI Generated Designs", "PHP"],
+    link: "https://hatsyshirtsy.com/",
+    github: ""
+  },
   // AI and creative tools.
   {
     title: "AI Research and Publishing Automation",
