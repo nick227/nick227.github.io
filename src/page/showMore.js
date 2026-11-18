@@ -1,4 +1,4 @@
-const STEP = 10;
+const STEP = 8;
 
 /** Reveals list children five at a time until every item is visible. */
 export function attachShowMore(list) {

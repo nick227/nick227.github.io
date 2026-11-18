@@ -295,11 +295,12 @@
 
 .contact-portrait {
   display: block;
-  width: 100%;
+  width: 150px;
   object-fit: cover;
   border-radius: 10px;
   aspect-ratio: 1 / 1;
-
+  margin: auto;
+  border-radius: 9999px;
 }
 
 .contact-links {

@@ -2,6 +2,31 @@ import { contactEndpoint, contactIntents, contactLinks } from './data.js';
 
 const MOTION_MS = 280;
 
+const faceImageNames = [
+  'faces/1.jpg',
+  'faces/2.jpg',
+  'faces/3.jpg',
+  'faces/4.png',
+  'faces/5.png',
+  'faces/6.png',
+  'faces/7.png',
+  'faces/8.png',
+  'faces/9.png',
+  'faces/10.png',
+  'faces/11.png',
+  'faces/12.png',
+];
+
+function iterateFacialExpressions(duration){
+  // randomly jump arouhnd faceImageNames array
+  setInterval(() => {
+    const randomImage = faceImageNames[Math.floor(Math.random() * faceImageNames.length)];
+    const imgElement = document.querySelector('.contact-portrait');
+    imgElement.src = randomImage;
+  }, duration);
+
+}
+
 function linkMarkup(link) {
   const external = link.href.startsWith('http');
   const attrs = [
@@ -20,7 +45,6 @@ function sectionMarkup() {
 
   return `
     <div class="screen contact-split">
-        <img class="contact-portrait" src="/phone.jpg" alt="Nick Rios">
         <div class="contact-links">${contactLinks.map(linkMarkup).join('')}</div>
     </div>
   `;
@@ -97,6 +121,7 @@ export class Contact {
   #element;
   #timer = 0;
   #generation = 0;
+  #currentFaceIndex = 0;
 
   constructor(element) {
     this.#element = element;
@@ -262,3 +287,6 @@ export class Contact {
     this.mount();
   };
 }
+
+
+    iterateFacialExpressions(2000);

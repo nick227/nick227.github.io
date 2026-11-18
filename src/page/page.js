@@ -111,7 +111,6 @@ export class Page {
     // Project data is locally authored and Projects returns trusted markup.
     this.#projectsElement.innerHTML = `
       <section class="screen">
-        <h2 class="screen-title">Projects</h2>
         <div class="screen-body">
           <ol class="blog-list">${project.markup()}</ol>
         </div>
