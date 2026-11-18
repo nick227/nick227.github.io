@@ -272,7 +272,7 @@
 
 .contact-split {
   display: grid;
-  grid-template-columns: 1fr 1fr;
+  grid-template-columns: 1fr;
   align-items: start;
   justify-items: start;
   width: min(640px, 100%);
@@ -297,6 +297,9 @@
   display: block;
   width: 100%;
   object-fit: cover;
+  border-radius: 10px;
+  aspect-ratio: 1 / 1;
+
 }
 
 .contact-links {

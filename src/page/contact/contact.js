@@ -20,30 +20,8 @@ function sectionMarkup() {
 
   return `
     <div class="screen contact-split">
-      <div class="contact-aside">
         <img class="contact-portrait" src="/phone.jpg" alt="Nick Rios">
         <div class="contact-links">${contactLinks.map(linkMarkup).join('')}</div>
-      </div>
-      <form class="contact-form contact-panel" method="POST" action="${contactEndpoint}">
-        <input class="contact-honey" type="text" name="_honey" tabindex="-1" autocomplete="off" aria-hidden="true">
-        <input type="hidden" name="topic" value="">
-        <div class="contact-intents">${intents}</div>
-        <div class="contact-fields" hidden>
-          <label class="contact-field">
-            Name
-            <input name="name" autocomplete="name" required>
-          </label>
-          <label class="contact-field">
-            Message
-            <textarea name="message" required></textarea>
-          </label>
-          <p class="contact-error" role="alert" hidden></p>
-          <div class="contact-actions">
-            <button class="contact-change" type="button">Change</button>
-            <button class="contact-send" type="submit">Send</button>
-          </div>
-        </div>
-      </form>
     </div>
   `;
 }

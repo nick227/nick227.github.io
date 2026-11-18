@@ -46,15 +46,15 @@ h1.home-title,
 
 .section-header {
   display: flex;
-  align-items: flex-start;
+  align-items: center;
   justify-content: center;
   flex-direction: column;
   color: var(--color-txt-primary);
   width: 100%;
   padding-top: 12px;
-  padding-left: 20px;
   width: min(640px, 100%);
   margin: 0 auto;
+  text-align: center;
 }
 
 .section-header::before,
@@ -90,7 +90,7 @@ body.is-blog-reading .section-footer::before {
 .site-branding {
   min-height: 44px;
   align-items: center;
-  font-size: 10.125rem;
+  font-size: 8rem;
   font-weight: 700;
   letter-spacing: -0.045em;
 }
@@ -423,6 +423,10 @@ h1.home-title {
   color: var(--color-txt-primary);
   text-align: center;
   padding: 0 0 40px 0;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
 }
 
 .section-footer::before {
