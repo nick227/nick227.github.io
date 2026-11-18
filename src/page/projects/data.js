@@ -11,16 +11,6 @@ export const projectsData = [
     github: ""
   },
   {
-    title: "Nexstar News Publishing Platform",
-    kind: "platforms",
-    featured: true,
-    subText: "Shared platform for 60+ TV stations",
-    paragraph: "This shared web and CMS platform powered more than 60 television station sites. It connected newsroom and media systems while reliably serving over one million visitors in a single day.",
-    keywords: ["CMS", "Web Platform", "Media Publishing", "High Traffic"],
-    link: "",
-    github: ""
-  },
-  {
     title: "Collaborative Form Builder",
     kind: "platforms",
     subText: "Visual multi-tenant form building platform",
@@ -48,6 +38,16 @@ export const projectsData = [
     keywords: ["AI Images", "Cloudflare R2", "Prisma", "Job Queues"],
     link: "https://autoimage.up.railway.app/",
     github: "https://github.com/nick227/prompt-harvest",
+  },
+  {
+    title: "Nexstar News Publishing Platform",
+    kind: "platforms",
+    featured: true,
+    subText: "Shared platform for 60+ TV stations",
+    paragraph: "This shared web and CMS platform powered more than 60 television station sites. It connected newsroom and media systems while reliably serving over one million visitors in a single day.",
+    keywords: ["CMS", "Web Platform", "Media Publishing", "High Traffic"],
+    link: "",
+    github: ""
   },
   {
     title: "Local Food Delivery Marketplace",
@@ -121,6 +121,15 @@ export const projectsData = [
     subText: "Centralized media pipeline for publishing systems",
     paragraph: "A central asset pipeline serving more than 10 newspaper and magazine systems. PHP and Smarty applications managed content backed by MySQL and other SQL data stores.",
     keywords: ["Digital Assets", "PHP", "MySQL", "Data Pipelines"],
+    link: "",
+    github: ""
+  },
+  {
+    title: "KEYE weareaustin.com website",
+    kind: "platforms",
+    subText: "One of many examples of sites launched with Nexstar Broadcasting",
+    paragraph: "This project underwent a couple stages. We initially tried retrofitting Joomla Community before building from scratch following same concepts.",
+    keywords: ["Media", "PHP", "Data System", "Multi-tenant"],
     link: "",
     github: ""
   },
